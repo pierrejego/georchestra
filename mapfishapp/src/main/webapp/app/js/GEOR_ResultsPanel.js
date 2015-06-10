@@ -15,6 +15,7 @@
 /*
  * @include GeoExt/data/FeatureStore.js
  * @include GeoExt/widgets/grid/FeatureSelectionModel.js
+ * @include OpenLayers/Format/WKT.js
  * @include OpenLayers/Format/GML.js
  * @include OpenLayers/Format/JSON.js
  * @include OpenLayers/Request/XMLHttpRequest.js
@@ -93,7 +94,7 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
             return;
         }
         GEOR.waiter.show();
-        var data = [], att, record, raw,
+        var data = [], att, record, raw, f,
             fields = this._model.getFields(),
             grid = this.findByType("grid")[0];
         if (!grid) {
@@ -104,23 +105,26 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
         if (sm.getCount() == 0) {
             bypass = true;
         }
+        var wktFormat = new OpenLayers.Format.WKT();
         for (var i=0; i<t; i++) {
             record = this._store.getAt(i);
             if (bypass || sm.isSelected(record)) {
                 raw = [];
-                att = record.get('feature').attributes;
+                f = record.get('feature');
+                att = f.attributes;
                 // see http://applis-bretagne.fr/redmine/issues/4084
                 for (var j=0, ll=fields.length; j<ll; j++) {
                     raw.push(att[fields[j]] || '');
                 }
+                raw.push(wktFormat.write(f) || '');
                 data.push(raw);
             }
         }
-        var format = new OpenLayers.Format.JSON();
+        var jsonFormat = new OpenLayers.Format.JSON();
         OpenLayers.Request.POST({
             url: GEOR.config.PATHNAME + "/ws/csv/",
-            data: format.write({
-                columns: this._model.getFields(), 
+            data: jsonFormat.write({
+                columns: this._model.getFields().concat("geometry"),
                 data: data
             }),
             success: function(response) {
