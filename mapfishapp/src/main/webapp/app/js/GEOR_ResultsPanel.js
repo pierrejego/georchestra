@@ -84,45 +84,70 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
     _model: null,
 
     /**
-     * Method: _csvExportBtnHandler
-     * Triggers the download dialog for CSV export of the store's content
+     * Method: _exportBtnHandler
+     * Triggers the download dialog for export of the store's content
      */
-    _csvExportBtnHandler: function() {
+    _exportBtnHandler: function(filetype) {
         var t = this._store.getCount();
         if (t === 0) {
             return;
         }
         GEOR.waiter.show();
-        var data = [], att, record, raw,
+        var data = [], features = [], att, record, raw,
             fields = this._model.getFields(),
             grid = this.findByType("grid")[0];
         if (!grid) {
             return;
         }
         var sm = grid.getSelectionModel(),
-            bypass = false;
+            bypass = false,
+            payload;
         if (sm.getCount() == 0) {
             bypass = true;
         }
-        for (var i=0; i<t; i++) {
-            record = this._store.getAt(i);
-            if (bypass || sm.isSelected(record)) {
-                raw = [];
-                att = record.get('feature').attributes;
-                // see http://applis-bretagne.fr/redmine/issues/4084
-                for (var j=0, ll=fields.length; j<ll; j++) {
-                    raw.push(att[fields[j]] || '');
+        switch (filetype) {
+            case "csv":
+                for (var i=0; i<t; i++) {
+                    record = this._store.getAt(i);
+                    if (bypass || sm.isSelected(record)) {
+                        raw = [];
+                        att = record.getFeature().attributes;
+                        // see http://applis-bretagne.fr/redmine/issues/4084
+                        for (var j=0, ll=fields.length; j<ll; j++) {
+                            raw.push(att[fields[j]] || '');
+                        }
+                        data.push(raw);
+                    }
                 }
-                data.push(raw);
-            }
+                payload = (new OpenLayers.Format.JSON()).write({
+                    columns: this._model.getFields(),
+                    data: data
+                });
+                break;
+            default: // kml || gml
+                for (var i=0; i<t; i++) {
+                    record = this._store.getAt(i);
+                    if (bypass || sm.isSelected(record)) {
+                        features.push(record.getFeature());
+                    }
+                }
+                if (filetype == "gml") {
+                    payload = (new OpenLayers.Format.GML({
+                        featureNS: "http://www.georchestra.org/features"
+                    })).write(features);
+                    break;
+                } else if (filetype == "kml") {
+                    payload = (new OpenLayers.Format.KML({
+                        'foldersName': "geOrchestra",
+                        'internalProjection': this.map.getProjectionObject(),
+                        'externalProjection': new OpenLayers.Projection("EPSG:4326")
+                    })).write(features);
+                    break;
+                }
         }
-        var format = new OpenLayers.Format.JSON();
         OpenLayers.Request.POST({
-            url: GEOR.config.PATHNAME + "/ws/csv/",
-            data: format.write({
-                columns: this._model.getFields(), 
-                data: data
-            }),
+            url: GEOR.config.PATHNAME + "/ws/"+filetype+"/",
+            data: payload,
             success: function(response) {
                 var o = Ext.decode(response.responseText);
                 window.location.href = GEOR.config.PATHNAME + "/" + o.filepath;
@@ -328,11 +353,24 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
                         },
                         scope: this
                     },{
-                        text: tr("CSV Export"),
-                        iconCls: 'geor-csv-export',
-                        tooltip: tr("Export results as CSV"),
-                        handler: this._csvExportBtnHandler,
-                        scope: this
+                        text: tr("Export"),
+                        iconCls: 'geor-export',
+                        menu: [{
+                            text: tr("CSV file"),
+                            tooltip: tr("Export results as CSV"),
+                            handler: this._exportBtnHandler.createDelegate(this, ["csv"]),
+                            scope: this
+                        },{
+                            text: tr("GML file"),
+                            tooltip: tr("Export results as GML"),
+                            handler: this._exportBtnHandler.createDelegate(this, ["gml"]),
+                            scope: this
+                        },{
+                            text: tr("KML file"),
+                            tooltip: tr("Export results as KML"),
+                            handler: this._exportBtnHandler.createDelegate(this, ["kml"]),
+                            scope: this
+                        }]
                     },{
                         text: tr("Store the geometry"),
                         iconCls: 'geor-geom-save',
