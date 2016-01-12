@@ -176,7 +176,7 @@ public abstract class A_DocService {
         PreparedStatement st = null;
         try {
             connection = pgPool.getConnection();
-            st = connection.prepareStatement("INSERT INTO mapfishapp.geodocs (username, standard, raw_file_content, file_hash) VALUES (?,?,?,?);");
+            st = connection.prepareStatement("INSERT INTO mapfishapp.geodocs (username, standard, raw_file_content, file_hash) VALUES (?,?,?,?)");
             st.setString(1, username);
             st.setString(2, standard);
             st.setString(3, _content);
@@ -350,7 +350,7 @@ public abstract class A_DocService {
             int count = 0;
             try {
                 connection = pgPool.getConnection();
-                st = connection.prepareStatement("SELECT count(*)::integer from mapfishapp.geodocs WHERE file_hash = ?;");
+                st = connection.prepareStatement("SELECT count(id) from mapfishapp.geodocs WHERE file_hash = ?");
                 st.setString(1, fileName.substring(DOC_PREFIX.length(), DOC_PREFIX.length() + 32));
                 rs = st.executeQuery();
 
@@ -408,7 +408,7 @@ public abstract class A_DocService {
             Connection connection = null;
             try {
                 connection = pgPool.getConnection();
-                st = connection.prepareStatement("SELECT raw_file_content from mapfishapp.geodocs WHERE file_hash = ?;");
+                st = connection.prepareStatement("SELECT raw_file_content from mapfishapp.geodocs WHERE file_hash = ?");
                 st.setString(1, hash);
                 rs = st.executeQuery();
 
@@ -417,7 +417,7 @@ public abstract class A_DocService {
                 }
 
                 // now that we have loaded the content, update the metadata fields
-                st = connection.prepareStatement("UPDATE mapfishapp.geodocs set last_access = now() , access_count = access_count + 1 WHERE file_hash = ?;");
+                st = connection.prepareStatement("UPDATE mapfishapp.geodocs set last_access = CURRENT_TIMESTAMP , access_count = access_count + 1 WHERE file_hash = ?");
                 st.setString(1, hash);
                 st.executeUpdate();
             }
