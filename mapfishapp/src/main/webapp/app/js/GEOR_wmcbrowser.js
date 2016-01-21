@@ -429,16 +429,28 @@ GEOR.wmcbrowser = (function() {
     var filterContexts = function(storeData) {
 	var filteredStoreData = [];
 	Ext.each(storeData, function(data) {
-	    if( data.roles == undefined || data.roles.length === 0 ) {
-		filteredStoreData.push(data);
-		return true;
+		if( data.title.slice(0, "default".length) === "default") {
+			filteredStoreData.push(data);
+			return true;
+		} else {
+			Ext.each(GEOR.config.ROLES, function(role) {
+				if (data.title.slice(0, role.length) === role) {
+					filteredStoreData.push(data);
+					return true;
+				}
+		    });
+		 }		
+		
+	    /*if( data.roles == undefined || data.roles.length === 0 ) {
+	    	filteredStoreData.push(data);
+	    	return true;
 	    }
 	    Ext.each(data.roles, function(role) {
 		if (GEOR.config.ROLES.indexOf(role) >= 0) {
 		    filteredStoreData.push(data);
 		    return false;
 		}
-	    });
+	    });*/
 	});
 	return filteredStoreData;
     }

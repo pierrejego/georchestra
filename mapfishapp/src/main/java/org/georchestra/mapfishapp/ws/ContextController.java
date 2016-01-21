@@ -78,12 +78,13 @@ public class ContextController implements ServletContextAware {
 
         // description
         JSONObject xmlInfos = getXmlInfos(f);
-
+        
+        info.put("title", title);
         info.put("label", xmlInfos.get("label").equals("unset") ? title : xmlInfos.get("label"));
         info.put("thumbnail", image);
         info.put("wmc", wmcUrl);
         info.put("tip", xmlInfos.get("tip").equals("unset") ? title : xmlInfos.get("tip"));
-        info.put("keywords", xmlInfos.getJSONArray("keywords").put(title));
+        info.put("keywords", xmlInfos.getJSONArray("keywords"));
 
         return info;
     }
