@@ -110,6 +110,20 @@ Ext.namespace("GEOR");
     };
 
     Ext.onReady(function() {
+    	
+    	/**
+    	 * Connection to Geobuilder
+    	 */
+    	var options = [];
+    	options.nbIconesGeobuilderVisible = 5;
+    	options.urlGeobuilder = "http://localhost/geobuilder/";
+    	options.cfmGenToken = "cfm/q_gentoken.cfm";
+    	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
+    	options.cfmMenu = "cfm/wmenu.cfm";
+    	options.repoImagesGeobuilder= "ggis_images/";
+    	
+    	GEOR.geobuilder_loaded = GEOR.geobuilder_connection(options);
+    	
         var tr = OpenLayers.i18n;
 
         /*
@@ -171,7 +185,7 @@ Ext.namespace("GEOR");
          * Create the page's layout.
          */
 
-        var eastItems = GEOR.createEastTabPanel(layerStore);
+        var eastItems = GEOR.geobuilder_createEastTabPanel(layerStore);//GEOR.createEastTabPanel(layerStore);
 
         // this panel serves as the container for
         // the "search results" tabs
