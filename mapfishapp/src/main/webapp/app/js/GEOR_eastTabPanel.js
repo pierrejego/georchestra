@@ -1,5 +1,4 @@
 GEOR.createEastTabPanel = function (layerStore) {
-console.log(GEOR.config.MODULE_GEOBUILDER);
 
 	var recenteringItems = [
         Ext.apply({

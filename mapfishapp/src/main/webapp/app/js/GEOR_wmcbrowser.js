@@ -441,6 +441,7 @@ GEOR.wmcbrowser = (function() {
 		    });
 		 }		
 		
+		// Old filter contexts
 	    /*if( data.roles == undefined || data.roles.length === 0 ) {
 	    	filteredStoreData.push(data);
 	    	return true;
