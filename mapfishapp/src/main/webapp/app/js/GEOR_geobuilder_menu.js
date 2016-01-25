@@ -1,15 +1,14 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_initMenu = function (items) {
-	
+GEOR.geobuilder_initMenu = function (options) {
 	var options = [];
 	options.nbIconesGeobuilderVisible = 5;
 	options.urlGeobuilder = "http://localhost/geobuilder/";
 	options.cfmGenToken = "cfm/q_gentoken.cfm";
-	options.fmLogin = "cfm/loginGeoOrchestra.cfm";
+	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
 	options.cfmMenu = "cfm/wmenu.cfm";
 	options.repoImagesGeobuilder= "ggis_images/";
-
+	
 	//Creation du menu geobuilder
 	
 	//Récupération du menu JSon
@@ -42,16 +41,16 @@ GEOR.geobuilder_initMenu = function (items) {
 			            menuGeobuilder.loadData(data);
 			            
 			            //On cherche la position ou l'on doit insérer ce menu
-			            /*var listeItems = this.mapPanel.getTopToolbar().items;
+			            var listeItems = this.mapPanel.getTopToolbar().items;
 			            var position;
 			            for (var i = 0; i < listeItems.length; i++) {
 			            	if (listeItems.items[i].getXType() === 'tbfill') {
 			            		position = i + 1;
 			            		break;
 			            	}
-			            }*/
+			            }
 			            
-			            var nbVisible = this.options.nbIconesGeobuilderVisible;
+			            var nbVisible = options.nbIconesGeobuilderVisible;
 			            
 			            var menuDropDown = [];
 			            var compteurItemVisible = 0;
@@ -63,12 +62,12 @@ GEOR.geobuilder_initMenu = function (items) {
 			            	if (type === "STAB" || type === "WTAB" || type === "BLNK" || type === "WKPL" ) {
 			            		compteurItemVisible++;
 				            	if (compteurItemVisible <= nbVisible) {
-				            		items.push({
+				            		this.mapPanel.getTopToolbar().insertButton(position, {
 				            			id : 'menuItemGeobuilder'+compteurItemVisible,
 				                    	xtype: 'button',
 				                    	tooltip: menuGeobuilder.getAt(i).get("LIBELLE"),
 				                    	icon: options.urlGeobuilder  + options.repoImagesGeobuilder + menuGeobuilder.getAt(i).get("ICONE"),
-				                    	handler: geobuilder_clickMenuHandler.createDelegate(this, [type, 
+				                    	handler: GEOR.geobuilder_clickMenuHandler.createDelegate(this, [type, 
 				            			                                                                             menuGeobuilder.getAt(i).get("TABURL"),
 				            			                                                                             menuGeobuilder.getAt(i).get("LIBELLE")]),
 				                    	scope: this
@@ -78,7 +77,7 @@ GEOR.geobuilder_initMenu = function (items) {
 				            		menuDropDown.push({
 				            			text: menuGeobuilder.getAt(i).get("LIBELLE"),
 				            			icon: options.urlGeobuilder + options.repoImagesGeobuilder + menuGeobuilder.getAt(i).get("ICONE"),
-				            			handler: geobuilder_clickMenuHandler.createDelegate(this, [type, 
+				            			handler: GEOR.geobuilder_clickMenuHandler.createDelegate(this, [type, 
 				            			                                                                             menuGeobuilder.getAt(i).get("TABURL"),
 				            			                                                                             menuGeobuilder.getAt(i).get("LIBELLE")]),
 				            			scope: this                			
@@ -89,16 +88,16 @@ GEOR.geobuilder_initMenu = function (items) {
 		                            
 			            //Si le menu contient plus de 5 boutons, on crée un menu dropdown
 			            if (compteurItemVisible > nbVisible) {
-			            	items.push({
+			            	this.mapPanel.getTopToolbar().insertButton(position, {
 			            		id : 'menuItemGeobuilder'+ (nbVisible + 1),
 			                    menu: menuDropDown
 			        		});
 			            }
-			            
+			            		            
 			            /**
 			             * Affichage de la nouvelle toolbar
 			             */
-			            //globalElem.mapPanel.doLayout();
+			            this.mapPanel.doLayout();
 		            } else {
 		            	console.error(data);
 		            }
@@ -140,9 +139,9 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 		}
 		winWorkplace.show();
 		var iframe = Ext.get(winWorkplace.contentEl);
-		iframe.dom.src = this.options.urlGeobuilder+cfm;
+		iframe.dom.src = options.urlGeobuilder+cfm;
 	} else if (type === "BLNK") {
-		window.open(this.options.urlGeobuilder+cfm);
+		window.open(options.urlGeobuilder+cfm);
 	} 
 };
 

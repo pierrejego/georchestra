@@ -1,6 +1,6 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_connection = function (options) {
+GEOR.geobuilder_connection = function (options, self) {
 
 	// Connect to geobuilder server and create session + token for authentication
 	console.log(options.urlGeobuilder + options.cfmGenToken);
@@ -28,7 +28,7 @@ GEOR.geobuilder_connection = function (options) {
                 },
                 success: function (response) {
                     // Appel de la fonction d'init du menu geobuilder dans la toolbar
-                    //GEOR.geobuilder_initMenuGeobuilder(self);
+                    GEOR.geobuilder_initMenu(options);
 
                 	// Load all 5 IFRAMEs for geobuilder to use
                 	console.log('o');
