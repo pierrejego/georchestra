@@ -99,7 +99,7 @@
         <property name="url" value="${psql.url}"/>
         <property name="username" value="${psql.user}"/>
         <property name="password" value="${psql.pass}"/>
-        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="driverClassName" value="${psql.driver}"/>
         <property name="testOnBorrow" value="true"/>
         <property name="poolPreparedStatements" value="true"/>
         <property name="maxOpenPreparedStatements" value="-1"/>
@@ -123,7 +123,7 @@
        </property>
        <property name="jpaProperties">
            <props>
-               <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</prop>
+               <prop key="hibernate.dialect">${psql.hibernate.dialect}</prop>
                <prop key="hibernate.show_sql">false</prop>
                <prop key="hibernate.format_sql">false</prop>
                <prop key="hibernate.hbm2ddl.auto">update</prop>
