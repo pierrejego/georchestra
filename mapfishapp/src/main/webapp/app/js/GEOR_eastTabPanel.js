@@ -17,33 +17,50 @@ GEOR.createEastTabPanel = function (layerStore) {
         }, GEOR.address.create(layerStore.map)));
     }
 
-	var eastItems = [
-		new Ext.Panel({
-			// this panel contains the "manager layer" and
-			// "querier" components
-			id: "east-tabpanel",
+	var legendPanel = new GeoExt.LegendPanel({
+        layerStore: layerStore,
+        border: false,
+        defaults: {
+            labelCls: 'bold-text',
+            showTitle: true,
+            baseParams: {
+                FORMAT: 'image/png',
+                // geoserver specific:
+                LEGEND_OPTIONS: [
+                    'forceLabels:on',
+                    'fontAntiAliasing:true'
+                ].join(';')
+            }
+        },
+        autoScroll: true
+    });
+	
+	var eastItems = [	                 
+	                 
+		new Ext.TabPanel({
+			// this panel contains the components for
+			// recentering the map
 			region: "center",
-			height: 270, // has no effect when region is
-			// "center"
-			layout: "card",
-			activeItem: 0,
-			title: tr("Available layers"),
-			split: false,
-			collapsible: false,
-			collapsed: false,
-			// we use hideMode: "offsets" here to workaround this bug in
-			// extjs 3.x, see the bug report:
-			// http://www.sencha.com/forum/showthread.php?107119-DEFER-1207-Slider-in-panel-with-collapsed-true-make-slider-weird
-			//hideMode: 'offsets',
+			id: "east-tabpanel",
+			activeTab: 0,
+			resizeTabs: true,
 			defaults: {
-				border:false
+				frame: false,
+				border: false,
+				bodyStyle: "padding: 5px"
 			},
-			items: [
-				Ext.apply({
-				// nothing
-				}, GEOR.managelayers.create(layerStore))
-			]
+			items: [Ext.apply({
+					id:'layers-panel',
+		            title: tr("Available layers"),
+		            tabTip: tr("Available layers"),
+		        }, GEOR.managelayers.create(layerStore)),
+		        Ext.apply({
+		        	id:'legend-panel',
+		            title: tr("Legend"),
+		            tabTip: tr("Legend")
+		        }, legendPanel)]
 		}),
+	                 
 		new Ext.TabPanel({
 			// this panel contains the components for
 			// recentering the map
