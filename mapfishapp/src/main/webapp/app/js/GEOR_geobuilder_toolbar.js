@@ -255,14 +255,7 @@ GEOR.geobuilder_toolbar = (function() {
     	items.push('->');
     	
     	console.log(GEOR.geobuilder_loaded);
-    	
-    	//Appel du menu geobuilder
-    	var itemsGeo = GEOR.geobuilder_initMenu();
-    	console.log(itemsGeo);
-    	Ext.each(itemsGeo, function(itemMenuGeobuilder) {
-    		items.push(itemMenuGeobuilder);
-    	});
-    	 
+    	  	 
     	/**
     	 * Ajout du bouton pour le menu Outils
     	 */
