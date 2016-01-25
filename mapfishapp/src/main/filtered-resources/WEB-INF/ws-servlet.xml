@@ -45,6 +45,7 @@
 
     <bean id="pgpool" class="org.georchestra.mapfishapp.model.ConnectionPool" init-method="init">
         <property name="jdbcUrl" value="${jdbcUrl}" /> 
+        <property name="jdbcDriver" value="${jdbcDriver}" /> 
     </bean>
 
     <!-- Documents controller -->
