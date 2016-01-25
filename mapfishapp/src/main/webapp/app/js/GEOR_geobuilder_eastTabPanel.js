@@ -44,6 +44,7 @@ GEOR.geobuilder_createEastTabPanel = function (layerStore) {
 			region: "center",
 			id: "east-tabpanel",
 			activeTab: 0,
+			resizeTabs: true,
 			defaults: {
 				frame: false,
 				border: false,
@@ -84,7 +85,6 @@ GEOR.geobuilder_createEastTabPanel = function (layerStore) {
 		})
 	];
 	return eastItems;
-	
 }
 
 GEOR.geobuilder_addGeobuilderTab = function () {
@@ -96,5 +96,6 @@ GEOR.geobuilder_addGeobuilderTab = function () {
 		iconCls: 'geo-icon',
 		contentEl: 'ggis_menu_IFRAME'
 	});
+	Ext.get('ggis_menu_IFRAME').dom.height = Ext.getCmp('east-tabpanel').getInnerHeight();
 	eastTabs.doLayout();
 };

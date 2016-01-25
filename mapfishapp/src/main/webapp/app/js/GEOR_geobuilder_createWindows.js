@@ -1,6 +1,6 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_createPopupWindow = function (globalElem) {
+GEOR.geobuilder_createPopupWindow = function (title) {
 
 	// Traduction
 	var tr = OpenLayers.i18n;
@@ -24,7 +24,7 @@ GEOR.geobuilder_createPopupWindow = function (globalElem) {
 
 };
 
-GEOR.geobuilder_createCardWindow = function (globalElem) {
+GEOR.geobuilder_createCardWindow = function (title) {
 
 	// Traduction
 	var tr = OpenLayers.i18n;
@@ -46,11 +46,12 @@ GEOR.geobuilder_createCardWindow = function (globalElem) {
 	
 };
 
-GEOR.geobuilder_createWorkplaceWindow = function () {
+GEOR.geobuilder_createWorkplaceWindow = function (title) {
 
 	workplaceWindow = new Ext.Window({
 		id: 'geo-window-workplace',
 		layout: 'fit',
+		title: title,
 		height: 400,
 		width: 500,
 		closeAction: 'hide',
