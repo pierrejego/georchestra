@@ -118,25 +118,31 @@ GEOR.geobuilder_initMenu = function (mapPanel, options) {
 
 //Méthode appelée lors du clic d'un menu geobuilder
 GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
-
+	var options = [];
+	options.nbIconesGeobuilderVisible = 5;
+	options.urlGeobuilder = "http://localhost/geobuilder/";
+	options.cfmGenToken = "cfm/q_gentoken.cfm";
+	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
+	options.cfmMenu = "cfm/wmenu.cfm";
+	options.repoImagesGeobuilder= "ggis_images/";
 	if (type === "STAB" || type === "WTAB") {		
 		// Show spinner
 //		GEOR.waiter.show();
 	
 		// Change IRAME src attribute and select "Geobuilder" tab
-		var tabPanel = Ext.getCmp('geobuilder-tabs');
+		var tabPanel = Ext.getCmp('east-tabpanel');
 		if (typeof Ext.getCmp('geobuilder-integration-tab') === "undefined") {
-			GEOR.Addons.GeoBuilder.addGeobuilderTab();
+			GEOR.geobuilder_addGeobuilderTab();
 		}
 		var geobuilderTab = Ext.getCmp('geobuilder-integration-tab');
 		tabPanel.setActiveTab(geobuilderTab);
 		geobuilderTab.setTitle(title);
 		var iframe = Ext.get(geobuilderTab.contentEl);
-		iframe.dom.src = this.options.urlGeobuilder+cfm;
+		iframe.dom.src = options.urlGeobuilder+cfm;
 	} else if (type === "WKPL") {
 		var winWorkplace = Ext.getCmp('geo-window-workplace');
 		if (!winWorkplace) {
-			winWorkplace = GEOR.Addons.GeoBuilder.createWorkplaceWindow();
+			winWorkplace = GEOR.geobuilder_createWorkplaceWindow();
 		}
 		winWorkplace.show();
 		var iframe = Ext.get(winWorkplace.contentEl);
