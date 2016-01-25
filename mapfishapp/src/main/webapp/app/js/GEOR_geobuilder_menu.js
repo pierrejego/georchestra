@@ -1,6 +1,6 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_initMenu = function (options) {
+GEOR.geobuilder_initMenu = function (mapPanel, options) {
 	var options = [];
 	options.nbIconesGeobuilderVisible = 5;
 	options.urlGeobuilder = "http://localhost/geobuilder/";
@@ -13,7 +13,6 @@ GEOR.geobuilder_initMenu = function (options) {
 	
 	//Récupération du menu JSon
     var url = options.urlGeobuilder + options.cfmMenu;
-    console.log(url);
 	Ext.Ajax.request
     ({
         url: url,
@@ -36,12 +35,14 @@ GEOR.geobuilder_initMenu = function (options) {
 	            
 	            try{
 		            var data = JSON.parse(response.responseText);
+		            
 		            if (data) {
 		            	//Chargement du menu par les données retour de l'appel
 			            menuGeobuilder.loadData(data);
-			            
+
 			            //On cherche la position ou l'on doit insérer ce menu
-			            var listeItems = this.mapPanel.getTopToolbar().items;
+			            var listeItems = mapPanel.getTopToolbar().items;
+			            
 			            var position;
 			            for (var i = 0; i < listeItems.length; i++) {
 			            	if (listeItems.items[i].getXType() === 'tbfill') {
@@ -62,7 +63,7 @@ GEOR.geobuilder_initMenu = function (options) {
 			            	if (type === "STAB" || type === "WTAB" || type === "BLNK" || type === "WKPL" ) {
 			            		compteurItemVisible++;
 				            	if (compteurItemVisible <= nbVisible) {
-				            		this.mapPanel.getTopToolbar().insertButton(position, {
+				            		mapPanel.getTopToolbar().insertButton(position, {
 				            			id : 'menuItemGeobuilder'+compteurItemVisible,
 				                    	xtype: 'button',
 				                    	tooltip: menuGeobuilder.getAt(i).get("LIBELLE"),
@@ -88,7 +89,7 @@ GEOR.geobuilder_initMenu = function (options) {
 		                            
 			            //Si le menu contient plus de 5 boutons, on crée un menu dropdown
 			            if (compteurItemVisible > nbVisible) {
-			            	this.mapPanel.getTopToolbar().insertButton(position, {
+			            	mapPanel.getTopToolbar().insertButton(position, {
 			            		id : 'menuItemGeobuilder'+ (nbVisible + 1),
 			                    menu: menuDropDown
 			        		});
@@ -97,12 +98,12 @@ GEOR.geobuilder_initMenu = function (options) {
 			            /**
 			             * Affichage de la nouvelle toolbar
 			             */
-			            this.mapPanel.doLayout();
+			            mapPanel.doLayout();
 		            } else {
 		            	console.error(data);
 		            }
 		        }catch(e){
-	                alert(e); //error in the above string(in this case,yes)!
+		        	//error in the above string(in this case,yes)!
 	                console.error(response.responseText);
 	            }
         	} else {

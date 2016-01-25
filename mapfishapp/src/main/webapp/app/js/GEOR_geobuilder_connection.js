@@ -1,9 +1,8 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_connection = function (options, self) {
+GEOR.geobuilder_connection = function (options, mapPanel) {
 
 	// Connect to geobuilder server and create session + token for authentication
-	console.log(options.urlGeobuilder + options.cfmGenToken);
     Ext.Ajax.request
     ({
         url: options.urlGeobuilder + options.cfmGenToken,
@@ -18,7 +17,7 @@ GEOR.geobuilder_connection = function (options, self) {
         	var data = Ext.util.JSON.decode(response.responseText);
         	var token = data.data.token;
         	var url = options.urlGeobuilder + options.cfmLogin;
-        	console.log(url);
+        	
             Ext.Ajax.request
             ({
                 url: url,
@@ -28,10 +27,9 @@ GEOR.geobuilder_connection = function (options, self) {
                 },
                 success: function (response) {
                     // Appel de la fonction d'init du menu geobuilder dans la toolbar
-                    GEOR.geobuilder_initMenu(options);
+                    GEOR.geobuilder_initMenu(mapPanel, options);
 
                 	// Load all 5 IFRAMEs for geobuilder to use
-                	console.log('o');
                 	GEOR.geobuilder_loadIFRAMES();
                 	return true;
                 },

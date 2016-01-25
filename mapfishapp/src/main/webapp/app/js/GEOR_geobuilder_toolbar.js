@@ -254,8 +254,6 @@ GEOR.geobuilder_toolbar = (function() {
     	 */
     	items.push('->');
     	
-    	console.log(GEOR.geobuilder_loaded);
-    	  	 
     	/**
     	 * Ajout du bouton pour le menu Outils
     	 */

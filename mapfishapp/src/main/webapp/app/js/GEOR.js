@@ -521,7 +521,6 @@ Ext.namespace("GEOR");
             }
         });
         
-
     	/**
     	 * Connection to Geobuilder
     	 */
@@ -533,7 +532,7 @@ Ext.namespace("GEOR");
     	options.cfmMenu = "cfm/wmenu.cfm";
     	options.repoImagesGeobuilder= "ggis_images/";
     	
-    	GEOR.geobuilder_loaded = GEOR.geobuilder_connection(options, this);
+    	GEOR.geobuilder_loaded = GEOR.geobuilder_connection(options, mapPanel);
     	
     	
     });
