@@ -36,6 +36,14 @@
  * @include GEOR_styler.js
  * @include GEOR_wmc.js
  * @include GEOR_helper.js
+ * @include GEOR_eastTabPanel.js
+ * @include GEOR_geobuilder_toolbar.js
+ * @include GEOR_geobuilder_eastTabPanel.js
+ * @include GEOR_geobuilder_connection.js
+ * @include GEOR_geobuilder_loadIFRAMES.js
+ * @include GEOR_geobuilder_createWindows.js
+ * @include GEOR_geobuilder_menu.js
+ * @include GEOR_geobuilder_module_metier.js
  */
 
 Ext.namespace("GEOR");
