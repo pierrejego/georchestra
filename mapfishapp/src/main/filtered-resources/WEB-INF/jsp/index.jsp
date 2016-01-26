@@ -22,10 +22,27 @@ String instanceName = null;
 String defaultLanguage = null;
 String georCustomPath = "/app/js/GEOR_custom.js";
 
+String geobuilderUrl = null;
+String geobuilderCfmLogin = null;
+String geobuilderCfmMenu = null;
+String geobuilderCfmProfiles = null;
+String geobuilderRepoImages = null;
+String geobuilderGroupeLdap = null;
+String geobuilderNbIconesVisible = null;
+
 try {
   ApplicationContext ctx = RequestContextUtils.getWebApplicationContext(request);
   instanceName = ctx.getBean(GeorchestraConfiguration.class).getProperty("instance");
   defaultLanguage = ctx.getBean(GeorchestraConfiguration.class).getProperty("language");
+ 
+  geobuilderUrl = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.url");
+  geobuilderCfmLogin = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.cfmLogin");
+  geobuilderCfmMenu = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.cfmMenu");
+  geobuilderCfmProfiles = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.cfmProfiles");
+  geobuilderRepoImages = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.repoImages");
+  geobuilderGroupeLdap = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.groupeLdap");
+  geobuilderNbIconesVisible = ctx.getBean(GeorchestraConfiguration.class).getProperty("geobuilder.nbIconesVisible");
+  
   if ((ctx.getBean(GeorchestraConfiguration.class) != null)
     && (((GeorchestraConfiguration) ctx.getBean(GeorchestraConfiguration.class)).activated())) {
       georDatadirActivated = true;
@@ -184,6 +201,13 @@ if(sec_roles != null) {
         GEOR.config.CUSTOM_FILE = '<%=request.getParameter("file") %>';
         </c:when>
     </c:choose>
+    
+    // custom Module loader 
+    <c:choose>
+        <c:when test='<%= request.getParameter("module") != null %>'>
+        GEOR.config.CUSTOM_MODULE = '<%=request.getParameter("module") %>';
+        </c:when>
+    </c:choose>
         // custom startup zoom parameters (override the WMC bbox):
         GEOR.config.CUSTOM_BBOX = "${c.bbox}";
         GEOR.config.CUSTOM_CENTER = "${c.lon},${c.lat}";
@@ -211,6 +235,15 @@ if(sec_roles != null) {
         GEOR.config.ADDONS = ${c.addons};
         </c:when>
     </c:choose>
+    
+    //Config Geobuilder
+    GEOR.config.GEOBUILDER_URL = '<%= geobuilderUrl %>';
+    GEOR.config.GEOBUILDER_CFM_LOGIN = '<%= geobuilderCfmLogin %>';
+    GEOR.config.GEOBUILDER_CFM_MENU = '<%= geobuilderCfmMenu %>';
+    GEOR.config.GEOBUILDER_CFM_PROFILES = '<%= geobuilderCfmProfiles %>';
+    GEOR.config.GEOBUILDER_REPO_IMAGES = '<%= geobuilderRepoImages %>';
+    GEOR.config.GEOBUILDER_GROUPE_LDAP = '<%= geobuilderGroupeLdap %>';
+    GEOR.config.GEOBUILDER_NB_ICONES = '<%= geobuilderNbIconesVisible %>';
         
     </script>
     <noscript><p><fmt:message key="need.javascript"/></p></noscript>
