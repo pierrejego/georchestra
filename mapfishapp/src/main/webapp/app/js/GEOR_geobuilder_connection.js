@@ -28,6 +28,9 @@ GEOR.geobuilder_connection = function (options, mapPanel) {
                 success: function (response) {
                     // Appel de la fonction d'init du menu geobuilder dans la toolbar
                     GEOR.geobuilder_initMenu(mapPanel, options);
+                    
+                 // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
+                    GEOR.geobuilder_initListeModule(mapPanel, options);
 
                 	// Load all 5 IFRAMEs for geobuilder to use
                 	GEOR.geobuilder_loadIFRAMES();

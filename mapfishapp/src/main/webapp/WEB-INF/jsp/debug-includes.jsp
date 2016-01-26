@@ -88,6 +88,7 @@
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_loadIFRAMES.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_createWindows.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_menu.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_module_metier.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/geobuilder.js"></script>
     <!-- uncomment this for IE debugging -->
     <!--script type="text/javascript" src="https://getfirebug.com/firebug-lite-beta.js"></script-->
