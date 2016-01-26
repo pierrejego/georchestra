@@ -43,6 +43,7 @@
  * @include GEOR_geobuilder_loadIFRAMES.js
  * @include GEOR_geobuilder_createWindows.js
  * @include GEOR_geobuilder_menu.js
+ * @include GEOR_geobuilder_module_metier.js
  */
 
 Ext.namespace("GEOR");
