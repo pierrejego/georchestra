@@ -127,7 +127,7 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 	options.repoImagesGeobuilder= "ggis_images/";
 	if (type === "STAB" || type === "WTAB") {		
 		// Show spinner
-//		GEOR.waiter.show();
+		GEOR.waiter.show();
 	
 		// Change IRAME src attribute and select "Geobuilder" tab
 		var tabPanel = Ext.getCmp('east-tabpanel');
@@ -139,14 +139,23 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 		geobuilderTab.setTitle(title);
 		var iframe = Ext.get(geobuilderTab.contentEl);
 		iframe.dom.src = options.urlGeobuilder+cfm;
+		iframe.dom.onload = function () {
+			GEOR.waiter.hide();
+		};
 	} else if (type === "WKPL") {
+		// Show spinner
+		GEOR.waiter.show();
+
 		var winWorkplace = Ext.getCmp('geo-window-workplace');
 		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createWorkplaceWindow();
+			winWorkplace = GEOR.geobuilder_createWorkplaceWindow(title);
 		}
 		winWorkplace.show();
 		var iframe = Ext.get(winWorkplace.contentEl);
 		iframe.dom.src = options.urlGeobuilder+cfm;
+		iframe.dom.onload = function () {
+			GEOR.waiter.hide();
+		};
 	} else if (type === "BLNK") {
 		window.open(options.urlGeobuilder+cfm);
 	} 

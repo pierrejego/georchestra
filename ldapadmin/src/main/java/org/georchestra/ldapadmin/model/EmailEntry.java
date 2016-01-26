@@ -23,6 +23,8 @@ public class EmailEntry {
     private UUID sender;
     private UUID recipient;
     private String subject;
+    
+    @Column(name = "email_date")
     private Date date;
     private String body;
 
