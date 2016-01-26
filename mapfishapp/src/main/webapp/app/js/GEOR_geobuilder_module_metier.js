@@ -1,7 +1,7 @@
 Ext.namespace("GEOR");
 
 GEOR.geobuilder_initListeModule = function (mapPanel, options) {
-	 
+	
 	var options = [];
 	options.nbIconesGeobuilderVisible = 5;
 	options.urlGeobuilder = "http://localhost/geobuilder/";
@@ -92,6 +92,16 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            			return fileContext;
 	            		}
 	            		
+	            		var module = 'default';
+	            		if (GEOR.config.CUSTOM_MODULE) {		       
+        					Ext.each(GEOR.config.ROLES, function(role) {
+        						if (role === GEOR.config.CUSTOM_MODULE ) {
+        							module = GEOR.config.CUSTOM_MODULE;
+        							return;
+        						}
+        				    });
+	            		}
+	            		
 	            		var onFailure = function(msg) {
 	            	        GEOR.util.errorDialog({
 	            	            msg: tr(msg)
@@ -99,6 +109,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            	        GEOR.waiter.hide();
 	            	    };
 	            		
+	            	    
 	            		var combo = new Ext.form.ComboBox({
 	            		    store: storeCombo,
 	            		    displayField: 'name', 
@@ -106,7 +117,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            		    fieldLabel: 'name',
 	            		    editable: false, 
 	            		    forceSelection:true,
-	            		    value: 'default',
+	            		    value: module,
 	            		    mode: 'local',
 	            		    triggerAction: 'all',
 	            		    listeners: {

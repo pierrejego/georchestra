@@ -441,18 +441,41 @@ GEOR.mapinit = (function() {
      *
      */
     var loadDefaultWMC = function() {
-        if (GEOR.ls.get("default_context")) {
-            // restore default context
-            updateStoreFromWMC(GEOR.ls.get("default_context"));
-        } else if (GEOR.ls.get("latest_context")) {
-            // restore latest context
-            GEOR.wmc.read(GEOR.ls.get("latest_context"), true, !customRecenter());
-            zoomToCustomExtent();
-            // and finally we're running our global success callback:
-            cb.call();
-        } else {
-            updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
-        }
+    	
+		if (GEOR.config.CUSTOM_MODULE) {	
+			var module = 'default';
+			var hasRole = false;
+			Ext.each(GEOR.config.ROLES, function(role) {
+				if (role === GEOR.config.CUSTOM_MODULE ) {
+					hasRole = true;
+					return
+				}
+				
+		    });
+			if (hasRole) {
+				Ext.each(GEOR.config.CONTEXTS, function(context) {
+					if (context.title === GEOR.config.CUSTOM_MODULE ) {
+						updateStoreFromWMC(context.wmc);
+						return;
+					}
+				});
+			} else {
+				updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
+			}
+		} else {    	
+	        if (GEOR.ls.get("default_context")) {
+	            // restore default context
+	            updateStoreFromWMC(GEOR.ls.get("default_context"));
+	        } else if (GEOR.ls.get("latest_context")) {
+	            // restore latest context
+	            GEOR.wmc.read(GEOR.ls.get("latest_context"), true, !customRecenter());
+	            zoomToCustomExtent();
+	            // and finally we're running our global success callback:
+	            cb.call();
+	        } else {
+	            updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
+	        }
+	   }
     };
 
     /**
