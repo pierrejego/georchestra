@@ -1,6 +1,7 @@
 Ext.namespace("GEOR");
 
 GEOR.geobuilder_initListeModule = function (mapPanel, options) {
+	 
 	var options = [];
 	options.nbIconesGeobuilderVisible = 5;
 	options.urlGeobuilder = "http://localhost/geobuilder/";
@@ -55,6 +56,11 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 		            		};
 			            }
 	            		
+	            		moduleDropDown[data.data.pros.length+1] = {
+		            			id: "ROLE_EL_TEST",
+		            			name: "metier test"             			
+		            		};
+	            		
 	            		var storeCombo = new Ext.data.ArrayStore({
             		        autoDestroy: true,
             		        fields: ['id', 'name'],
@@ -64,6 +70,34 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            		for (var i = 0; i < storeCombo.totalLength; i++) {
 	            			storeCombo.data.items[i].data = storeCombo.data.items[i].json;
 	            		}
+	            		
+	            		var searchContext = function(storeData, moduleMetier) {
+	            			var fileContext = undefined;
+	            			
+	            			Ext.each(storeData, function(data) {
+            					Ext.each(GEOR.config.ROLES, function(role) {
+            						if (role === moduleMetier && data.title === role ) {
+            							fileContext = data.wmc;
+            							return;
+            						}
+            				    });
+	            			});
+	            			if (fileContext === undefined) {
+		            			Ext.each(storeData, function(data) {
+            						if (data.title === "default" ) {
+            							fileContext = data.wmc; 
+            						}
+            				    });
+	            			}
+	            			return fileContext;
+	            		}
+	            		
+	            		var onFailure = function(msg) {
+	            	        GEOR.util.errorDialog({
+	            	            msg: tr(msg)
+	            	        });
+	            	        GEOR.waiter.hide();
+	            	    };
 	            		
 	            		var combo = new Ext.form.ComboBox({
 	            		    store: storeCombo,
@@ -77,8 +111,18 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            		    triggerAction: 'all',
 	            		    listeners: {
 	                            "select": function(combo, record) {
-	                                console.log(record.data);
-		            		    	console.log(combo);
+		            		    	 GEOR.waiter.show();
+		            		    	 
+		            		    	 var fileContext = searchContext(GEOR.config.CONTEXTS, record.data.id);
+		            		    	 
+		            		         OpenLayers.Request.GET({
+		            		             url: GEOR.util.getValidURI(fileContext),
+		            		             success: function(response) {
+		            		                 GEOR.waiter.hide();
+		            		                 GEOR.wmc.read(response.responseXML, true, true);
+		            		             },
+		            		             failure: onFailure.createCallback("Could not find WMC file")
+		            		         });
 	                            },
 	                            'expand'   : function(combo) {
 	                                var blurField = function(el) {
@@ -119,4 +163,6 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
         }
     });
 };
+
+
 
