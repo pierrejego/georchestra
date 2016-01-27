@@ -16,7 +16,7 @@ GEOR.geobuilder_connection = function (mapPanel) {
         	var data = Ext.util.JSON.decode(response.responseText);
         	if (data && data.data && data.data.token) {
 	        	var token = data.data.token;
-	        	var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_PROFILES;
+	        	var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_LOGIN;
 	        	
 	            Ext.Ajax.request
 	            ({
@@ -29,7 +29,7 @@ GEOR.geobuilder_connection = function (mapPanel) {
 	                    // Appel de la fonction d'init du menu geobuilder dans la toolbar
 	                    GEOR.geobuilder_initMenu(mapPanel);
 	                    
-	                 // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
+	                    // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
 	                    GEOR.geobuilder_initListeModule(mapPanel);
 	
 	                	// Load all 5 IFRAMEs for geobuilder to use

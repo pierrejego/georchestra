@@ -82,13 +82,13 @@
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_edit.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_eastTabPanel.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_toolbar.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_eastTabPanel.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_connection.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_loadIFRAMES.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_createWindows.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_menu.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/GEOR_geobuilder_module_metier.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/geobuilder.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_toolbar.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_eastTabPanel.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_connection.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_loadIFRAMES.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_createWindows.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_menu.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_module_metier.js"></script>
+    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/geobuilder.js"></script>
     <!-- uncomment this for IE debugging -->
     <!--script type="text/javascript" src="https://getfirebug.com/firebug-lite-beta.js"></script-->
