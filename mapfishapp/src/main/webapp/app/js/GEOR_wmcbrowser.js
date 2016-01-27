@@ -426,14 +426,18 @@ GEOR.wmcbrowser = (function() {
      * Parameters:
      * storeData - {Array} The list of contexts to filter
      */
-    var filterContexts = function(storeData) {
+    var filterContexts = function(storeData) {//Nouvelle méthode de filtre des contextes
 	var filteredStoreData = [];
-	Ext.each(storeData, function(data) {
+	Ext.each(storeData, function(data) { //Pour chaque contexte
+		//On doit récupèrer tous les contextes defaut 
+		//(c'est à dire tous les fichiers qui commence par default)
 		if( data.title.slice(0, "default".length) === "default") {
 			filteredStoreData.push(data);
 			return true;
 		} else {
-			Ext.each(GEOR.config.ROLES, function(role) {
+			//On regarde si l'utilisateur a les droits d'accès aux contextes
+			//les fichiers wmc doit commencer par le nom du role
+			Ext.each(GEOR.config.GEOBUILDER_ROLES, function(role) {
 				if (data.title.slice(0, role.length) === role) {
 					filteredStoreData.push(data);
 					return true;
