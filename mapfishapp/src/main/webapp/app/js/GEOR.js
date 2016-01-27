@@ -529,19 +529,7 @@ Ext.namespace("GEOR");
             }
         });
         
-    	/**
-    	 * Connection to Geobuilder
-    	 */
-    	var options = [];
-    	options.nbIconesGeobuilderVisible = 5;
-    	options.urlGeobuilder = "http://localhost/geobuilder/";
-    	options.cfmGenToken = "cfm/q_gentoken.cfm";
-    	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
-    	options.cfmMenu = "cfm/wmenu.cfm";
-    	options.repoImagesGeobuilder= "ggis_images/";
-    	
-    	GEOR.geobuilder_loaded = GEOR.geobuilder_connection(options, mapPanel);
-    	
+    	GEOR.geobuilder_connection(mapPanel);
     	
     });
 })();

@@ -1,18 +1,10 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_initMenu = function (mapPanel, options) {
-	var options = [];
-	options.nbIconesGeobuilderVisible = 5;
-	options.urlGeobuilder = "http://localhost/geobuilder/";
-	options.cfmGenToken = "cfm/q_gentoken.cfm";
-	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
-	options.cfmMenu = "cfm/wmenu.cfm";
-	options.repoImagesGeobuilder= "ggis_images/";
-	
+GEOR.geobuilder_initMenu = function (mapPanel) {	
 	//Creation du menu geobuilder
 	
 	//Récupération du menu JSon
-    var url = options.urlGeobuilder + options.cfmMenu;
+    var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_MENU;
 	Ext.Ajax.request
     ({
         url: url,
@@ -51,7 +43,7 @@ GEOR.geobuilder_initMenu = function (mapPanel, options) {
 			            	}
 			            }
 			            
-			            var nbVisible = options.nbIconesGeobuilderVisible;
+			            var nbVisible = parseInt(GEOR.config.GEOBUILDER_NB_ICONES);
 			            
 			            var menuDropDown = [];
 			            var compteurItemVisible = 0;
@@ -67,7 +59,7 @@ GEOR.geobuilder_initMenu = function (mapPanel, options) {
 				            			id : 'menuItemGeobuilder'+compteurItemVisible,
 				                    	xtype: 'button',
 				                    	tooltip: menuGeobuilder.getAt(i).get("LIBELLE"),
-				                    	icon: options.urlGeobuilder  + options.repoImagesGeobuilder + menuGeobuilder.getAt(i).get("ICONE"),
+				                    	icon: GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_REPO_IMAGES+ menuGeobuilder.getAt(i).get("ICONE"),
 				                    	handler: GEOR.geobuilder_clickMenuHandler.createDelegate(this, [type, 
 				            			                                                                             menuGeobuilder.getAt(i).get("TABURL"),
 				            			                                                                             menuGeobuilder.getAt(i).get("LIBELLE")]),
@@ -77,7 +69,7 @@ GEOR.geobuilder_initMenu = function (mapPanel, options) {
 				            	} else if (compteurItemVisible > nbVisible) {
 				            		menuDropDown.push({
 				            			text: menuGeobuilder.getAt(i).get("LIBELLE"),
-				            			icon: options.urlGeobuilder + options.repoImagesGeobuilder + menuGeobuilder.getAt(i).get("ICONE"),
+				            			icon: GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_REPO_IMAGES + menuGeobuilder.getAt(i).get("ICONE"),
 				            			handler: GEOR.geobuilder_clickMenuHandler.createDelegate(this, [type, 
 				            			                                                                             menuGeobuilder.getAt(i).get("TABURL"),
 				            			                                                                             menuGeobuilder.getAt(i).get("LIBELLE")]),
@@ -118,13 +110,6 @@ GEOR.geobuilder_initMenu = function (mapPanel, options) {
 
 //Méthode appelée lors du clic d'un menu geobuilder
 GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
-	var options = [];
-	options.nbIconesGeobuilderVisible = 5;
-	options.urlGeobuilder = "http://localhost/geobuilder/";
-	options.cfmGenToken = "cfm/q_gentoken.cfm";
-	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
-	options.cfmMenu = "cfm/wmenu.cfm";
-	options.repoImagesGeobuilder= "ggis_images/";
 	if (type === "STAB" || type === "WTAB") {		
 		// Show spinner
 		GEOR.waiter.show();
@@ -138,7 +123,7 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 		tabPanel.setActiveTab(geobuilderTab);
 		geobuilderTab.setTitle(title);
 		var iframe = Ext.get(geobuilderTab.contentEl);
-		iframe.dom.src = options.urlGeobuilder+cfm;
+		iframe.dom.src = GEOR.config.GEOBUILDER_URL + cfm;
 		iframe.dom.onload = function () {
 			GEOR.waiter.hide();
 		};
@@ -152,12 +137,12 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 		}
 		winWorkplace.show();
 		var iframe = Ext.get(winWorkplace.contentEl);
-		iframe.dom.src = options.urlGeobuilder+cfm;
+		iframe.dom.src = GEOR.config.GEOBUILDER_URL + cfm;
 		iframe.dom.onload = function () {
 			GEOR.waiter.hide();
 		};
 	} else if (type === "BLNK") {
-		window.open(options.urlGeobuilder+cfm);
+		window.open(GEOR.config.GEOBUILDER_URL + cfm);
 	} 
 };
 

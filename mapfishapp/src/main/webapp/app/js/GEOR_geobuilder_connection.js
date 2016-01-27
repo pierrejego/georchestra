@@ -1,11 +1,11 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_connection = function (options, mapPanel) {
+GEOR.geobuilder_connection = function (mapPanel) {
 
 	// Connect to geobuilder server and create session + token for authentication
     Ext.Ajax.request
     ({
-        url: options.urlGeobuilder + options.cfmGenToken,
+        url: GEOR.config.GEOBUILDER_URL + "cfm/loginGeoOrchestra.cfm",
     	method: 'GET',
         params: {
         	login: 'lud',
@@ -17,7 +17,7 @@ GEOR.geobuilder_connection = function (options, mapPanel) {
         	var data = Ext.util.JSON.decode(response.responseText);
         	if (data && data.data && data.data.token) {
 	        	var token = data.data.token;
-	        	var url = options.urlGeobuilder + options.cfmLogin;
+	        	var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_LOGIN;
 	        	
 	            Ext.Ajax.request
 	            ({
@@ -28,10 +28,10 @@ GEOR.geobuilder_connection = function (options, mapPanel) {
 	                },
 	                success: function (response) {
 	                    // Appel de la fonction d'init du menu geobuilder dans la toolbar
-	                    GEOR.geobuilder_initMenu(mapPanel, options);
+	                    GEOR.geobuilder_initMenu(mapPanel);
 	                    
 	                 // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
-	                    GEOR.geobuilder_initListeModule(mapPanel, options);
+	                    GEOR.geobuilder_initListeModule(mapPanel);
 	
 	                	// Load all 5 IFRAMEs for geobuilder to use
 	                	GEOR.geobuilder_loadIFRAMES();

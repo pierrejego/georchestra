@@ -1,21 +1,10 @@
 Ext.namespace("GEOR");
 
-GEOR.geobuilder_initListeModule = function (mapPanel, options) {
-	
-	var options = [];
-	options.nbIconesGeobuilderVisible = 5;
-	options.urlGeobuilder = "http://localhost/geobuilder/";
-	options.cfmGenToken = "cfm/q_gentoken.cfm";
-	options.cfmLogin = "cfm/loginGeoOrchestra.cfm";
-	options.cfmMenu = "cfm/wmenu.cfm";
-	options.cfmProfiles = "cfm/q_getProfiles.cfm";
-	options.repoImagesGeobuilder= "ggis_images/";
-	options.groupeLdap="EL_PWRS_APPLI_";
-	
+GEOR.geobuilder_initListeModule = function (mapPanel) {
 	//Creation du menu geobuilder
 	
 	//Récupération du menu JSon
-    var url = options.urlGeobuilder + options.cfmProfiles;
+    var url = GEOR.config.GEOBUILDER_URL + GEOR.GEOBUILDER_CFM_LOGIN;
 	Ext.Ajax.request
     ({
         url: url,
@@ -28,7 +17,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 	            try{
 		            var data = JSON.parse(response.responseText);
 		            
-		            if (data) {
+		            if (data && data.data && data.data.pros && data.data.pros.length > 0) {
 			            //On cherche la position ou l'on doit insérer ce menu
 			            var listeItems = mapPanel.toolbars[0].items;
 			            
@@ -48,7 +37,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 			            //Pour chaque menu geobuilder, on l'ajoute à la toolbar
 			            //A partir du certain nombre de menu, on crée un menu Dropdown pour mettre la suite des menus Geobuilder
 	            		for (var i = 0; i < data.data.pros.length; i++) {
-			            	var id = options.groupeLdap + data.data.pros[i].id;
+			            	var id = GEOR.config.GEOBUILDER_GROUPE_LDAP + data.data.pros[i].id;
 			            	var name = data.data.pros[i].name;
 			            	moduleDropDown[i+1] = {
 		            			id: id,
@@ -158,8 +147,6 @@ GEOR.geobuilder_initListeModule = function (mapPanel, options) {
 			             * Affichage de la nouvelle toolbar
 			             */
 			            mapPanel.doLayout();
-		            } else {
-		            	console.error(data);
 		            }
 		        }catch(e){
 		        	//error in the above string(in this case,yes)!
