@@ -4,7 +4,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 	//Creation du menu geobuilder
 	
 	//Récupération du menu JSon
-    var url = GEOR.config.GEOBUILDER_URL + GEOR.GEOBUILDER_CFM_LOGIN;
+    var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_PROFILES;
 	Ext.Ajax.request
     ({
         url: url,

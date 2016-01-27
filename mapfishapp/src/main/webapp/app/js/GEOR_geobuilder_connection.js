@@ -1,11 +1,10 @@
 Ext.namespace("GEOR");
 
 GEOR.geobuilder_connection = function (mapPanel) {
-
 	// Connect to geobuilder server and create session + token for authentication
     Ext.Ajax.request
     ({
-        url: GEOR.config.GEOBUILDER_URL + "cfm/loginGeoOrchestra.cfm",
+        url: GEOR.config.GEOBUILDER_URL + "cfm/q_gentoken.cfm",
     	method: 'GET',
         params: {
         	login: 'lud',
@@ -13,11 +12,11 @@ GEOR.geobuilder_connection = function (mapPanel) {
         	site: '1'
         },
         success: function(response)
-        {
+        {   
         	var data = Ext.util.JSON.decode(response.responseText);
         	if (data && data.data && data.data.token) {
 	        	var token = data.data.token;
-	        	var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_LOGIN;
+	        	var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_PROFILES;
 	        	
 	            Ext.Ajax.request
 	            ({
@@ -42,6 +41,7 @@ GEOR.geobuilder_connection = function (mapPanel) {
 	                	return false;
 	                }
 	            });
+	            
         	} else {
         		console.log(tr("Aucune réponse lors de l'appel de la génération du token"));
         	}
