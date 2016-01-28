@@ -529,8 +529,8 @@ Ext.namespace("GEOR");
                 return GEOR.wmc.read(o.wmcString, !o.noReset, true);
             }
         });
-        
-    	GEOR.geobuilder_connection(mapPanel);
+                
+    	GEOR.geobuilder_connection(mapPanel, GEOR.config.CUSTOM_MODULE, false);
     	
     });
 })();

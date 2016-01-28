@@ -441,10 +441,11 @@ GEOR.mapinit = (function() {
      *
      */
     var loadDefaultWMC = function() {
-    	
+    	var defaultWMC = "context/default.wmc";
 		if (GEOR.config.CUSTOM_MODULE) {	
 			var module = 'default';
 			var hasRole = false;
+			//On regarde si il a le droit de charger le contexte passé en paramètre
 			Ext.each(GEOR.config.ROLES, function(role) {
 				if (role === GEOR.config.CUSTOM_MODULE ) {
 					hasRole = true;
@@ -459,11 +460,11 @@ GEOR.mapinit = (function() {
 						return;
 					}
 				});
-			} else {
-				updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
+			} else {//sinon on charge le contexte par défaut
+				updateStoreFromWMC(defaultWMC);
 			}
-		} else {    	
-	        if (GEOR.ls.get("default_context")) {
+		} else {   updateStoreFromWMC(defaultWMC);
+	        /*if (GEOR.ls.get("default_context")) {
 	            // restore default context
 	            updateStoreFromWMC(GEOR.ls.get("default_context"));
 	        } else if (GEOR.ls.get("latest_context")) {
@@ -473,8 +474,8 @@ GEOR.mapinit = (function() {
 	            // and finally we're running our global success callback:
 	            cb.call();
 	        } else {
-	            updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
-	        }
+	        	updateStoreFromWMC(GEOR.config.DEFAULT_WMC());
+	        }*/
 	   }
     };
 

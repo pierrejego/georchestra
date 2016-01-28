@@ -146,3 +146,9 @@ GEOR.geobuilder_clickMenuHandler = function(type, cfm, title){
 	} 
 };
 
+
+GEOR.geobuilder_destroyMenu = function (mapPanel) {
+	for (var i = 1; i <= parseInt(GEOR.config.GEOBUILDER_NB_ICONES) + 1; i++) {
+		mapPanel.getTopToolbar().remove('menuItemGeobuilder'+i, true);
+	}
+};
