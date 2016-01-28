@@ -244,18 +244,6 @@ if(sec_roles != null) {
     GEOR.config.GEOBUILDER_REPO_IMAGES = '<%= geobuilderRepoImages %>';
     GEOR.config.GEOBUILDER_GROUPE_LDAP = '<%= geobuilderGroupeLdap %>';
     GEOR.config.GEOBUILDER_NB_ICONES = '<%= geobuilderNbIconesVisible %>';
-    GEOR.config.GEOBUILDER_ROLES = [];
-    
-    <%
-    String secRoles = request.getHeader("sec-roles");
-    if(secRoles != null) {
-        String[] rolesHeader = secRoles.split(";");
-        for (int i = 0; i < rolesHeader.length; i++) {
-           %> GEOR.config.GEOBUILDER_ROLES[<%= i%>] = '<%= rolesHeader[i] %>';
-           <%
-        }
-    }
-    %>
         
     </script>
     <noscript><p><fmt:message key="need.javascript"/></p></noscript>

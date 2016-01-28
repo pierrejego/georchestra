@@ -18,7 +18,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            var data = JSON.parse(response.responseText);
 		            //On constitue la liste des modules si l'utilisateur à au moins 1 profil
 		            if (data && data.data && data.data.pros && data.data.pros.length > 0
-		            		&& GEOR.config.GEOBUILDER_ROLES.length > 0) {
+		            		&& GEOR.config.ROLES.length > 0) {
 		            	
 			            /*
 			             *
@@ -34,7 +34,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 			            
 			            //Pour chaque role de l'utilisateur, on récupère le nom du profil
 			            var nbProfil = 1;
-	            		Ext.each(GEOR.config.GEOBUILDER_ROLES, function(role) {
+	            		Ext.each(GEOR.config.ROLES, function(role) {
 	            			Ext.each(data.data.pros, function(profil) {
 				            	var idProfil = GEOR.config.GEOBUILDER_GROUPE_LDAP + profil.id;
 	            				if (idProfil === role) {
@@ -72,7 +72,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            		var module = 'default';
 		            		if (GEOR.config.CUSTOM_MODULE) {
 		            			//On vérifie si l'utilisateur à bien les droits
-	        					Ext.each(GEOR.config.GEOBUILDER_ROLES, function(role) {
+	        					Ext.each(GEOR.config.ROLES, function(role) {
 	        						if (role === GEOR.config.CUSTOM_MODULE) {
 	        							module = GEOR.config.CUSTOM_MODULE;
 	        							return;
