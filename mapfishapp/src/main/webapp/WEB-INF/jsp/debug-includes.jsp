@@ -82,7 +82,6 @@
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_edit.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR_eastTabPanel.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/GEOR.js"></script>
-    <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_toolbar.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_eastTabPanel.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_connection.js"></script>
     <script type="text/javascript" src="<%= context %>/app/js/geobuilder/GEOR_geobuilder_loadIFRAMES.js"></script>
