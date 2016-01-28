@@ -37,6 +37,7 @@
  * @include GEOR_wmc.js
  * @include GEOR_helper.js
  * @include GEOR_eastTabPanel.js
+ * @include geobuilder/GEOR_geobuilder_toolbar.js
  * @include geobuilder/GEOR_geobuilder_eastTabPanel.js
  * @include geobuilder/GEOR_geobuilder_connection.js
  * @include geobuilder/GEOR_geobuilder_loadIFRAMES.js

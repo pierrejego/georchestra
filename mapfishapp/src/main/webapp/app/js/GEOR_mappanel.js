@@ -186,7 +186,8 @@ GEOR.mappanel = (function() {
                 stateful: false,
                 map: map,
                 layers: layerStore,
-                tbar: GEOR.toolbar.create(layerStore),
+                tbar: //Appel de la fonction d'init du menu de la toolbar
+                    GEOR.geobuilder_toolbar.create(layerStore),//GEOR.toolbar.create(layerStore),
                 bbar: new Ext.Toolbar(buildBbarCfg(map))
                 // hack for better ergonomics:
                 //,updateMapSize: function() {}
