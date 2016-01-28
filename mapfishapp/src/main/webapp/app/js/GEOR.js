@@ -181,7 +181,7 @@ Ext.namespace("GEOR");
          * Create the page's layout.
          */
 
-        var eastItems = GEOR.geobuilder_createEastTabPanel(layerStore);//GEOR.createEastTabPanel(layerStore);
+        var eastItems = GEOR.createEastTabPanel(layerStore);
 
         // this panel serves as the container for
         // the "search results" tabs
