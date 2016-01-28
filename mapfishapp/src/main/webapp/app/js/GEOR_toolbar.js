@@ -209,44 +209,44 @@ GEOR.toolbar = (function() {
             }
         });
 
-        items.push('-');
-        items.push({
-            text: tr("Legend"),
-            tooltip: tr("Show legend"),
-            enableToggle: true,
-            handler: function(btn) {
-                if (!legendWin) {
-                    legendWin = new Ext.Window({
-                        width: 340,
-                        bodyStyle: 'padding: 5px',
-                        constrainHeader: true,
-                        title: tr("Legend"),
-                        border: false,
-                        animateTarget: GEOR.config.ANIMATE_WINDOWS && this.el,
-                        layout: 'fit',
-                        bodyCssClass: 'white-bg',
-                        items: [ legendPanel ],
-                        autoHeight: false,
-                        height: 350,
-                        closeAction: 'hide',
-                        listeners: {
-                            "hide": function() {
-                                btn.toggle(false);
-                            },
-                            "show": function() {
-                                btn.toggle(true);
-                            }
-                        },
-                        autoScroll: true
-                    });
-                }
-                if (!legendWin.isVisible()) {
-                    legendWin.show();
-                } else {
-                    legendWin.hide();
-                }
-            }
-        });
+//        items.push('-');
+//        items.push({
+//            text: tr("Legend"),
+//            tooltip: tr("Show legend"),
+//            enableToggle: true,
+//            handler: function(btn) {
+//                if (!legendWin) {
+//                    legendWin = new Ext.Window({
+//                        width: 340,
+//                        bodyStyle: 'padding: 5px',
+//                        constrainHeader: true,
+//                        title: tr("Legend"),
+//                        border: false,
+//                        animateTarget: GEOR.config.ANIMATE_WINDOWS && this.el,
+//                        layout: 'fit',
+//                        bodyCssClass: 'white-bg',
+//                        items: [ legendPanel ],
+//                        autoHeight: false,
+//                        height: 350,
+//                        closeAction: 'hide',
+//                        listeners: {
+//                            "hide": function() {
+//                                btn.toggle(false);
+//                            },
+//                            "show": function() {
+//                                btn.toggle(true);
+//                            }
+//                        },
+//                        autoScroll: true
+//                    });
+//                }
+//                if (!legendWin.isVisible()) {
+//                    legendWin.show();
+//                } else {
+//                    legendWin.hide();
+//                }
+//            }
+//        });
 
         items.push("-");
         items.push(GEOR.tools.create());
