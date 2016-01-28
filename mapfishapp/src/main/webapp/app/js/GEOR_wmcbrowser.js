@@ -431,7 +431,6 @@ GEOR.wmcbrowser = (function() {
 	Ext.each(storeData, function(data) {
 		if( data.title.slice(0, "default".length) === "default") {
 			filteredStoreData.push(data);
-			return true;
 		} else {
 			Ext.each(GEOR.config.ROLES, function(role) {
 				if (data.title.slice(0, role.length) === role) {
