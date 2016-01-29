@@ -20,8 +20,12 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 	        	
 	        	var params = {token: token};
 	        	
-	        	if (idProfil) {
-	        		params.propro = idProfil;
+	        	if (idProfil) {  
+	        		//On passe unqiuement le trigramme a geobuilder
+	        		var profils = idProfil.split(GEOR.config.GEOBUILDER_GROUPE_LDAP);
+	        		if (profils.length === 2) {
+	        			params.propro = profils[1];
+	        		}
 	        	}
 	        	
 	            Ext.Ajax.request
