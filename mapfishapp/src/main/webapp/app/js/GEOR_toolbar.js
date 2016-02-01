@@ -109,16 +109,18 @@ GEOR.toolbar = (function() {
             control: ctrl.previous,
             iconCls: "back",
             tooltip: tr("back to previous zoom"),
-            disabled: true
+            disabled: true,
+            hidden: true
         }));
         items.push(new GeoExt.Action({
             control: ctrl.next,
             iconCls: "next",
             tooltip: tr("go to next zoom"),
-            disabled: true
+            disabled: true,
+            hidden: true
         }));
 
-        items.push("-");
+//        items.push("-");
 
         items.push({
             xtype: 'button',

@@ -217,20 +217,22 @@ GEOR.geobuilder_toolbar = (function() {
     	    control: ctrl.previous,
     	    iconCls: "back",
     	    tooltip: tr("back to previous zoom"),
-    	    disabled: true
+    	    disabled: true,
+    	    hidden: true
     	}));
     	
     	items.push(new GeoExt.Action({
     	    control: ctrl.next,
     	    iconCls: "next",
     	    tooltip: tr("go to next zoom"),
-    	    disabled: true
+    	    disabled: true,
+    	    hidden: true
     	}));
     	
     	/**
     	 * Ajout d'une séparation par trait
     	 */
-    	items.push("-");
+//    	items.push("-");
     	
     	/**
     	 * Ajout du bouton info
