@@ -135,6 +135,16 @@ if(sec_roles != null) {
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/openlayers_gray_theme/style.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/main.css" />
     <script type="text/javascript">
+    var cssFileName = "<%= request.getParameter("module") %>";
+    if (cssFileName !== "null") {
+        var link = document.createElement('link');
+        link.href = "<%= context %>/app/css/"+ cssFileName +".css";
+        link.rel = 'stylesheet';
+        link.type = "text/css";
+    	document.getElementsByTagName('head')[0].appendChild(link);
+	}
+    </script>
+    <script type="text/javascript">
         GEOR = {
             header: <%= request.getParameter("noheader") == null %>
         };
