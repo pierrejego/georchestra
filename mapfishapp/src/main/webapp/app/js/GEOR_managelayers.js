@@ -1249,6 +1249,7 @@ GEOR.managelayers = (function() {
                 rootVisible: false,
                 root: layerContainer,
                 buttons: [{
+                	hidden: true,
                     text: "",
                     tooltip: tr("Remove all layers"),
                     iconCls: 'btn-removeall',
