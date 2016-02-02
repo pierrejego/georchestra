@@ -1248,27 +1248,28 @@ GEOR.managelayers = (function() {
                 lines: false,
                 rootVisible: false,
                 root: layerContainer,
-//                    text: "",
-//                    tooltip: tr("Remove all layers"),
-//                    iconCls: 'btn-removeall',
-//                    handler: function() {
-//                        if (GEOR.config.CONFIRM_LAYER_REMOVAL) {
-//                            GEOR.util.confirmDialog({
-//                                msg: tr(
-//                                    "Are you sure you want to remove all layers ?"
-//                                ),
-//                                width: 360,
-//                                yesCallback: function() {
-//                                    removeAllLayers(layerStore.map);
-//                                },
-//                                scope: this
-//                            });
-//                        } else {
-//                            removeAllLayers(layerStore.map);
-//                        }
-//                    }
-//                }, {
                 buttons: [{
+                	hidden: true,
+                    text: "",
+                    tooltip: tr("Remove all layers"),
+                    iconCls: 'btn-removeall',
+                    handler: function() {
+                        if (GEOR.config.CONFIRM_LAYER_REMOVAL) {
+                            GEOR.util.confirmDialog({
+                                msg: tr(
+                                    "Are you sure you want to remove all layers ?"
+                                ),
+                                width: 360,
+                                yesCallback: function() {
+                                    removeAllLayers(layerStore.map);
+                                },
+                                scope: this
+                            });
+                        } else {
+                            removeAllLayers(layerStore.map);
+                        }
+                    }
+                }, {
                     text: tr("Add layers"),
                     iconCls: 'btn-add',
                     handler: function() {
