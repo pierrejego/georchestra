@@ -53,12 +53,7 @@ GEOR.createEastTabPanel = function (layerStore) {
 					id:'layers-panel',
 		            title: tr("Available layers"),
 		            tabTip: tr("Available layers"),
-		        }, GEOR.managelayers.create(layerStore)),
-		        Ext.apply({
-		        	id:'legend-panel',
-		            title: tr("Legend"),
-		            tabTip: tr("Legend")
-		        }, legendPanel)]
+		        }, GEOR.managelayers.create(layerStore))]
 		}),
 	                 
 		new Ext.TabPanel({

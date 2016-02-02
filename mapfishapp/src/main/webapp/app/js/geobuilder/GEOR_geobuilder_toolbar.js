@@ -275,8 +275,47 @@ GEOR.geobuilder_toolbar = (function() {
     	var share = share_array[0];
     	//On supprime le menu Partager du menu Workspace
     	workspace.menu.remove(share, true);
-    	
+    	    	
     	items.push(workspace);
+
+        items.push('-');
+        items.push({
+            text: tr("Legend"),
+            tooltip: tr("Show legend"),
+            enableToggle: true,
+            handler: function(btn) {
+                if (!legendWin) {
+                    legendWin = new Ext.Window({
+                        width: 340,
+                        bodyStyle: 'padding: 5px',
+                        constrainHeader: true,
+                        title: tr("Legend"),
+                        border: false,
+                        animateTarget: GEOR.config.ANIMATE_WINDOWS && this.el,
+                        layout: 'fit',
+                        bodyCssClass: 'white-bg',
+                        items: [ legendPanel ],
+                        autoHeight: false,
+                        height: 350,
+                        closeAction: 'hide',
+                        listeners: {
+                            "hide": function() {
+                                btn.toggle(false);
+                            },
+                            "show": function() {
+                                btn.toggle(true);
+                            }
+                        },
+                        autoScroll: true
+                    });
+                }
+                if (!legendWin.isVisible()) {
+                    legendWin.show();
+                } else {
+                    legendWin.hide();
+                }
+            }
+        });
 
         // the toolbar items are added afterwards the creation of the toolbar
         // because we need a reference to the toolbar when creating the
