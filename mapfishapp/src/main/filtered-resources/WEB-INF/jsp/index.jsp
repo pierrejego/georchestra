@@ -125,8 +125,8 @@ if(sec_roles != null) {
     </style>
     <title lang="<%= lang %>" dir="ltr"><fmt:message key="title.visual"/> - <%= instanceName %></title>
 
-    <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/ext/resources/css/ext-all.css" />
-    <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/ext/resources/css/xtheme-gray.css" />
+    <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/xtheme-pwr.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/styler/theme/css/styler.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/geoext/resources/css/popup.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/palettecombobox/palettecombobox.ux.css" />
