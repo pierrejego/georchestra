@@ -128,6 +128,11 @@ GEOR.managelayers = (function() {
     var panelCache;
 
     /**
+     * Property: infoItems
+     */
+    var infoItems = [];
+    
+    /**
      * Method: checkEditEnabled
      * A convenient method to check that a layer is editable.
      */
@@ -1097,7 +1102,7 @@ GEOR.managelayers = (function() {
             buttons: buttons
         }];
         if (GEOR.config.DISPLAY_VISIBILITY_RANGE) {
-            panelItems.push(formatVisibility(layerRecord), {
+            infoItems.push(formatVisibility(layerRecord), {
                 xtype: 'box',
                 autoEl: {
                     tag: 'span',
@@ -1106,7 +1111,25 @@ GEOR.managelayers = (function() {
                 }
             });
         }
-        panelItems.push(formatAttribution(layerRecord));
+        infoItems.push(formatAttribution(layerRecord));
+
+    	infoPanel = new Ext.Panel({
+    		border: false,
+            cls: "gx-tree-layer-panel",
+            // we add a class to the bwrap element
+            // to avoid the default overflow:hidden
+            // behavior which prevents the visibility
+            // range from being fully displayed
+            bwrapCssClass: "gx-tree-layer-panel-bwrap",
+            bodyCfg: {
+                // we use our own class for the panel
+                // body, this is to avoid the white
+                // background of .x-panel-body
+                cls: "geor-tree-layer-panel-body"
+            },
+            items: infoItems,
+            collapsed: true
+    	});
 
         // return the panel
         panelCache[layerRecord.id] = new Ext.Panel({
@@ -1123,7 +1146,7 @@ GEOR.managelayers = (function() {
                 // background of .x-panel-body
                 cls: "geor-tree-layer-panel-body"
             },
-            items: panelItems,
+            items: panelItems.concat(infoPanel),
             // add a method to unselect all predefined which
             // keeps a references on the styles menu
             unselectStyles: function() {
@@ -1134,6 +1157,19 @@ GEOR.managelayers = (function() {
                 });
             }
         });
+        infoItems = [];
+
+        // Add event listener on title click to toggle collapse of info panel
+        var nodes = layerContainer.childNodes;
+        for (var i=0, len=nodes.length; i<len; i++) {
+            if (nodes[i].layer.id === layerRecord.id) {
+            	nodes[i].on('click', function () {
+            		this.component.items.items[this.component.items.items.length - 1].toggleCollapse();
+            		console.dir(layerRecord);
+            	});
+            }
+        }
+
         return panelCache[layerRecord.id];
     };
 
@@ -1228,6 +1264,8 @@ GEOR.managelayers = (function() {
                 autoScroll: true,
                 trackMouseOver: false,
                 enableDD: true,
+                allowChildren: true,
+                childrenRendered: true,
                 loader: {
                     applyLoader: false,
                     uiProviders: {
