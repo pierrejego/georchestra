@@ -185,7 +185,7 @@ ul.x-tab-strip li {
 }
 
 .x-tab-strip .x-tab-strip-closable a.x-tab-strip-close {
-	background-image:url(images/pwrs/tabs/tab-close.gif);
+	background-image:url(images/pwrs/tabs/tab-close.png);
 }
 
 .x-tab-strip .x-tab-strip-closable a.x-tab-strip-close:hover{
@@ -355,6 +355,7 @@ ul.x-tab-strip li {
 .x-btn em {
     font-style:normal;
     font-weight:normal;
+    padding: 0 6px;
 }
 
 .x-btn-tl, .x-btn-tr, .x-btn-tc, .x-btn-ml, .x-btn-mr, .x-btn-mc, .x-btn-bl, .x-btn-br, .x-btn-bc{
@@ -367,7 +368,7 @@ ul.x-tab-strip li {
 }
 /* Buttons definitions 
 =======================================================================================================
-Need to override every style element by elementl in casacade :)
+Need to override every style element by element in cascade :)
 */
 .x-btn:hover, .x-btn:hover .x-btn-text {
 	background-color: #92C0E3;
@@ -393,7 +394,10 @@ Need to override every style element by elementl in casacade :)
 #tbar .x-btn-bl,
 #tbar .x-btn-bc,
 #tbar .x-btn-br	{border-color: white;}
+
 #tbar .x-btn-icon td {border: none;}
+#tbar .x-btn-icon em {padding: 0;}
+
 
 #east-tabpanel .x-btn-tl,
 #east-tabpanel .x-btn-tc,
@@ -406,7 +410,7 @@ Need to override every style element by elementl in casacade :)
 
 .gx-tree-layer-panel .x-btn button{
 	color: #4d4d4d ;
-	background-image: url(imgages/pwrs/button/option.png);
+	background-image: url(images/pwrs/button/information-blue.png);
 }
 .gx-tree-layer-actions .delete {
     background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
@@ -503,9 +507,17 @@ Need to override every style element by elementl in casacade :)
     background-image:url(images/pwrs/button/arrow-white.png);
 }
 #tbar .x-btn-icon .geor-btn-info {
-	background: transparent url("../img/famfamfam/information-white.png") repeat scroll 0% 0%;
+	background: transparent url("../img/famfamfam/information-white.png") no-repeat scroll 0% center;
 }
-
+/* Geor Toolbar : Calques et couches.
+=============================================================================================================
+*/
+.geor-toolbar {
+	
+}
+.geor-btn-metadata {
+    background-image: url(../img/famfamfam/application_view_list.png) !important;
+}
 .x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label{
     font:normal 11px arial,tahoma, helvetica, sans-serif;
 }
@@ -1286,7 +1298,7 @@ td.x-date-mp-sep {
 }
 
 .x-menu-item-arrow{
-	background-image:url(images/pwrs/menu/menu-parent.gif);
+	background-image:url(images/pwrs/menu/menu-parent.png);
 }
 
 .x-menu-sep {
