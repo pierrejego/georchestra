@@ -18,7 +18,7 @@ div.olMapViewport {
  */
 .olControlOverviewMapElement {
   border-radius: 1em 0 0 0;
-  background-color:#e0e0e0;
+  background-color:##007EC3;
   padding:10px 18px 10px 10px;
 }
 
@@ -91,8 +91,7 @@ div.olMapViewport {
    width: 0px !important;
 }
 .geor-tree-node {
-    border-bottom: thin dotted #D7D7D7;
-    padding: 3px 0 0 3px;
+    border-bottom: 1px dotted #B3B3B3;
 }
 .geor-toolbar {
     background: none; !important;
@@ -450,7 +449,7 @@ div.olMapViewport {
 
 /* base layers are shown with a different color */
 #geor-layerManager .geor-baselayer {
-	background-color: #f2f0f5;
+	background-color: white;
 }
 
 /* Mouse pointer hover editor grid row: */
