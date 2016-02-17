@@ -369,6 +369,10 @@ ul.x-tab-strip li {
 =======================================================================================================
 Need to override every style element by elementl in casacade :)
 */
+.x-btn:hover, .x-btn:hover .x-btn-text {
+	background-color: #92C0E3;
+	color: white;
+}
 
 
 .x-btn-tl	{border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
@@ -389,6 +393,7 @@ Need to override every style element by elementl in casacade :)
 #tbar .x-btn-bl,
 #tbar .x-btn-bc,
 #tbar .x-btn-br	{border-color: white;}
+#tbar .x-btn-icon td {border: none;}
 
 #east-tabpanel .x-btn-tl,
 #east-tabpanel .x-btn-tc,
@@ -486,17 +491,30 @@ Need to override every style element by elementl in casacade :)
 ======================================================================================================
 */
 #tbar{
-	border-color:#d0d0d0;
+	border:none;
     background-color:#007EC3;
     color: white;
+    padding: 7px 14px;
 }
 #tbar a, #tbar button {
 	color: white;
 }
+#tbar .x-btn-mc em.x-btn-arrow {
+    background-image:url(images/pwrs/button/arrow-white.png);
+}
+#tbar .x-btn-icon .geor-btn-info {
+	background: transparent url("../img/famfamfam/information-white.png") repeat scroll 0% 0%;
+}
+
 .x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label{
     font:normal 11px arial,tahoma, helvetica, sans-serif;
 }
-
+.x-toolbar .x-toolbar-left .x-toolbar-cell {
+	padding-right: 6px;
+}
+.x-toolbar .x-toolbar-right .x-toolbar-cell {
+	padding-left: 6px;
+}
 .x-toolbar .x-item-disabled {
 	color:gray;
 }
@@ -504,7 +522,6 @@ Need to override every style element by elementl in casacade :)
 .x-toolbar .x-item-disabled * {
 	color:gray;
 }
-
 .x-toolbar .x-btn-mc em.x-btn-split {
     background-image:url(images/pwrs/button/s-arrow-noline.gif);
 }
@@ -1495,7 +1512,7 @@ a.x-menu-item {
 }
 
 .x-tool {
-    background-image:url(images/pwrs/panel/tool-sprites.gif);
+    background-image:url(images/pwrs/panel/tool-sprites.png);
 }
 
 .x-panel-ghost {
@@ -1660,20 +1677,32 @@ body.x-body-masked .x-window-plain .x-window-mc {
     background-image:url(images/pwrs/layout/mini-left.gif);
 }
 .x-layout-split-east .x-layout-mini {
-   background-image:url(images/pwrs/layout/mini-right.png);
-   background-position: 8px 6px;
-   background-repeat: no-repeat;
-   background-color: #4D4D4D;
-   position: absolute;
-   left: -20px;
-   display: block;
-   width: 20px;
-   height: 20px;
-   cursor: pointer;
-   opacity: 1;
-   box-shadow:  0 0 5px #4d4d4d;
+	background-image:url(images/pwrs/layout/mini-right.png);
+	background-position: 8px 6px;
+	background-repeat: no-repeat;
+	background-color: #4D4D4D;
+	position: absolute;
+	left: -20px;
+	display: block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	opacity: 1;
+	box-shadow:  0 0 5px #4d4d4d;
 }
-
+.x-layout-collapsed-east .x-layout-mini-east {
+	background-position: 8px 6px;
+	background-repeat: no-repeat;
+	background-color: #4D4D4D;
+	position: absolute;
+	left: -20px;
+	display: block;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	opacity: 1;
+	box-shadow:  0 0 5px #4d4d4d;
+}
 
 .x-layout-split-north .x-layout-mini {
     background-image:url(images/pwrs/layout/mini-top.gif);
@@ -1687,7 +1716,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 }
 
 .x-layout-cmini-east .x-layout-mini {
-    background-image:url(images/pwrs/layout/mini-left.gif);
+    background-image:url(images/pwrs/layout/mini-left.png);
 }
 
 .x-layout-cmini-north .x-layout-mini {
