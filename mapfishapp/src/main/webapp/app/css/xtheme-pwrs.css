@@ -23,20 +23,20 @@ Build date: 2013-04-03 15:07:25
 }
 
 .ext-el-mask-msg {
-    border-color:#999;
-    background-color:#ddd;
-    background-image:url(images/pwrs/panel/white-top-bottom.gif);
+    border:0px;
+    background-color:white;
+    background-image:none;
     background-position: 0 -1px;
 }
 .ext-el-mask-msg div {
     background-color: #eee;
-    border-color:#d0d0d0;
+    border:0px;
     color:#222;
     font:normal 11px tahoma, arial, helvetica, sans-serif;
 }
 
 .x-mask-loading div {
-    background-color:#fbfbfb;
+    background-color:white;
     background-image:url(images/pwrs/grid/loading.gif);
 }
 
@@ -420,6 +420,10 @@ Need to override every style element by element in cascade :)
 #east-tabpanel #geor-layerManager .x-btn:hover .x-btn-text {
 	background-color: white;
 	color: #4d4d4d;
+}
+
+#east-tabpanel #geor-layerManager .x-panel-btns {
+	border-top: solid 1px #007EC3;
 }
 
 .x-item-disabled.x-btn:hover,
@@ -1398,26 +1402,31 @@ a.x-menu-item {
 .x-menu-scroller-bottom {
     background-image:url(images/pwrs/layout/mini-bottom.gif);
 }.x-box-tl {
-	background-image: url(images/pwrs/box/corners.gif);
+    background-image: none;
 }
-
+.help {
+	box-shadow: 3px 3px 3px gray;
+	background-color: white
+}
 .x-box-tc {
-	background-image: url(images/pwrs/box/tb.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-tr {
-	background-image: url(images/pwrs/box/corners.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-ml {
-	background-image: url(images/pwrs/box/l.gif);
+    background-image: none;
+    background-color: white;
 }
 
 .x-box-mc {
-	background-color: #eee;
-    background-image: url(images/pwrs/box/tb.gif);
-	font-family: "Myriad Pro","Myriad Web","Tahoma","Helvetica","Arial",sans-serif;
-	color: #393939;
+	background-color: white;
+    background-image: none;
+	color: #4d4d4d;
 	font-size: 12px;
 }
 
@@ -1427,19 +1436,23 @@ a.x-menu-item {
 }
 
 .x-box-mr {
-	background-image: url(images/pwrs/box/r.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-bl {
-	background-image: url(images/pwrs/box/corners.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-bc {
-	background-image: url(images/pwrs/box/tb.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-br {
-	background-image: url(images/pwrs/box/corners.gif);
+    background-image: none;
+    background-color: white
 }
 
 .x-box-blue .x-box-bl, .x-box-blue .x-box-br, .x-box-blue .x-box-tl, .x-box-blue .x-box-tr {
@@ -1719,7 +1732,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 }
 
 .x-layout-collapsed-over{
-    background-color:#e7e7e7;
+    background-color: #4D4D4D;
 }
 .x-layout-split {
 	background-color: #4D4D4D;
@@ -1740,6 +1753,9 @@ body.x-body-masked .x-window-plain .x-window-mc {
 	cursor: pointer;
 	opacity: 1;
 	box-shadow:  0 0 5px #4d4d4d;
+}
+.x-layout-collapsed {
+	overflow: visible;
 }
 .x-layout-collapsed-east .x-layout-mini-east {
 	background-position: 8px 6px;
