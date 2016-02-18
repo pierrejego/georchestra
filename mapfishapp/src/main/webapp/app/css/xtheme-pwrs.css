@@ -47,7 +47,9 @@ Build date: 2013-04-03 15:07:25
 .x-item-disabled * {
     color: gray !important;
 }
-
+.x-item-disabled:hover * {
+    color: #4d4d4d !important;
+}
 .x-splitbar-proxy {
     background-color: #aaa;
 }
@@ -413,6 +415,17 @@ Need to override every style element by element in cascade :)
 #east-tabpanel .x-btn-bl,
 #east-tabpanel .x-btn-bc,
 #east-tabpanel .x-btn-br {border: 0px !important;}
+
+#east-tabpanel #geor-layerManager .x-btn:hover,
+#east-tabpanel #geor-layerManager .x-btn:hover .x-btn-text {
+	background-color: white;
+	color: #4d4d4d;
+}
+
+.x-item-disabled.x-btn:hover,
+.x-item-disabled.x-btn:hover .x-btn-text {
+	background-color: #cccccc;
+}
 
 .gx-tree-layer-panel .x-btn button{
 	color: #4d4d4d ;
@@ -1339,7 +1352,12 @@ a.x-menu-item {
 	background-color: #f2f2f2;
     border:0px;
 }
-
+.ext-strict .x-menu-item-icon {
+	background-repeat: no-repeat;
+}
+.geor-save-map {
+	
+}
 .x-menu-item-active a.x-menu-item {
 	border: 0px;
 }
