@@ -6,36 +6,6 @@
 CREATE USER mapfishapp IDENTIFIED BY georchestradb default tablespace TS_DATA temporary tablespace TS_TEMP;
 GRANT ALL PRIVILEGES TO mapfishapp;
 
-Hibernate: 
-    drop table geodocs cascade constraints
-Hibernate: 
-    drop sequence hibernate_sequence
-Hibernate: 
-    create table geodocs (
-        id number(19,0) not null,
-        access_count number(10,0),
-        raw_file_content clob,
-        created_at timestamp,
-        file_hash varchar2(255 char),
-        last_access timestamp,
-        standard varchar2(255 char),
-        username varchar2(255 char),
-        primary key (id)
-    )
-Hibernate: 
-    create sequence hibernate_sequence
-    
-    CREATE TABLE "MAPFISHAPPDEV"."GEODOCS" 
-   (	"ID" NUMBER(19,0) NOT NULL ENABLE, 
-	"ACCESS_COUNT" NUMBER(10,0), 
-	"RAW_FILE_CONTENT" CLOB, 
-	"CREATED_AT" TIMESTAMP (6), 
-	"FILE_HASH" VARCHAR2(255 CHAR), 
-	"LAST_ACCESS" TIMESTAMP (6), 
-	"STANDARD" VARCHAR2(255 CHAR), 
-	"USERNAME" VARCHAR2(255 CHAR), 
-	 PRIMARY KEY ("ID")
-    
 create table mapfishapp.geodocs (
   id NUMBER(20) primary key, -- 1 to 9223372036854775807 (~ 1E19)
   username varchar(200), -- can be NULL (eg: anonymous user)

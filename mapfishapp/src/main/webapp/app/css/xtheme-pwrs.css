@@ -18,6 +18,30 @@ at http://www.sencha.com/contact.
 
 Build date: 2013-04-03 15:07:25
 */
+@font-face {
+    font-family: 'latobold';
+    src: url('fonts/lato/lato-bold-webfont.eot');
+    src: url('fonts/lato/lato-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/lato/lato-bold-webfont.woff2') format('woff2'),
+         url('fonts/lato/lato-bold-webfont.woff') format('woff'),
+         url('fonts/lato/lato-bold-webfont.ttf') format('truetype'),
+         url('fonts/lato/lato-bold-webfont.svg#latobold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'latoregular';
+    src: url('fonts/lato/lato-regular-webfont.eot');
+    src: url('fonts/lato/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/lato/lato-regular-webfont.woff2') format('woff2'),
+         url('fonts/lato/lato-regular-webfont.woff') format('woff'),
+         url('fonts/lato/lato-regular-webfont.ttf') format('truetype'),
+         url('fonts/lato/lato-regular-webfont.svg#latoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
 .ext-el-mask {
     background-color: #ccc;
 }
@@ -330,11 +354,11 @@ ul.x-tab-strip li {
 }
 
 .x-small-editor .x-form-field {
-    font:normal 11px arial, tahoma, helvetica, sans-serif;
+    font:normal 11px 'latoregular', arial, sans-serif;
 }
 
 .ext-webkit .x-small-editor .x-form-field {
-    font:normal 12px arial, tahoma, helvetica, sans-serif;
+    font:normal 12px 'latoregular', arial, sans-serif;
 }
 
 .x-form-invalid-icon {
@@ -346,14 +370,16 @@ ul.x-tab-strip li {
 }
 
 .x-fieldset legend {
-    font:bold 11px tahoma, arial, helvetica, sans-serif;
+    font:bold;
+    font-family: 'latobold'
     color:#777777;
 }.x-btn{
-	font:normal 11px tahoma, verdana, helvetica;
+	font:normal;
 }
 
 .x-btn button{
-    font:normal 11px arial,tahoma,verdana,helvetica;
+    font:normal;
+    font-family: 'latoregular';
     color:#007EC3;
 }
 #tbar .x-btn button{
@@ -1533,7 +1559,7 @@ a.x-menu-item {
 }
 
 .x-panel-bbar .x-toolbar, .x-panel-tbar .x-toolbar {
-    border-color:#d0d0d0;
+    border-top:solid 1px #007EC3;
 }
 
 .x-panel-tbar-noheader .x-toolbar, .x-panel-mc .x-panel-tbar .x-toolbar {
