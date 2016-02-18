@@ -430,6 +430,14 @@ Need to override every style element by element in cascade :)
 #tbar .x-btn-icon td {border: none;}
 #tbar .x-btn-icon em {padding: 0;}
 
+.annotation .x-btn-tl,
+.annotation .x-btn-tc,
+.annotation .x-btn-tr,
+.annotation .x-btn-ml,
+.annotation .x-btn-mr,
+.annotation .x-btn-bl,
+.annotation .x-btn-bc,
+.annotation .x-btn-br {border: 0px !important;}
 
 #east-tabpanel .x-btn-tl,
 #east-tabpanel .x-btn-tc,

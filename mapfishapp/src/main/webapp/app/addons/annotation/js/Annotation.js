@@ -20,7 +20,6 @@ Ext.namespace("GEOR");
  * @include GeoExt/widgets/Popup.js
  */
 
-
 /** api: constructor
  *  .. class:: Annotationj(config)
  *
@@ -115,12 +114,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     /** private: property[defaultStyle]
      *  ``Object`` Feature style hash to apply to the default
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
-     *   Default style after create new feature
      */
     defaultStyle: {
         fillColor: "#FF0000",
         strokeColor: "#FF0000",
-        fillOpacity: 0.1,
         fontColor: "#000000"
     },
 
@@ -401,7 +398,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 group: this.toggleGroup,
                 checked: false
             };
-            
+
             action = new GeoExt.Action(actionOptions);
 
             this.actions.push(action);
@@ -608,7 +605,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             // the following line is here for compatibility with
             // GeoExt < 1 (before changeset 2343)
             feature: feature,
-            closeAction:'hide',
             items: [this.featurePanel]
         };
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions,
@@ -801,3 +797,4 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
     CLASS_NAME: "Annotation"
 });
+

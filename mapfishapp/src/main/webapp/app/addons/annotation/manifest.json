@@ -48,7 +48,6 @@
             "annotation.name": "Name",
             "annotation.no_title": "no title"
         },
-        
         "es": {
             "annotation.drawing_tools": "Herramientas de dibujo",
             "annotation.delete_feature": "Borrar el objeto",
@@ -121,8 +120,7 @@
             "annotation.fillcolor": "Remplissage",
             "annotation.outlinecolor": "Contour",
             "annotation.name": "Nom",
-            "annotation.no_title": "Sans titre",
-            "annotation.fillOpacity": "Opacité"
+            "annotation.no_title": "Sans titre"
         },
         "de": {
             "annotation.drawing_tools": "Zeichenwerkzeug",
