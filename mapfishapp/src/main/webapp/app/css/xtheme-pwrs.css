@@ -352,7 +352,7 @@ ul.x-tab-strip li {
 	color: white;
 }
 
-.x-btn em {
+.x-btn .x-btn-text {
     font-style:normal;
     font-weight:normal;
     padding: 0 6px;
