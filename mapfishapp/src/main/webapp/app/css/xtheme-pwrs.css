@@ -159,19 +159,15 @@ ul.x-tab-strip li {
 }
 
 .x-tab-strip span.x-tab-strip-text {
-	font:normal 11px 'latoregular',tahoma,arial,helvetica;
+	font:normal 14px 'latoregular',tahoma,arial,helvetica;
 	color:white;
 }
 
 .x-tab-strip-active span.x-tab-strip-text {
 	color:#333;
-	font-family: 'latobold', arial;
-    font-weight:bold;
 }
 .x-tab-strip-active span.x-tab-strip-text {
 	color:#333;
-	font-family: 'latobold', arial;
-    font-weight:bold;
 }
 .x-tab-strip-disabled .x-tabs-text {
 	color:#aaaaaa;
@@ -270,7 +266,7 @@ ul.x-tab-strip li {
 
 .x-form-text, textarea.x-form-field{
     background-color:#fff;
-    background-image:url(images/pwrs/form/text-bg.gif);
+    background-image:none;
     border-color:#C1C1C1;
 }
 
@@ -1548,11 +1544,10 @@ a.x-menu-item {
 
 .x-panel-header {
     color:#333;
-	font-weight:bold; 
     font-size: 11px;
-    font-family: 'latobold',tahoma,arial,verdana,sans-serif;
+    font-family: 'latoregular',tahoma,arial,verdana,sans-serif;
     border-color:#d0d0d0;
-    background-image: url(images/pwrs/panel/white-top-bottom.gif);
+    background-image: none;
 }
 
 .x-panel-body {
