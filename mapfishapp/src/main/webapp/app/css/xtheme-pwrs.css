@@ -120,6 +120,12 @@ ul.x-tab-strip-bottom{
 ul.x-tab-strip li {
 	margin-left:0;
 }
+.x-tab-strip .x-tab-strip-closable a.x-tab-strip-close {
+	width: 13px;
+	height: 13px;
+	top: 3px;
+	right: 2px;
+}
 .x-tab-panel-header-plain .x-tab-strip-spacer,
 .x-tab-panel-footer-plain .x-tab-strip-spacer {
     border-color:#d0d0d0;
@@ -189,7 +195,7 @@ ul.x-tab-strip li {
 }
 
 .x-tab-strip .x-tab-strip-closable a.x-tab-strip-close:hover{
-	background-image:url(images/pwrs/tabs/tab-close.gif);
+	background-image:url(images/pwrs/tabs/tab-close.png);
 }
 
 .x-tab-panel-body {
@@ -505,27 +511,35 @@ Need to override every style element by element in cascade :)
 }
 #tbar .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow-white.png);
+    padding-right: 12px;
+	background-position: right 6px center;
 }
+#tbar .x-btn-text-icon .x-btn-icon-small-left .x-btn-text {
+	padding-right: 6px;
+}
+
 #tbar .x-btn-icon .geor-btn-info {
 	background: transparent url("../img/famfamfam/information-white.png") no-repeat scroll 0% center;
 }
-/* Geor Toolbar : Calques et couches.
-=============================================================================================================
-*/
-.geor-toolbar {
-	
-}
-.geor-btn-metadata {
-    background-image: url(../img/famfamfam/application_view_list.png) !important;
-}
+
 .x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label{
     font:normal 11px arial,tahoma, helvetica, sans-serif;
 }
-.x-toolbar .x-toolbar-left .x-toolbar-cell {
-	padding-right: 6px;
+
+.x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-icon{
+	margin-right: 0px;
 }
-.x-toolbar .x-toolbar-right .x-toolbar-cell {
-	padding-left: 6px;
+.x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-text-icon{
+	margin-right: 6px;
+}
+.x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-icon{
+	margin-right: 0px;
+}
+.x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon {
+	margin-right: 6px;
+}
+#tbar .x-toolbar-right .x-btn-mc em.x-btn-arrow {
+	padding-right:18px;
 }
 .x-toolbar .x-item-disabled {
 	color:gray;
@@ -577,7 +591,15 @@ Need to override every style element by element in cascade :)
 .x-tbar-page-prev{
 	background-image: url(images/pwrs/grid/page-prev.gif) !important;
 }
-
+/* Geor Toolbar : Calques et couches.
+=============================================================================================================
+*/
+.geor-toolbar {
+	
+}
+.geor-btn-metadata {
+    background-image: url(../img/famfamfam/application_view_list.png) !important;
+}
 .x-item-disabled .x-tbar-loading{
 	background-image: url(images/pwrs/grid/loading.gif) !important;
 }
@@ -1462,7 +1484,7 @@ a.x-menu-item {
 .x-combo-list-small {
     font:normal 11px tahoma, arial, helvetica, sans-serif;
 }.x-panel {
-    border-color: #d0d0d0;
+    border: 0px;
 }
 
 .x-panel-header {
@@ -1475,7 +1497,7 @@ a.x-menu-item {
 }
 
 .x-panel-body {
-    border-color:#d0d0d0;
+    border: 0px;;
     background-color:#fff;
 }
 
@@ -1488,7 +1510,7 @@ a.x-menu-item {
 }
 
 .x-panel-body-noheader, .x-panel-mc .x-panel-body {
-    border-top-color:#d0d0d0;
+    border: 0px;
 }
 
 .x-panel-tl .x-panel-header {
@@ -1553,11 +1575,10 @@ a.x-menu-item {
 	margin-top: 5px;
 	padding: 5px;
 }
-
 .x-window-tc {
 	background-image: none;
 	background-color: white;
-	
+	width: calc(100% + 2px);
 }
 
 .x-window-tl {
@@ -1623,12 +1644,12 @@ a.x-menu-item {
 }
 
 .x-window-plain .x-window-mc {
-    background-color: #E8E8E8;
-    border-color: #D0D0D0 #EEEEEE #EEEEEE #D0D0D0;
+    background-color: white;
+    border:0px;
 }
 
 .x-window-plain .x-window-body {
-    border-color: #EEEEEE #D0D0D0 #D0D0D0 #EEEEEE;
+    border: 0px;
 }
 
 body.x-body-masked .x-window-plain .x-window-mc {
