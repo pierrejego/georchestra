@@ -44,13 +44,13 @@ if (lang == null || (!lang.equals("en") && !lang.equals("es") && !lang.equals("r
     if (georLanguage != null)
         lang = georLanguage;
     else
-        lang = "${language}";
+        lang = "en";
 }
 
 if (georLdapadminPublicContextPath != null)
     ldapadm = georLdapadminPublicContextPath;
 else
-    ldapadm = "${ldapadminPublicContextPath}";
+    ldapadm = "/ldapadmin";
 
 
 Locale l = new Locale(lang);
@@ -110,135 +110,158 @@ if(sec_roles != null) {
 
     <style type="text/css">
         /* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
-        @import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
 
+		/* @font-face {
+		    font-family: 'montserratbold';
+		    src: url('montserrat/montserrat-bold-webfont.eot');
+		    src: url('montserrat/montserrat-bold-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('montserrat/montserrat-bold-webfont.woff2') format('woff2'),
+		         url('montserrat/montserrat-bold-webfont.woff') format('woff'),
+		         url('montserrat/montserrat-bold-webfont.ttf') format('truetype'),
+		         url('montserrat/montserrat-bold-webfont.svg#montserratbold') format('svg');
+		    font-weight: normal;
+		    font-style: normal;
+		
+		}
+		@font-face {
+		    font-family: 'montserratregular';
+		    src: url('montserrat/montserrat-regular-webfont.eot');
+		    src: url('montserrat/montserrat-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('montserrat/montserrat-regular-webfont.woff2') format('woff2'),
+		         url('montserrat/montserrat-regular-webfont.woff') format('woff'),
+		         url('montserrat/montserrat-regular-webfont.ttf') format('truetype'),
+		         url('montserrat/montserrat-regular-webfont.svg#montserratregular') format('svg');
+		    font-weight: normal;
+		    font-style: normal;
+		
+		} */
+		
+		* {font-family: 'montserratregular', sans-serif; font-size: 16px; color: white;}
+		a {color: white;}
+		
         html, body {
-            padding     : 0;
-            margin      : 0;
-            background  : #fff;
+            padding     		: 0;
+            margin      		: 0;
+            background  		: #fff;
+        }
+
+        .main {
+        	width				: 100%;
+        	height				: 40px;
+        	background-color	: #85AA03;
+        }
+        .navitem {
+        	display				: inline-block;
+        	padding				: 10px 0 10px 0;
+        	color				: white;
+        }
+         .bgicon a{
+        	padding           	: 10px 30px 10px 50px !important;
+        	background-repeat	: no-repeat;	
+        	background-position	: 10px center;
         }
         #go_head {
-            padding     : 0;
-            margin      : 0;
-            font-family : 'Yanone Kaffeesatz', arial,verdana,helvetica;
-            background  : #fff;
+            padding     		: 0;
+            margin      		: 0;
         }
-        #go_home {
-            float  : left;
-            margin : 20px 0 0 10px;
+        #go_home a{ 
+        	background-image	: url('img/accueil.png');
         }
+        #catalogue a{
+        	background-image	: url('img/catalogue.png');
+        }
+        #map a{
+        	background-image	: url('img/carte.png');
+        }
+        #login a{
+        	background-image	: url('img/user.png');
+        } 
+        
         #go_home img {
-            border : none;
+            border 				: none;
         }
         #go_head ul {
-            float      : left;
-            list-style : none;
-            margin     : 20px 0 0 10px;
-            padding    : 0;
-            font-size  : 18px;
-            display    : inline;
+            float    			: left;
+            list-style 		 	: none;
+            margin    			: 0;
+            padding   			: 0px;
+            display   			: inline;
         }
         #go_head li {
-            right      : 100%;
-            left       : 0;
-            margin     : 0;
-            padding    : 0;
-            position   : relative;
-            display    : inline-block;
-            transition : right .3s ease, left .3s ease, background .3s ease;
-            background : transparent;
+            margin   			: 0;
+            padding   			: 0;
+            display   			: block;
+            float				: left;
+            transition			: right .3s ease, left .3s ease, background .3s ease;
+            background			: transparent;
         }
-        #go_head li a {
-            color              : #666;
-            display            : inline-block;
-            background         : #fff;
-            padding            : 0 0.3em;
-            margin             : 0 0.3em;
-            border-bottom      : 1px dotted #ddd;
-            height             : 52px;
-            line-height        : 52px;
-            text-decoration    : none;
-            border-radius      : .3em .3em 0 0;
-            transition         : background .3s ease-in;
-            transition-property         : background,color,border-radius;
+       #go_head li a {
+            display            	: block;
+            padding           	: 10px 30px 10px;
+            margin             	: 0px;
+            text-decoration    	: none;
+            transition         	: background .3s ease-in;
+            transition-property	: background,color;
+            height				: 20px;
+            width				: auto;
         }
-        #go_head li a:hover {
-            background-color : #666;
-            color            : #fff;
-            border-radius    : 0.3em;
-            border-bottom    : none;
+         #go_head li a:hover {
+            background-color 	: #4D4D4D;
+            border-bottom    	: none;
         }
         #go_head ul li.active a {
-            background-color : rgb(85,0,106);
-            padding          : 0 0.6em;
-            border-radius    : 0.3em;
-            color            : #fff;
-            border           : 0;
+            background-color 	: #4D4D4D;
         }
         #go_head .logged {
-            margin        : 20px 15px 0 0;
-            border        : 1px dotted #ddd;
-            border-radius : 0.3em;
-            padding       : 0 0.6em;
-            width         : auto;
-            float         : right;
-            height        : 52px;
-            line-height   : 52px;
-            font-size     : 16px;
+            width         		: auto;
+            float         		: right;
         }
         #go_head .logged span{
-            color: #000;
+            color				: #000;
         }
         #go_head .logged span.light{
-            color: #ddd;
+            color				: #ddd;
         }
         #go_head .logged {
-            position : relative;
+            position 			: relative;
         }
         #go_head .logged div {
-            position : absolute;
-            top      : 16px;
-            right    : 10px;
+
         }
-        #go_head .logged a {
-            text-decoration : underline;
-            color           : rgb(84, 0, 105);
+        #go_head .logged a {;
         }
         #go_head ul ul {
-            display: none;
+            display				: none;
         }
         #go_head li li {
-            right: auto;
+            right				: auto;
         }
         #go_head .expanded {
-            position    : absolute;
-            right       : 0;
-            left        : 200px;
-            top         : 20px;
-            background  : white;
-            z-index     : 1;
-            min-width   : 20em;
+
+            background 			 : white;
+            z-index    			 : 1;
+            min-width  			 : 20em;
         }
         #go_head .expanded ul{
-            display: block;
+            display				: block;
         }
         #go_head .expanded > a,
         #go_head .expanded ul{
-            margin-top: 0;
-            float: right;
+            margin-top			: 0;
+            float				: right;
         }
         #go_head .expanded > a {
-            color: white;
-            background: #666;
+            color				: white;
+            background			: #666;
         }
         #go_head .group > a:after {
-            content: ' »';
+           content				: ' »';
         }
         #go_head .expanded > a:before {
-            content: '« ';
+            content				: '« ';
         }
         #go_head .expanded > a:after {
-            content: '';
+            content				: '';
         }
     </style>
 
@@ -247,26 +270,30 @@ if(sec_roles != null) {
 
 <body>
 
+	<div class="main">
     <div id="go_head">
-        <a href="#" id="go_home" title="<fmt:message key='go.home'/>">
-            <img src="img/logo.png" alt="<fmt:message key='logo'/>" height="50"/>
-        </a>
+
         <ul>
+	        <li class="navitem bgicon" id="homelink">
+		        <a href="#" id="go_home" title="<fmt:message key='go.home'/>">
+		        	<img src="img/accueil.png" alt="<fmt:message key='logo'/>" height="18"/>
+		        </a>
+	        </li>
         <c:choose>
             <c:when test='<%= active.equals("geonetwork") %>'>
-            <li class="active"><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
+            <li class="active navitem bgicon" id="catalogue"><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
             </c:when>
             <c:otherwise>
-            <li><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
+            <li class="navitem bgicon" id="catalogue"><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
             </c:otherwise>
         </c:choose>
 
         <c:choose>
             <c:when test='<%= active.equals("mapfishapp") %>'>
-            <li class="active"><a><fmt:message key="viewer"/></a></li>
+            <li class="active navitem bgicon" id="map"><a><fmt:message key="viewer"/></a></li>
             </c:when>
             <c:otherwise>
-            <li><a href="/mapfishapp/"><fmt:message key="viewer"/></a></li>
+            <li class="navitem bgicon" id="map"><a href="/mapfishapp/"><fmt:message key="viewer"/></a></li>
             </c:otherwise>
         </c:choose>
 
@@ -274,10 +301,10 @@ if(sec_roles != null) {
             <c:when test='<%= extractor == true %>'>
             <c:choose>
                 <c:when test='<%= active.equals("extractorapp") %>'>
-            <li class="active"><a><fmt:message key="extractor"/></a></li>
+            <li class="active navitem" id="services"><a><fmt:message key="extractor"/></a></li>
                 </c:when>
                 <c:otherwise>
-            <li><a href="/extractorapp/"><fmt:message key="extractor"/></a></li>
+            <li class="navitem" id="services"><a href="/extractorapp/"><fmt:message key="extractor"/></a></li>
                 </c:otherwise>
             </c:choose>
             </c:when>
@@ -285,16 +312,16 @@ if(sec_roles != null) {
 
         <c:choose>
             <c:when test='<%= active.equals("geoserver") %>'>
-            <li class="active"><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
+            <li class="active navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
             </c:when>
             <c:otherwise>
-            <li><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
+            <li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
             </c:otherwise>
         </c:choose>
 
         <c:choose>
             <c:when test='<%= admin == true %>'>
-            <li class="group"> 
+            <li class="group navitem"> 
                 <a href="#admin"><fmt:message key="admin"/></a>
                 <ul>
 
@@ -305,7 +332,7 @@ if(sec_roles != null) {
                         <li class="active"><a href="/geonetwork/srv/eng/admin"><fmt:message key="catalogue"/></a></li>
                             </c:when>
                             <c:otherwise>
-                        <li><a href="/geonetwork/srv/<%= lang %>/admin"><fmt:message key="catalogue"/></a></li> <!-- FIXME: GN3 -->
+                        <li class="navitem"><a href="/geonetwork/srv/<%= lang %>/admin"><fmt:message key="catalogue"/></a></li> <!-- FIXME: GN3 -->
                             </c:otherwise>
                         </c:choose>
                         </c:when>
@@ -315,10 +342,10 @@ if(sec_roles != null) {
                         <c:when test='<%= extractorappadmin == true %>'>
                         <c:choose>
                             <c:when test='<%= active.equals("extractorappadmin") %>'>
-                        <li class="active"><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
+                        <li class="active navitem"><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
                             </c:when>
                             <c:otherwise>
-                        <li><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
+                        <li class="navitem"><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
                             </c:otherwise>
                         </c:choose>
                         </c:when>
@@ -328,10 +355,10 @@ if(sec_roles != null) {
                         <c:when test='<%= analyticsadmin == true %>'>
                         <c:choose>
                             <c:when test='<%= active.equals("analytics") %>'>
-                        <li class="active"><a href="/analytics/">analytics</a></li>
+                        <li class="active navitem"><a href="/analytics/">analytics</a></li>
                             </c:when>
                             <c:otherwise>
-                        <li><a href="/analytics/">analytics</a></li>
+                        <li class="navitem"><a href="/analytics/">analytics</a></li>
                             </c:otherwise>
                         </c:choose>
                         </c:when>
@@ -341,10 +368,10 @@ if(sec_roles != null) {
                         <c:when test='<%= ldapadmin == true %>'>
                         <c:choose>
                             <c:when test='<%= active.equals("ldapadmin") %>'>
-                        <li class="active"><a><fmt:message key="users"/></a></li>
+                        <li class="active navitem"><a><fmt:message key="users"/></a></li>
                             </c:when>
                             <c:otherwise>
-                        <li><a href="<%= ldapadm %>/privateui/"><fmt:message key="users"/></a></li>
+                        <li class="navitem"><a href="<%= ldapadm %>/privateui/"><fmt:message key="users"/></a></li>
                             </c:otherwise>
                         </c:choose>
                         </c:when>
@@ -358,14 +385,14 @@ if(sec_roles != null) {
 
         <c:choose>
             <c:when test='<%= anonymous == false %>'>
-        <p class="logged">
-            <a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a><span class="light"> | </span><a href="/j_spring_security_logout"><fmt:message key="logout"/></a>
-        </p>
+	        <li id="login" class="logged navitem bgicon">
+	            <a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a><span class="light"> | </span><a href="/j_spring_security_logout"><fmt:message key="logout"/></a>
+	        </li>
             </c:when>
             <c:otherwise>
-        <p class="logged">
-            <a id="login_a"><fmt:message key="login"/></a>
-        </p>
+		        <li id="login" class="logged navitem bgicon">
+		            <a id="login_a"><fmt:message key="login"/></a>
+		        </li>
             </c:otherwise>
         </c:choose>
     </div>
@@ -424,6 +451,6 @@ if(sec_roles != null) {
             });
         })();
     </script>
-
+</div>
 </body>
 </html>
