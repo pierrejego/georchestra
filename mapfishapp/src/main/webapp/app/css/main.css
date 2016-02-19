@@ -153,6 +153,7 @@ div.olMapViewport {
 }
 .geor-edit-osm {
     background-image: url(../img/osm_logo.png) !important;
+    background-size : 16px 16px;
 }
 .geor-export {
     background-image: url(../img/famfamfam/table_save.png) !important;
@@ -339,7 +340,7 @@ div.olMapViewport {
 }
 .x-list div.x-view-item img.thumb {
 	padding: 5px;
-	border: 1px solid #bbb;
+	border: 0px;
 	max-width: 180px; /* to cope with larger images (geonetwork has 180px thumbnails)*/
 }
 .x-list a {

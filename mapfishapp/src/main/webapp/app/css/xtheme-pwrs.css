@@ -581,6 +581,9 @@ Need to override every style element by element in cascade :)
 .x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-text-icon{
 	margin-right: 6px;
 }
+.annotation .x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-text-icon{
+	margin-right: 0px;
+}
 .x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-icon{
 	margin-right: 0px;
 }
