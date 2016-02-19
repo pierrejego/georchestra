@@ -466,6 +466,7 @@ Need to override every style element by element in cascade :)
 .gx-tree-layer-panel .x-btn button{
 	color: #4d4d4d ;
 	background-image: url(images/pwrs/button/information-blue.png);
+	background-repeat: no-repeat;
 }
 .gx-tree-layer-actions .delete {
     background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
@@ -623,7 +624,12 @@ Need to override every style element by element in cascade :)
 .x-toolbar .xtb-sep {
 	background-image: url(images/pwrs/grid/grid-split.gif);
 }
-
+.x-grid3-header-inner {
+	color: white;
+}
+.xgrid3-hd-over {
+	background-color: #6EABDA;
+}
 .x-tbar-page-first{
 	background-image: url(images/pwrs/grid/page-first.gif) !important;
 }
@@ -1058,7 +1064,10 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
     width:15px;
     height:15px;
 }
-
+.ext-gecko .x-form-text, .ext-ie8 .x-form-text {
+    padding-top: 0px;
+    padding-bottom: 2px;
+}
 .x-tree-lines .x-tree-elbow{
 	background-image:url(images/pwrs/tree/elbow.gif);
 }
