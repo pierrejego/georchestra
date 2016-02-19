@@ -646,12 +646,11 @@ Need to override every style element by element in cascade :)
 /* Geor Toolbar : Calques et couches.
 =============================================================================================================
 */
-.geor-toolbar {
-	
-}
+
 .geor-btn-metadata {
     background-image: url(../img/famfamfam/application_view_list.png) !important;
 }
+
 .x-item-disabled .x-tbar-loading{
 	background-image: url(images/pwrs/grid/loading.gif) !important;
 }
@@ -733,8 +732,9 @@ Need to override every style element by element in cascade :)
 }
 
 .x-grid3-hd-row td {
-    border-left-color:#eee;
-    border-right-color:#d0d0d0;
+    border-left-color:white;
+    border-right-color:white;
+    background-color: #4A96D1;
 }
 
 .x-grid-row-loading {
@@ -1394,13 +1394,12 @@ a.x-menu-item {
 .ext-strict .x-menu-item-icon {
 	background-repeat: no-repeat;
 }
-.geor-save-map {
-	
-}
 .x-menu-item-active a.x-menu-item {
 	border: 0px;
 }
-
+.x-menu-item-active a.x-menu-item {
+	margin: 0px;
+}
 .x-menu-check-item .x-menu-item-icon{
 	background-image:url(images/pwrs/menu/unchecked.gif);
 }

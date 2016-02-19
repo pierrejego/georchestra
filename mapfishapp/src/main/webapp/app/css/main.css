@@ -175,9 +175,11 @@ div.olMapViewport {
 	visibility:hidden;
 }
 #waiter span {
-	background:#EFAE00 none repeat scroll 0 0;
+	background:white none repeat scroll 0 0;
+	color: #4D4D4D;
 	padding:2px;
 	border-radius: 0 0 4px 4px;
+	box-shadow: 3px 3px 3px gray;
 }
 
 .olControlLoadingPanel {
