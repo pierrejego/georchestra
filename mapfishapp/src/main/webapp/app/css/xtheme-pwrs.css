@@ -469,7 +469,7 @@ Need to override every style element by element in cascade :)
 }
 .geor-tree-node {
 	border-top : 1px solid #B3B3B3;
-	border-bottom: 1px solid #B3B3B3 !important;
+	border-bottom: 1px solid #B3B3B3;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
@@ -1044,6 +1044,9 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 	font: normal 11px 'latoregular',arial, helvetica, sans-serif;
     border-color: #ddd #bbb #bbb #ddd;
 	background-color:#fff;
+}
+.x-dd-drag-ghost .geor-tree-node {
+	border: 0px;
 }
 .x-dd-drag-ghost .geor-tree-node .x-tree-node-anchor {
 	left:60px;
