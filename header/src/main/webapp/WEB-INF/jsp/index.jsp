@@ -304,10 +304,8 @@ html, body {
 
 
 <body>
-
 	<div class="main">
 		<div id="go_head">
-
 			<ul>
 				<li class="navitem bgicon" id="homelink"><a href="#"
 					id="go_home" title="<fmt:message key='go.home'/>"> <img
@@ -315,23 +313,23 @@ html, body {
 				</a></li>
 				<c:choose>
 					<c:when test='<%= active.equals("geonetwork") %>'>
-						<li class="active navitem bgicon" id="catalogue"><a
-							href="/geonetwork/"><fmt:message key="catalogue" /></a></li>
+						<li class="active navitem bgicon" id="catalogue">
+							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>
+						</li>
 					</c:when>
 					<c:otherwise>
-						<li class="navitem bgicon" id="catalogue"><a
-							href="/geonetwork/"><fmt:message key="catalogue" /></a></li>
+						<li class="navitem bgicon" id="catalogue">
+							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>.
+						</li>
 					</c:otherwise>
 				</c:choose>
 
 				<c:choose>
 					<c:when test='<%= active.equals("mapfishapp") %>'>
-						<li class="active navitem bgicon" id="map"><a><fmt:message
-									key="viewer" /></a></li>
+						<li class="active navitem bgicon" id="map"><a><fmt:message key="viewer" /></a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="navitem bgicon" id="map"><a href="/mapfishapp/"><fmt:message
-									key="viewer" /></a></li>
+						<li class="navitem bgicon" id="map"><a href="/mapfishapp/"><fmt:message key="viewer" /></a></li>
 					</c:otherwise>
 				</c:choose>
 
@@ -339,12 +337,10 @@ html, body {
 					<c:when test='<%= extractor == true %>'>
 						<c:choose>
 							<c:when test='<%= active.equals("extractorapp") %>'>
-								<li class="active navitem" id="services"><a><fmt:message
-											key="extractor" /></a></li>
+								<li class="active navitem" id="services"><a><fmt:message key="extractor" /></a></li>
 							</c:when>
 							<c:otherwise>
-								<li class="navitem" id="services"><a href="/extractorapp/"><fmt:message
-											key="extractor" /></a></li>
+								<li class="navitem" id="services"><a href="/extractorapp/"><fmt:message key="extractor" /></a></li>
 							</c:otherwise>
 						</c:choose>
 					</c:when>
@@ -356,22 +352,8 @@ html, body {
 							href="/geoserver/web/"><fmt:message key="services" /></a></li>
 					</c:when>
 					<c:otherwise>
-						<li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message
-									key="services" /></a></li>
+						<li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services" /></a></li>
 					</c:otherwise>
-				</c:choose>
-
-				<c:choose>
-					<c:when test='<%= analyticsadmin == true %>'>
-						<c:choose>
-							<c:when test='<%= active.equals("analytics") %>'>
-								<li class="active navitem"><a href="/analytics/">analytics</a></li>
-							</c:when>
-							<c:otherwise>
-								<li class="navitem"><a href="/analytics/">analytics</a></li>
-							</c:otherwise>
-						</c:choose>
-					</c:when>
 				</c:choose>
 
 				<c:choose>
@@ -390,13 +372,16 @@ html, body {
 
 			<c:choose>
 				<c:when test='<%= anonymous == false %>'>
-					<li id="login" class="logged navitem bgicon"><a
-						href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a><span
-						class="light"> | </span><a href="/j_spring_security_logout"><fmt:message key="logout" /></a></li>
+					<li id="login" class="logged navitem bgicon">
+						<a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a>
+						<span class="light"> | </span>
+						<a href="/j_spring_security_logout"><fmt:message key="logout" /></a>
+					</li>
 				</c:when>
 				<c:otherwise>
-					<li id="login" class="logged navitem bgicon"><a id="login_a"><fmt:message
-								key="login" /></a></li>
+					<li id="login" class="logged navitem bgicon">
+						<a id="login_a"><fmt:message key="login" /></a>
+					</li>
 				</c:otherwise>
 			</c:choose>
 		</div>
@@ -432,14 +417,14 @@ html, body {
                     callback(els[i]);
                 }
             }
-            each(document.querySelectorAll('#go_head li a'), function(li){
+            each(document.querySelectorAll('#go_head li a'), function(a){
 
-                li.addEventListener('click', function(e) {
+                a.addEventListener('click', function(e) {
                     each(
                         document.querySelectorAll('#go_head li'),
                         function(l){ l.classList.remove('active');}
                     );
-	                li.parentNode.className = 'active';
+                    a.classList.add('active');
                 });
             });
         })();
