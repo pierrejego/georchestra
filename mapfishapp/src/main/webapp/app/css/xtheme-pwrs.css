@@ -475,6 +475,7 @@ Need to override every style element by element in cascade :)
 }
 #east-tabpanel #geor-layerManager .x-panel-btns {
 	border-top: solid 1px #007EC3;
+	padding-top: 11px;
 }
 
 input.x-tree-node-cb {

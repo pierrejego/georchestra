@@ -91,7 +91,7 @@ div.olMapViewport {
    width: 0px !important;
 }
 .geor-tree-node {
-    border-bottom: 1px #B3B3B3;
+    border-bottom: 1px solid #B3B3B3;
 }
 .geor-toolbar {
     background: none; !important;
