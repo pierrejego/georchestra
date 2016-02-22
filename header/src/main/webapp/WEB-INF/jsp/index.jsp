@@ -44,7 +44,7 @@ if (lang == null || (!lang.equals("en") && !lang.equals("es") && !lang.equals("r
     if (georLanguage != null)
         lang = georLanguage;
     else
-        lang = "en";
+        lang = "fr";
 }
 
 if (georLdapadminPublicContextPath != null)
@@ -108,295 +108,285 @@ if(sec_roles != null) {
 
 <head>
 
-    <style type="text/css">
-        /* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
+<style type="text/css">
+/* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
+@font-face {
+	font-family: 'montserratbold';
+	src: url('montserrat/montserrat-bold-webfont.eot');
+	src: url('montserrat/montserrat-bold-webfont.eot?#iefix')
+		format('embedded-opentype'),
+		url('montserrat/montserrat-bold-webfont.woff2') format('woff2'),
+		url('montserrat/montserrat-bold-webfont.woff') format('woff'),
+		url('montserrat/montserrat-bold-webfont.ttf') format('truetype'),
+		url('montserrat/montserrat-bold-webfont.svg#montserratbold')
+		format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 
-		 @font-face {
-		    font-family: 'montserratbold';
-		    src: url('montserrat/montserrat-bold-webfont.eot');
-		    src: url('montserrat/montserrat-bold-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('montserrat/montserrat-bold-webfont.woff2') format('woff2'),
-		         url('montserrat/montserrat-bold-webfont.woff') format('woff'),
-		         url('montserrat/montserrat-bold-webfont.ttf') format('truetype'),
-		         url('montserrat/montserrat-bold-webfont.svg#montserratbold') format('svg');
-		    font-weight: normal;
-		    font-style: normal;
-		
-		}
-		@font-face {
-		    font-family: 'montserratregular';
-		    src: url('montserrat/montserrat-regular-webfont.eot');
-		    src: url('montserrat/montserrat-regular-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('montserrat/montserrat-regular-webfont.woff2') format('woff2'),
-		         url('montserrat/montserrat-regular-webfont.woff') format('woff'),
-		         url('montserrat/montserrat-regular-webfont.ttf') format('truetype'),
-		         url('montserrat/montserrat-regular-webfont.svg#montserratregular') format('svg');
-		    font-weight: normal;
-		    font-style: normal;
-		
-		}
-		
-		* {
-			font-family			: 'montserratregular', sans-serif; 
-			font-size			: 16px; 
-			color				: white;
-			background-repeat	: no-repeat;
-		}
-		a {color: white;}
-		
-        html, body {
-            padding     		: 0;
-            margin      		: 0;
-            background  		: #fff;
-        }
+@font-face {
+	font-family: 'montserratregular';
+	src: url('montserrat/montserrat-regular-webfont.eot');
+	src: url('montserrat/montserrat-regular-webfont.eot?#iefix')
+		format('embedded-opentype'),
+		url('montserrat/montserrat-regular-webfont.woff2') format('woff2'),
+		url('montserrat/montserrat-regular-webfont.woff') format('woff'),
+		url('montserrat/montserrat-regular-webfont.ttf') format('truetype'),
+		url('montserrat/montserrat-regular-webfont.svg#montserratregular')
+		format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 
-        .main {
-        	width				: 100%;
-        	height				: 40px;
-        	background-color	: #85AA03;
-        }
-        .navitem {
-        	display				: inline-block;
-        	padding				: 10px 0 10px 0;
-        	color				: white;
-        }
-         .bgicon a{
-        	padding           	: 10px 30px 10px 40px !important;
-        	background-position	: 10px 7px;
-        }
-        #go_head {
-            padding     		: 0;
-            margin      		: 0;
-        }
-        #homelink a{ 
-        	background-image	: url('img/accueil.png');
-        }
-        #catalogue a{
-        	background-image	: url('img/catalogue.png');
-        }
-        #map a{
-        	background-image	: url('img/carte.png');
-        }
-        #login a{
-        	background-image	: url('img/user.png');
-        } 
-        
-        #go_home img {
-            border 				: none;
-        }
-        #go_head ul {
-            float    			: left;
-            list-style 		 	: none;
-            margin    			: 0;
-            padding   			: 0px;
-            display   			: inline;
-        }
-        #go_head li {
-            margin   			: 0;
-            padding   			: 0;
-            display   			: block;
-            float				: left;
-            transition			: right .3s ease, left .3s ease, background .3s ease;
-            background			: transparent;
-        }
-       #go_head li a {
-            display            	: block;
-            padding           	: 10px 30px 10px;
-            margin             	: 0px;
-            text-decoration    	: none;
+* {
+	font-family: 'montserratregular', sans-serif;
+	font-size: 16px;
+	color: white;
+}
 
-        }
-         #go_head li a:hover {
-            background-color 	: #4D4D4D;
-            border-bottom    	: none;
-        }
-        #go_head ul li.active a {
-            background-color 	: #4D4D4D;
-        }
-        #go_head .logged {
-            width         		: auto;
-            float         		: right;
-        }
-        #go_head .logged span{
-            color				: #000;
-        }
-        #go_head .logged span.light{
-            color				: #ddd;
-        }
-        #go_head .logged {
-            position 			: relative;
-        }
-        #go_head .logged div {
+a {
+	color: white;
+}
 
-        }
-        #go_head .logged a {;
-        }
-        #go_head ul ul {
-            display				: none;
-        }
-        #go_head li li {
-            right				: auto;
-        }
-        #go_head .expanded {
+html, body {
+	padding: 0;
+	margin: 0;
+	background: #fff;
+}
 
-            background 			 : white;
-            z-index    			 : 1;
-            min-width  			 : 20em;
-        }
-        #go_head .expanded ul{
-            display				: block;
-        }
-        #go_head .expanded > a,
-        #go_head .expanded ul{
-            margin-top			: 0;
-            float				: right;
-        }
-        #go_head .expanded > a {
-            color				: white;
-            background			: #666;
-        }
-        #go_head .group > a:after {
-           content				: ' »';
-        }
-        #go_head .expanded > a:before {
-            content				: '« ';
-        }
-        #go_head .expanded > a:after {
-            content				: '';
-        }
-    </style>
+.main {
+	width: 100%;
+	height: 40px;
+	background-color: #85AA03;
+}
+
+.navitem {
+	display: inline-block;
+	padding: 10px 0 10px 0;
+	color: white;
+}
+
+.bgicon a {
+	padding: 10px 30px 10px 50px !important;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+#go_head {
+	padding: 0;
+	margin: 0;
+}
+
+#go_home a {
+	background-image: url('img/accueil.png');
+}
+
+#catalogue a {
+	background-image: url('img/catalogue.png');
+}
+
+#map a {
+	background-image: url('img/carte.png');
+}
+
+#login a {
+	background-image: url('img/user.png');
+}
+
+#go_home img {
+	border: none;
+}
+
+#go_head ul {
+	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0px;
+	display: inline;
+}
+
+#go_head li {
+	margin: 0;
+	padding: 0;
+	display: block;
+	float: left;
+	transition: right .3s ease, left .3s ease, background .3s ease;
+	background: transparent;
+}
+
+#go_head li a {
+	display: block;
+	padding: 10px 30px 10px;
+	margin: 0px;
+	text-decoration: none;
+	transition: background .3s ease-in;
+	transition-property: background, color;
+	height: 20px;
+	width: auto;
+}
+
+#go_head li a:hover {
+	background-color: #4D4D4D;
+	border-bottom: none;
+}
+
+#go_head ul li.active a {
+	background-color: #4D4D4D;
+}
+
+#go_head .logged {
+	width: auto;
+	float: right;
+}
+
+#go_head .logged span {
+	color: #000;
+}
+
+#go_head .logged span.light {
+	color: #ddd;
+}
+
+#go_head .logged {
+	position: relative;
+}
+
+#go_head .logged div {
+	
+}
+
+#go_head .logged a {;
+	
+}
+
+#go_head ul ul {
+	display: none;
+}
+
+#go_head li li {
+	right: auto;
+}
+
+#go_head .expanded {
+	background: white;
+	z-index: 1;
+	min-width: 20em;
+}
+
+#go_head .expanded ul {
+	display: block;
+}
+
+#go_head .expanded>a, #go_head .expanded ul {
+	margin-top: 0;
+	float: right;
+}
+
+#go_head .expanded>a {
+	color: white;
+	background: #666;
+}
+
+#go_head .group>a:after {
+	content: ' »';
+}
+
+#go_head .expanded>a:before {
+	content: '« ';
+}
+
+#go_head .expanded>a:after {
+	content: '';
+}
+</style>
 
 </head>
 
 
 <body>
-
 	<div class="main">
-    <div id="go_head">
+		<div id="go_head">
+			<ul>
+				<li class="navitem bgicon" id="homelink"><a href="#"
+					id="go_home" title="<fmt:message key='go.home'/>"> <img
+						src="img/accueil.png" alt="<fmt:message key='logo'/>" height="18" />
+				</a></li>
+				<c:choose>
+					<c:when test='<%= active.equals("geonetwork") %>'>
+						<li class="active navitem bgicon" id="catalogue">
+							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>
+						</li>
+					</c:when>
+					<c:otherwise>
+						<li class="navitem bgicon" id="catalogue">
+							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>.
+						</li>
+					</c:otherwise>
+				</c:choose>
 
-        <ul>
-	        <li class="navitem bgicon" id="homelink">
-		        <a href="#" id="go_home" title="<fmt:message key='go.home'/>"><fmt:message key='logo'/> </a>
-	        </li>
-        <c:choose>
-            <c:when test='<%= active.equals("geonetwork") %>'>
-            <li class="active navitem bgicon" id="catalogue"><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
-            </c:when>
-            <c:otherwise>
-            <li class="navitem bgicon" id="catalogue"><a href="/geonetwork/"><fmt:message key="catalogue"/></a></li>
-            </c:otherwise>
-        </c:choose>
+				<c:choose>
+					<c:when test='<%= active.equals("mapfishapp") %>'>
+						<li class="active navitem bgicon" id="map"><a><fmt:message key="viewer" /></a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="navitem bgicon" id="map"><a href="/mapfishapp/"><fmt:message key="viewer" /></a></li>
+					</c:otherwise>
+				</c:choose>
 
-        <c:choose>
-            <c:when test='<%= active.equals("mapfishapp") %>'>
-            <li class="active navitem bgicon" id="map"><a><fmt:message key="viewer"/></a></li>
-            </c:when>
-            <c:otherwise>
-            <li class="navitem bgicon" id="map"><a href="/mapfishapp/"><fmt:message key="viewer"/></a></li>
-            </c:otherwise>
-        </c:choose>
+				<c:choose>
+					<c:when test='<%= extractor == true %>'>
+						<c:choose>
+							<c:when test='<%= active.equals("extractorapp") %>'>
+								<li class="active navitem" id="services"><a><fmt:message key="extractor" /></a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="navitem" id="services"><a href="/extractorapp/"><fmt:message key="extractor" /></a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+				</c:choose>
 
-        <c:choose>
-            <c:when test='<%= extractor == true %>'>
-            <c:choose>
-                <c:when test='<%= active.equals("extractorapp") %>'>
-            <li class="active navitem" id="services"><a><fmt:message key="extractor"/></a></li>
-                </c:when>
-                <c:otherwise>
-            <li class="navitem" id="services"><a href="/extractorapp/"><fmt:message key="extractor"/></a></li>
-                </c:otherwise>
-            </c:choose>
-            </c:when>
-        </c:choose>
+				<c:choose>
+					<c:when test='<%= active.equals("geoserver") %>'>
+						<li class="active navitem" id="geoserver"><a
+							href="/geoserver/web/"><fmt:message key="services" /></a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services" /></a></li>
+					</c:otherwise>
+				</c:choose>
 
-        <c:choose>
-            <c:when test='<%= active.equals("geoserver") %>'>
-            <li class="active navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
-            </c:when>
-            <c:otherwise>
-            <li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services"/></a></li>
-            </c:otherwise>
-        </c:choose>
+				<c:choose>
+					<c:when test='<%= ldapadmin == true %>'>
+						<c:choose>
+							<c:when test='<%= active.equals("ldapadmin") %>'>
+								<li class="active navitem"><a><fmt:message key="users" /></a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="navitem"><a href="<%= ldapadm %>/privateui/"><fmt:message key="users" /></a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+				</c:choose>
+			</ul>
 
-        <c:choose>
-            <c:when test='<%= admin == true %>'>
-            <li class="group navitem"> 
-                <a href="#admin"><fmt:message key="admin"/></a>
-                <ul>
+			<c:choose>
+				<c:when test='<%= anonymous == false %>'>
+					<li id="login" class="logged navitem bgicon">
+						<a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a>
+						<span class="light"> | </span>
+						<a href="/j_spring_security_logout"><fmt:message key="logout" /></a>
+					</li>
+				</c:when>
+				<c:otherwise>
+					<li id="login" class="logged navitem bgicon">
+						<a id="login_a"><fmt:message key="login" /></a>
+					</li>
+				</c:otherwise>
+			</c:choose>
+		</div>
 
-                    <c:choose>
-                        <c:when test='<%= catadmin == true %>'>
-                        <c:choose>
-                            <c:when test='<%= active.equals("geonetwork") %>'>
-                        <li class="active"><a href="/geonetwork/srv/eng/admin"><fmt:message key="catalogue"/></a></li>
-                            </c:when>
-                            <c:otherwise>
-                        <li class="navitem"><a href="/geonetwork/srv/<%= lang %>/admin"><fmt:message key="catalogue"/></a></li> <!-- FIXME: GN3 -->
-                            </c:otherwise>
-                        </c:choose>
-                        </c:when>
-                    </c:choose>
-
-                    <c:choose>
-                        <c:when test='<%= extractorappadmin == true %>'>
-                        <c:choose>
-                            <c:when test='<%= active.equals("extractorappadmin") %>'>
-                        <li class="active navitem"><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
-                            </c:when>
-                            <c:otherwise>
-                        <li class="navitem"><a href="/extractorapp/admin/"><fmt:message key="extractor"/></a></li>
-                            </c:otherwise>
-                        </c:choose>
-                        </c:when>
-                    </c:choose>
-
-                    <c:choose>
-                        <c:when test='<%= analyticsadmin == true %>'>
-                        <c:choose>
-                            <c:when test='<%= active.equals("analytics") %>'>
-                        <li class="active navitem"><a href="/analytics/">analytics</a></li>
-                            </c:when>
-                            <c:otherwise>
-                        <li class="navitem"><a href="/analytics/">analytics</a></li>
-                            </c:otherwise>
-                        </c:choose>
-                        </c:when>
-                    </c:choose>
-
-                    <c:choose>
-                        <c:when test='<%= ldapadmin == true %>'>
-                        <c:choose>
-                            <c:when test='<%= active.equals("ldapadmin") %>'>
-                        <li class="active navitem"><a><fmt:message key="users"/></a></li>
-                            </c:when>
-                            <c:otherwise>
-                        <li class="navitem"><a href="<%= ldapadm %>/privateui/"><fmt:message key="users"/></a></li>
-                            </c:otherwise>
-                        </c:choose>
-                        </c:when>
-                    </c:choose>
-
-                </ul>
-            </li>
-            </c:when>
-        </c:choose>
-        </ul>
-
-        <c:choose>
-            <c:when test='<%= anonymous == false %>'>
-	        <li id="login" class="logged navitem bgicon">
-	            <a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a><span class="light"> | </span><a href="/j_spring_security_logout"><fmt:message key="logout"/></a>
-	        </li>
-            </c:when>
-            <c:otherwise>
-		        <li id="login" class="logged navitem bgicon">
-		            <a id="login_a"><fmt:message key="login"/></a>
-		        </li>
-            </c:otherwise>
-        </c:choose>
-    </div>
-
-    <script>
+		<script>
         (function(){
             // required to get the correct redirect after login, see https://github.com/georchestra/georchestra/issues/170
             var url,
@@ -428,28 +418,17 @@ if(sec_roles != null) {
                 }
             }
             each(document.querySelectorAll('#go_head li a'), function(a){
-                var li = a.parentNode;
-                var ul = li.querySelectorAll('ul');
+
                 a.addEventListener('click', function(e) {
                     each(
                         document.querySelectorAll('#go_head li'),
                         function(l){ l.classList.remove('active');}
                     );
-                    if (ul[0]) {
-                        e.stopImmediatePropagation();
-                        e.stopPropagation();
-                        e.preventDefault();
-                        li.classList.toggle('expanded');
-                        // hide/show connexion block:
-                        cnxblk.style.visibility = 
-                            cnxblk.style.visibility == '' ? 'hidden' : '';
-                    } else {
-                        a.parentNode.className = 'active';
-                    }
+                    a.classList.add('active');
                 });
             });
         })();
     </script>
-</div>
+	</div>
 </body>
 </html>
