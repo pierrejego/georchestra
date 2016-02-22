@@ -12,7 +12,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%
-Boolean anonymous = true;
+Boolean anonymous = false;
 
 /*
 response.setDateHeader("Expires", 31536000);
@@ -167,9 +167,9 @@ html, body {
 }
 
 .bgicon a {
-	padding: 10px 30px 10px 50px !important;
+	padding: 10px 20px 10px 40px !important;
 	background-repeat: no-repeat;
-	background-position: 10px center;
+	background-position: 10px 7px;
 }
 
 #go_head {
@@ -177,7 +177,7 @@ html, body {
 	margin: 0;
 }
 
-#go_home a {
+#homelink a {
 	background-image: url('img/accueil.png');
 }
 
@@ -192,13 +192,15 @@ html, body {
 #login a {
 	background-image: url('img/user.png');
 }
+#logout a {
+	background-image: url('img/logout.png');
+}
 
 #go_home img {
 	border: none;
 }
 
 #go_head ul {
-	float: left;
 	list-style: none;
 	margin: 0;
 	padding: 0px;
@@ -213,7 +215,12 @@ html, body {
 	transition: right .3s ease, left .3s ease, background .3s ease;
 	background: transparent;
 }
-
+#lefthead {	
+	float: left;
+	}
+#righthead {
+	float: right;
+}
 #go_head li a {
 	display: block;
 	padding: 10px 30px 10px;
@@ -298,6 +305,18 @@ html, body {
 #go_head .expanded>a:after {
 	content: '';
 }
+@media screen and (max-width: 1370px){
+	*{font-size: 14px;}
+}
+@media screen and (max-width: 1024px){
+	*{font-size: 12px;}
+		#go_head li a {
+			padding: 10px 10px;}
+		.bgicon a {
+padding: 10px 15px 10px 25px !important;
+background-position: 3px 7px;
+	}
+}
 </style>
 
 </head>
@@ -306,11 +325,12 @@ html, body {
 <body>
 	<div class="main">
 		<div id="go_head">
-			<ul>
-				<li class="navitem bgicon" id="homelink"><a href="#"
-					id="go_home" title="<fmt:message key='go.home'/>"> <img
-						src="img/accueil.png" alt="<fmt:message key='logo'/>" height="18" />
-				</a></li>
+			<ul id="lefthead">
+				<li class="navitem bgicon" id="homelink">
+					<a href="#" id="go_home" title="<fmt:message key='go.home'/>"> 
+						<fmt:message key='logo'/>
+					</a>
+				</li>
 				<c:choose>
 					<c:when test='<%= active.equals("geonetwork") %>'>
 						<li class="active navitem bgicon" id="catalogue">
@@ -369,13 +389,15 @@ html, body {
 					</c:when>
 				</c:choose>
 			</ul>
-
+			
+			<ul id="righthead">
 			<c:choose>
 				<c:when test='<%= anonymous == false %>'>
+					<li id="logout" class="logged bgicon">
+						<a href="/j_spring_security_logout"><fmt:message key="logout" /></a>
+					</li>
 					<li id="login" class="logged navitem bgicon">
 						<a href="<%=ldapadm %>account/userdetails"><%=request.getHeader("sec-username") %></a>
-						<span class="light"> | </span>
-						<a href="/j_spring_security_logout"><fmt:message key="logout" /></a>
 					</li>
 				</c:when>
 				<c:otherwise>
@@ -384,6 +406,7 @@ html, body {
 					</li>
 				</c:otherwise>
 			</c:choose>
+			</ul>
 		</div>
 
 		<script>
