@@ -465,7 +465,6 @@ Need to override every style element by element in cascade :)
 
 .gx-tree-layer-panel .x-btn button{
 	color: #4d4d4d ;
-	background-image: url(images/pwrs/button/information-blue.png);
 	background-repeat: no-repeat;
 }
 .gx-tree-layer-actions .delete {
@@ -737,12 +736,12 @@ Need to override every style element by element in cascade :)
     font:normal 11px/15px 'latoregular',arial, tahoma, helvetica, sans-serif;
 }
 
-.x-grid3-hd-row td {
-    border-left-color:white;
-    border-right-color:white;
-    background-color: #4A96D1;
+.x-grid3-hd-row td:hover {
+    background-color: #6EABDA;
 }
-
+.x-grid3-hd-row td  {
+	background-color: #007EC3;
+}
 .x-grid-row-loading {
     background-color: #fff;
     background-image:url(images/pwrs/shared/loading-balls.gif);
@@ -791,8 +790,8 @@ td.x-grid3-hd-over, td.sort-desc, td.sort-asc, td.x-grid3-hd-menu-open {
 }
 
 td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-asc .x-grid3-hd-inner, td.x-grid3-hd-menu-open .x-grid3-hd-inner {
-    background-color:#f9f9f9;
-    background-image:url(images/pwrs/grid/grid3-hrow-over2.gif);
+    background-color:#6EABDA;
+    background-image:none);
 
 }
 
@@ -1399,6 +1398,7 @@ a.x-menu-item {
     background-image: none;
 	background-color: #f2f2f2;
     border:0px;
+    margin: 0px;
 }
 .ext-strict .x-menu-item-icon {
 	background-repeat: no-repeat;
