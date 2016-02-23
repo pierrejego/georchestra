@@ -262,8 +262,9 @@ ul.x-tab-strip li {
 .x-tab-panel-bbar .x-toolbar, .x-tab-panel-tbar .x-toolbar {
     border-color:#d0d0d0;
 }
-.x-form-field{
+.x-form-field, .x-form-check-wrap{
     font:normal 12px 'latoregular',tahoma, arial, helvetica, sans-serif;
+    overflow-y: hidden;
 }
 
 .x-form-text, textarea.x-form-field{
