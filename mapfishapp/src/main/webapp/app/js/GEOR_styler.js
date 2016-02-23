@@ -905,6 +905,7 @@ GEOR.styler = (function() {
                 layout: "fit",
                 width: 900,
                 height: 500,
+                cls: "georchetra-styler-windows",
                 closeAction: 'close', // window is destroyed when closed
                 constrainHeader: true,
                 animateTarget: GEOR.config.ANIMATE_WINDOWS && animateFrom,
