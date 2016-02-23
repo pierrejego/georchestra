@@ -1857,7 +1857,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
     background-image:url(images/pwrs/layout/mini-top.gif);
 }
 .x-layout-split-south .x-layout-mini {
-    background-image:none;
+    background-image:url(images/pwrs/layout/mini-bottom.gif);
 }
 
 .x-layout-cmini-west .x-layout-mini {
