@@ -532,6 +532,7 @@ GEOR.layerfinder = (function() {
                 title: tr("Add layers from a ..."),
                 constrainHeader: true,
                 layout: 'fit',
+                cls:"add-layers-windows"
                 animateTarget: GEOR.config.ANIMATE_WINDOWS && animateFrom,
                 width: 650,
                 minWidth: 630,
