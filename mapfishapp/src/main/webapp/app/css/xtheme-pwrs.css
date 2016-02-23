@@ -121,7 +121,7 @@ Build date: 2013-04-03 15:07:25
 .x-spotlight {
     background-color: #ccc;
 }.x-tab-panel-header, .x-tab-panel-footer {
-	background-color: #eaeaea;
+	background-color: #B3B3B3;
 	border-color:#d0d0d0;
     overflow:hidden;
     zoom:1;
@@ -136,7 +136,7 @@ Build date: 2013-04-03 15:07:25
 
 ul.x-tab-strip-top{
     background-color:#4D4D4D;
-	border-bottom-color:#d0d0d0;
+	border:0px;
 	padding-top: 5px;
 }
 
@@ -407,11 +407,13 @@ ul.x-tab-strip li {
 =======================================================================================================
 Need to override every style element by element in cascade :)
 */
-.x-btn:hover, .x-btn:hover .x-btn-text {
+.x-btn:hover, .x-btn:hover .x-btn-text{
 	background-color: #92C0E3;
 	color: white;
 }
-
+.x-btn .btn-add:hover, .x-btn-text.add:hover {
+    background-image: url("../img/famfamfam/add-white.png");
+}
 
 .x-btn-tl	{border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
 .x-btn-tc	{border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
@@ -445,24 +447,24 @@ Need to override every style element by element in cascade :)
 .annotation .x-btn-br {border: 0px !important;}
 
 
-#east-tabpanel .x-btn-tl, .x-dd-drag-ghost .x-btn-tl,
-#east-tabpanel .x-btn-tc, .x-dd-drag-ghost .x-btn-tc,
-#east-tabpanel .x-btn-tr, .x-dd-drag-ghost .x-btn-tr,
-#east-tabpanel .x-btn-ml, .x-dd-drag-ghost .x-btn-ml,
-#east-tabpanel .x-btn-mr, .x-dd-drag-ghost .x-btn-mr,
-#east-tabpanel .x-btn-bl, .x-dd-drag-ghost .x-btn-bl,
-#east-tabpanel .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
-#east-tabpanel .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
+#east-tabpanel .geor-tree-node .x-btn-tl, .x-dd-drag-ghost .x-btn-tl,
+#east-tabpanel .geor-tree-node .x-btn-tc, .x-dd-drag-ghost .x-btn-tc,
+#east-tabpanel .geor-tree-node .x-btn-tr, .x-dd-drag-ghost .x-btn-tr,
+#east-tabpanel .geor-tree-node .x-btn-ml, .x-dd-drag-ghost .x-btn-ml,
+#east-tabpanel .geor-tree-node .x-btn-mr, .x-dd-drag-ghost .x-btn-mr,
+#east-tabpanel .geor-tree-node .x-btn-bl, .x-dd-drag-ghost .x-btn-bl,
+#east-tabpanel .geor-tree-node .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
+#east-tabpanel .geor-tree-node .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
 
 .x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
 	background-image: url('../img/famfamfam/add-white.png');
 }
 
-#east-tabpanel #geor-layerManager .x-btn:hover,
+/* #east-tabpanel #geor-layerManager .x-btn:hover,
 #east-tabpanel #geor-layerManager .x-btn:hover .x-btn-text {
 	background-color: white;
 	color: #4d4d4d;
-}
+} */
 #geor-layerManager .x-panel-bwrap .x-panel-body-noheader {
 	padding: 0 !important;
 	width: 100% !important;
@@ -475,7 +477,7 @@ Need to override every style element by element in cascade :)
 }
 #east-tabpanel #geor-layerManager .x-panel-btns {
 	border-top: solid 1px #007EC3;
-	padding-top: 11px;
+	padding-top: 14px;
 }
 
 input.x-tree-node-cb {
@@ -589,6 +591,9 @@ input.x-tree-node-cb {
     background-image:url(images/pwrs/button/arrow-white.png);
     padding-right: 12px;
 	background-position: right 6px center;
+}
+#tbar .mf-print-action {
+	background-image: url("../img/mapfish/printer-white.png") !important;
 }
 #tbar .x-btn-text-icon .x-btn-icon-small-left .x-btn-text {
 	padding-right: 6px;
@@ -1776,7 +1781,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 }
 
 .x-panel-noborder .x-panel-bbar-noborder .x-toolbar {
-    border-top-color:#d0d0d0;
+    border-top-color:#007EC3;
 }
 
 .x-tab-panel-bbar-noborder .x-toolbar {
