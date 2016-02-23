@@ -343,6 +343,7 @@ ul.x-tab-strip li {
 
 .x-form-item {
     font:normal 12px tahoma, arial, helvetica, sans-serif;
+    overflow: hidden !important; /* Overriding ext-all.js */
 }
 
 .x-form-invalid-msg {
