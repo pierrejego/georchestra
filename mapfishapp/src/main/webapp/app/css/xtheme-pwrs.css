@@ -262,11 +262,12 @@ ul.x-tab-strip li {
 .x-tab-panel-bbar .x-toolbar, .x-tab-panel-tbar .x-toolbar {
     border-color:#d0d0d0;
 }
-.x-form-field, .x-form-check-wrap{
+.x-form-field{
     font:normal 12px 'latoregular',tahoma, arial, helvetica, sans-serif;
-    overflow-y: hidden;
 }
-
+.x-form-check-wrap{
+    overflow-y: hidden !important; /* Overriding ext-all.css  */
+}
 .x-form-text, textarea.x-form-field{
     background-color:#fff;
     background-image:none;
