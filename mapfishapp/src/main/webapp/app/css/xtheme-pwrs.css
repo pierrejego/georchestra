@@ -415,21 +415,22 @@ Need to override every style element by element in cascade :)
     background-image: url("../img/famfamfam/add-white.png");
 }
 
-.x-btn-tl	{border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
-.x-btn-tc	{border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
-.x-btn-tr	{border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 1px; border-style: solid; border-color: #007EC3;}
-.x-btn-ml	{border-top: 0px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
-.x-btn-mc	{}
-.x-btn-mr	{border-top: 0px; border-left: 0px; border-bottom: 0px; border-right: 1px; border-style: solid; border-color: #007EC3;}
-.x-btn-bl	{border-top: 0px; border-left: 1px; border-bottom: 1px; border-right: 0px; border-style: solid; border-color: #007EC3;}
-.x-btn-bc	{border-top: 0px; border-left: 0px; border-bottom: 1px; border-right: 0px; border-style: solid; border-color: #007EC3;}
-.x-btn-br	{border-top: 0px; border-left: 0px; border-bottom: 1px; border-right: 1px; border-style: solid; border-color: #007EC3;}
+.x-btn-tl {border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
+.x-btn-tc {border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
+.x-btn-tr {border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 1px; border-style: solid; border-color: #007EC3;}
+.x-btn-ml {border-top: 0px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
+.x-btn-mc{}
+.x-btn-mr {border-top: 0px; border-left: 0px; border-bottom: 0px; border-right: 1px; border-style: solid; border-color: #007EC3;}
+.x-btn-bl {border-top: 0px; border-left: 1px; border-bottom: 1px; border-right: 0px; border-style: solid; border-color: #007EC3;}
+.x-btn-bc {border-top: 0px; border-left: 0px; border-bottom: 1px; border-right: 0px; border-style: solid; border-color: #007EC3;}
+.x-btn-br {border-top: 0px; border-left: 0px; border-bottom: 1px; border-right: 1px; border-style: solid; border-color: #007EC3;}
 
-#tbar .x-btn-tl,
+
+#tbar .x-btn-tl,	
 #tbar .x-btn-tc,
 #tbar .x-btn-tr,
 #tbar .x-btn-ml,
-#tbar .x-btn-mr,
+#tbar .x-btn-mr,	
 #tbar .x-btn-bl,
 #tbar .x-btn-bc,
 #tbar .x-btn-br	{border-color: white;}
@@ -1678,7 +1679,9 @@ a.x-menu-item {
     background-color:#fcfcfc;
     border-color:#d0d0d0;
 }
-
+.x-window-bc .x-window-footer {
+	border-top: solid 1px #007EC3;
+}
 .x-window-tl .x-window-header {
     color:white;
 	background-color: #007EC3;
