@@ -12,7 +12,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
 <%
-Boolean anonymous = false;
+Boolean anonymous = true;
 
 /*
 response.setDateHeader("Expires", 31536000);
