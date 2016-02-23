@@ -367,13 +367,18 @@ background-position: 3px 7px;
 				</c:choose>
 
 				<c:choose>
-					<c:when test='<%= active.equals("geoserver") %>'>
-						<li class="active navitem" id="geoserver"><a
-							href="/geoserver/web/"><fmt:message key="services" /></a></li>
+					<c:when test='<%=admin == true%>'>
+						<c:choose>
+							<c:when test='<%=active.equals("geoserver")%>'>
+								<li class="active navitem" id="geoserver"><a
+									href="/geoserver/web/"><fmt:message key="services" /></a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="navitem" id="geoserver"><a
+									href="/geoserver/web/"><fmt:message key="services" /></a></li>
+							</c:otherwise>
+						</c:choose>
 					</c:when>
-					<c:otherwise>
-						<li class="navitem" id="geoserver"><a href="/geoserver/web/"><fmt:message key="services" /></a></li>
-					</c:otherwise>
 				</c:choose>
 
 				<c:choose>
