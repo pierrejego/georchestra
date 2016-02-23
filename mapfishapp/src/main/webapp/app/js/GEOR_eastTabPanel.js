@@ -35,25 +35,47 @@ GEOR.createEastTabPanel = function (layerStore) {
         autoScroll: true
     });
 	
-	var eastItems = [	                 
+	var eastItems = [	                               
 	                 
-		new Ext.TabPanel({
-			// this panel contains the components for
-			// recentering the map
+		new Ext.Panel({
+			// this panel contains the "manager layer" and
+			// "querier" components
+			id: "east-panel",
 			region: "center",
-			id: "east-tabpanel",
-			activeTab: 0,
-			resizeTabs: true,
+			height: 270, // has no effect when region is
+			// "center"
+			layout: "card",
+			activeItem: 0,
+			split: false,
+			collapsible: false,
+			collapsed: false,
+			// we use hideMode: "offsets" here to workaround this bug in
+			// extjs 3.x, see the bug report:
+			// http://www.sencha.com/forum/showthread.php?107119-DEFER-1207-Slider-in-panel-with-collapsed-true-make-slider-weird
+			//hideMode: 'offsets',
 			defaults: {
-				frame: false,
-				border: false,
-				bodyStyle: "padding: 5px"
+				border:false
 			},
-			items: [Ext.apply({
-					id:'layers-panel',
-		            title: tr("Available layers"),
-		            tabTip: tr("Available layers"),
-		        }, GEOR.managelayers.create(layerStore))]
+			items: [
+				new Ext.TabPanel({
+					// this panel contains the components for
+					// recentering the map
+					region: "center",
+					id: "east-tabpanel",
+					activeTab: 0,
+					resizeTabs: true,
+					defaults: {
+						frame: false,
+						border: false,
+						bodyStyle: "padding: 5px"
+					},
+					items: [Ext.apply({
+							id:'layers-panel',
+				            title: tr("Available layers"),
+				            tabTip: tr("Available layers"),
+				        }, GEOR.managelayers.create(layerStore))]
+				})
+			]
 		}),
 	                 
 		new Ext.TabPanel({

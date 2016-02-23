@@ -341,6 +341,7 @@ Ext.namespace("GEOR");
             var querierTitle;
             GEOR.querier.events.on({
                 "ready": function(panelCfg) {
+            	                	                	
                     // clear the previous filterbuilder panel, if exists
                     if (eastItems[0].getComponent(1)) {
                         eastItems[0].remove(eastItems[0].getComponent(1));
@@ -350,16 +351,16 @@ Ext.namespace("GEOR");
                         handler: function() {
                             // we also need to hide querier vector layer:
                             eastItems[0].getComponent(1).tearDown();
-                            eastItems[0].setTitle(tr("Available layers"));
+                            eastItems[0].setTitle('');
+                            eastItems[0].doLayout();
                             eastItems[0].getLayout().setActiveItem(0);
                         }
                     });
                     panelCfg.buttons.reverse();
                     querierTitle = panelCfg.title;
-                    eastItems[0].setTitle(querierTitle);
                     var panel = Ext.apply(panelCfg, {
                         // whatever here
-                        title: null
+                        title: querierTitle
                     });
                     eastItems[0].add(panel);
                     eastItems[0].getLayout().setActiveItem(1);
