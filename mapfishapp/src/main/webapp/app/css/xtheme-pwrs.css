@@ -265,7 +265,9 @@ ul.x-tab-strip li {
 .x-form-field{
     font:normal 12px 'latoregular',tahoma, arial, helvetica, sans-serif;
 }
-
+.x-form-check-wrap{
+    overflow-y: hidden !important; /* Overriding ext-all.css  */
+}
 .x-form-text, textarea.x-form-field{
     background-color:#fff;
     background-image:none;
@@ -341,6 +343,7 @@ ul.x-tab-strip li {
 
 .x-form-item {
     font:normal 12px tahoma, arial, helvetica, sans-serif;
+    overflow: hidden !important; /* Overriding ext-all.js */
 }
 
 .x-form-invalid-msg {
