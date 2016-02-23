@@ -308,7 +308,7 @@ html, body {
 @media screen and (max-width: 1370px){
 	*{font-size: 14px;}
 }
-@media screen and (max-width: 1024px){
+@media screen and (max-width: 1045px){
 	*{font-size: 12px;}
 		#go_head li a {
 			padding: 10px 10px;}
