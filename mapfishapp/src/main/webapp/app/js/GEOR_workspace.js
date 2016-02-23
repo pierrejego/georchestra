@@ -435,41 +435,6 @@ GEOR.workspace = (function() {
                             ptype: 'menuqtips'
                         }],
                         menu: getShareMenu()
-                    },'-', {
-                        text: tr("Edit in OSM"),
-                        iconCls: "geor-edit-osm",
-                        plugins: [{
-                            ptype: 'menuqtips'
-                        }],
-                        menu: [{
-                            text: tr("with iD"),
-                            qtip: tr("Recommended scale is 1:10.000"),
-                            handler: editOSM.call(this, {
-                                base: 'http://www.openstreetmap.org/edit?editor=id&',
-                                protocol: 'llz'
-                            })
-                        },{
-                            text: tr("with Potlatch2"),
-                            qtip: tr("Recommended scale is 1:10.000"),
-                            handler: editOSM.call(this, {
-                                base: 'http://www.openstreetmap.org/edit?editor=potlatch2&',
-                                protocol: 'llz'
-                            })
-                        },{
-                            text: tr("with JOSM"),
-                            qtip: tr("JOSM must be started with the remote control option"),
-                            handler: editOSM.call(this, {
-                                base: 'http://127.0.0.1:8111/load_and_zoom?',
-                                protocol: 'lbrt'
-                            })
-                        },{
-                            text: tr("with Walking Papers"),
-                            qtip: tr("Recommended scale is 1:10.000"),
-                            handler: editOSM.call(this, {
-                                base: 'http://walking-papers.org/?',
-                                protocol: 'llz'
-                            })
-                        }]
                     }]
                 })
             };
