@@ -278,7 +278,6 @@ GEOR.geobuilder_toolbar = (function() {
     	    	
     	items.push(workspace);
 
-        items.push('-');
         items.push({
             text: tr("Legend"),
             tooltip: tr("Show legend"),

@@ -39,7 +39,7 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "File submission failed or invalid file": "L'envoi du fichier a échoué - le fichier est peut-être non valide",
     "Type": "Type",
     "Title": "Titre",
-    "Actions": "Actions",
+    "Actions": "Options",
     "Incorrect server response.": "Réponse du serveur incorrecte.",
     "No features found.": "Aucun objet trouvé.",
     /* GEOR.js strings */
