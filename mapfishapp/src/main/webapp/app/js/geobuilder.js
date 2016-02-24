@@ -1,7 +1,7 @@
 ;(function(){
 
     var WORKPLACE_DEFAULT_WIDTH = 600
-    var WORKPLACE_DEFAULT_HEIGHT = 400
+    var WORKPLACE_DEFAULT_HEIGHT = 480
 
 
     var oldSimpleSelection = false;
