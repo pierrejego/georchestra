@@ -464,6 +464,13 @@ Need to override every style element by element in cascade :)
 #east-tabpanel .geor-tree-node .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
 #east-tabpanel .geor-tree-node .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
 
+#east-tabpanel__geor-layerManager{
+	background-image: url('images/pwrs/tabs/layers.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
 .x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
 	background-image: url('../img/famfamfam/add-white.png');
 }
