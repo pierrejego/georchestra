@@ -464,10 +464,17 @@ Need to override every style element by element in cascade :)
 #east-tabpanel .geor-tree-node .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
 #east-tabpanel .geor-tree-node .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
 
-#east-tabpanel__geor-layerManager{
+#east-tabpanel__geor-layerManager {								/* Overriding ext-all.css	*/
+	width: calc(100% - 2px) !important;
+}
+#east-tabpanel__geor-layerManager .x-tab-strip-inner {			/* Overriding ext-all.css	*/
+	width: 100% !important;
+}
+#east-tabpanel__geor-layerManager .x-tab-right{
 	background-image: url('images/pwrs/tabs/layers.gif');
 	background-repeat: no-repeat;
-	background-position: center;
+	background-position: 10px center;
+	padding-left: 30px !important;
 }
 
 
