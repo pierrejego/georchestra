@@ -369,14 +369,18 @@ ul.x-tab-strip li {
 }
 
 .x-fieldset {
-    border-color:#CCCCCC;
+    border-color:#007EC3;
 }
-
+.x-fieldset legend input:active, .x-fieldset legend input:focus {
+	outline: none;
+}
 .x-fieldset legend {
-    font:bold;
-    font-family: 'latobold'
-    color:#777777;
-}.x-btn{
+    font-weight:bold;
+    font-family: 'latobold';
+    color:#4D4D4D;
+    font-size: 14px;
+}
+.x-btn{
 	font:normal;
 }
 
@@ -441,14 +445,14 @@ Need to override every style element by element in cascade :)
 #tbar .x-btn-icon td {border: none;}
 #tbar .x-btn-icon em {padding: 0;}
 
-.annotation .x-btn-tl,
-.annotation .x-btn-tc,
-.annotation .x-btn-tr,
-.annotation .x-btn-ml,
-.annotation .x-btn-mr,
-.annotation .x-btn-bl,
-.annotation .x-btn-bc,
-.annotation .x-btn-br {border: 0px !important;}
+.annotation .x-btn-tl, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tl,
+.annotation .x-btn-tc, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tc,
+.annotation .x-btn-tr, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tr,
+.annotation .x-btn-ml, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-ml,
+.annotation .x-btn-mr, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-mr,
+.annotation .x-btn-bl, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bl,
+.annotation .x-btn-bc, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bc,
+.annotation .x-btn-br, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-br {border: 0px !important;}
 
 
 #east-tabpanel .geor-tree-node .x-btn-tl, .x-dd-drag-ghost .x-btn-tl,
@@ -1104,10 +1108,10 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
     width:15px;
     height:15px;
 }
-.ext-gecko .x-form-text, .ext-ie8 .x-form-text {
+/* .ext-gecko .x-form-text, .ext-ie8 .x-form-text {
     padding-top: 0px;
     padding-bottom: 2px;
-}
+} */
 .x-tree-lines .x-tree-elbow{
 	background-image:url(images/pwrs/tree/elbow.gif);
 }
