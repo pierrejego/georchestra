@@ -367,7 +367,9 @@ ul.x-tab-strip li {
 .x-form-invalid-icon {
     background-image:url(images/pwrs/form/exclamation.gif);
 }
-
+input[type="checkbox"]:focus{
+        outline:0;
+    }
 .x-fieldset {
     border-color:#007EC3;
 }
@@ -1199,7 +1201,9 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 .x-tree-node a, .x-dd-drag-ghost a{
 	color:#000;
 }
-
+.geor-tree-node a.x-tree-node-anchor span {
+	font-weight: normal !important;
+}
 .x-tree-node a span, .x-dd-drag-ghost a span{
 	color:#000;
 }
@@ -1707,6 +1711,9 @@ a.x-menu-item {
 }
 .x-window-bc .x-window-footer {
 	border-top: solid 1px #007EC3;
+}
+#add-layers-windows .x-window-bc .x-window-footer {
+	border-top: 0px;
 }
 .x-window-tl .x-window-header {
     color:white;
