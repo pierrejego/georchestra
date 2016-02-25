@@ -470,11 +470,11 @@ Need to override every style element by element in cascade :)
 #east-tabpanel__geor-layerManager .x-tab-strip-inner {			/* Overriding ext-all.css	*/
 	width: 100% !important;
 }
-#east-tabpanel__geor-layerManager .x-tab-right{
+#east-tabpanel__geor-layerManager .x-tab-right{	
 	background-image: url('images/pwrs/tabs/layers.gif');
 	background-repeat: no-repeat;
 	background-position: 10px center;
-	padding-left: 30px !important;
+	padding-left: 30px !important;								/* Overriding ext-all.css	*/
 }
 
 
@@ -515,8 +515,13 @@ input.x-tree-node-cb {
 }
 
 .gx-tree-layer-panel .x-btn button{
+	font-size: 14px;
+	line-height: 1em;
 	color: #4d4d4d ;
 	background-repeat: no-repeat;
+}
+.geor-toolbar .x-btn .x-btn-tl, .geor-toolbar .x-btn .x-btn-tc, .geor-toolbar .x-btn .x-btn-tr {
+	display: none;
 }
 .gx-tree-layer-actions .delete {
     background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
