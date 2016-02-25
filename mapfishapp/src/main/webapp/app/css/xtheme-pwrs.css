@@ -367,9 +367,54 @@ ul.x-tab-strip li {
 .x-form-invalid-icon {
     background-image:url(images/pwrs/form/exclamation.gif);
 }
+/* Replacing extJs input styling
+=======================================================================
+*/
+/* .x-form-cb-label {
+	margin-left: 1.5em !important;			Override ext-all.css
+	top: -2px;
+}
+input[type="radio"], input[type="checkbox"] {
+    position: absolute;
+    overflow: hidden;
+    width: 13px;
+    height: 13px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0px none transparent;
+}
+input[type="radio"] {
+    background: transparent url("images/pwrs/form/radio.gif") no-repeat scroll;
+}
+input[type="radio"]:checked {
+	    background-position: -13px -13px;
+}
+input[type="radio"]:not(:checked) {
+	    background-position: 0px 0px;
+}
+input[type="checkbox"] {
+    background: transparent url("images/pwrs/form/checkbox.gif") no-repeat scroll;
+    position: absolute;
+    overflow: hidden;
+    width: 13px;
+    height: 13px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0px none transparent;
+}
+input[type="checkbox"]:not(:checked) {
+	    background-position: 0px 0px;
+}
+input[type="checkbox"]:checked {
+	    background-position: -13px -13px;
+}
 input[type="checkbox"]:focus{
         outline:0;
-    }
+    } */
+/* END input styling ============================================ */
+
 .x-fieldset {
     border-color:#007EC3;
 }
