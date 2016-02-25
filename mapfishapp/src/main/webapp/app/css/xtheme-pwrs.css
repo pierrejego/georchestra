@@ -177,6 +177,8 @@ ul.x-tab-strip li {
 
 .x-tab-strip-top .x-tab-right, .x-tab-strip-top .x-tab-left, .x-tab-strip-top .x-tab-strip-inner{
 	background-color: #808080;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 .x-tab-strip-active a,
 .x-tab-strip-active a em,
@@ -184,7 +186,6 @@ ul.x-tab-strip li {
 	background-color: white !important;
 	color: #4d4d4d;
 }
-
 .x-tab-strip-over a,
 .x-tab-strip-over a em,
 .x-tab-strip-over .x-tab-strip-inner,
@@ -436,10 +437,9 @@ input[type="checkbox"]:focus{
     font-family: 'latoregular';
     color:#007EC3;
 }
-#tbar .x-btn button{
+#tbar .x-btn button, #tbar .x-btn button:hover{
 	color: white;
 }
-
 .x-btn .x-btn-text {
     font-style:normal;
     font-weight:normal;
@@ -462,12 +462,12 @@ input[type="checkbox"]:focus{
 Need to override every style element by element in cascade :)
 */
 .x-btn:hover, .x-btn:hover .x-btn-text{
-	background-color: #92C0E3;
-	color: white;
+	background-color: #C9DFF0;
+	color: #4D4D4D; 
 }
-.x-btn .btn-add:hover, .x-btn-text.add:hover {
+/* .x-btn .btn-add:hover, .x-btn-text.add:hover {
     background-image: url("../img/famfamfam/add-white.png");
-}
+} */
 
 .x-btn-tl {border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
 .x-btn-tc {border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
@@ -525,9 +525,9 @@ Need to override every style element by element in cascade :)
 }
 
 
-.x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
+/* .x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
 	background-image: url('../img/famfamfam/add-white.png');
-}
+} */
 
 /* #east-tabpanel #geor-layerManager .x-btn:hover,
 #east-tabpanel #geor-layerManager .x-btn:hover .x-btn-text {
