@@ -153,7 +153,9 @@ html, body {
 	margin: 0;
 	background: #fff;
 }
-
+a, a:hover, li, li:hover {
+	cursor: pointer;
+}
 .main {
 	width: 100%;
 	height: 40px;
@@ -313,8 +315,8 @@ html, body {
 		#go_head li a {
 			padding: 10px 10px;}
 		.bgicon a {
-padding: 10px 15px 10px 25px !important;
-background-position: 3px 7px;
+			padding: 10px 15px 10px 25px !important;
+			background-position: 3px 7px;
 	}
 }
 </style>
