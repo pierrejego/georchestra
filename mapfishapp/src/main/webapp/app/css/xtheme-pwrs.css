@@ -676,18 +676,17 @@ input.x-tree-node-cb {
 */
 #tbar{
 	border:none;
-    background-color:#007EC3;
-    color: white;
+    background-color:#007EC3; 
     padding: 7px 14px;
 }
-#tbar a, #tbar button {
+#tbar a {
 	color: white;
 }
-#tbar a:hover, #tbar .x-btn:hover {
-	color: #007EC3;
+#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, #tbar .x-btn:focus, #tbar .x-btn-focus{
+	background-color: #99BBE8;
 }
 .x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active, .x-btn:focus, .x-btn-focus {
-	background-color: #C9DFF0;
+	background-color: #D4E6F4;
 	color: #4D4D4D; 
 }
 /* .x-btn .btn-add:hover, .x-btn-text.add:hover {
@@ -725,7 +724,7 @@ input.x-tree-node-cb {
 .x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-icon{
 	margin-right: 0px;
 }
-.x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon {
+#tbar.x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon {
 	margin-right: 6px;
 }
 #tbar .x-toolbar-right .x-btn-mc em.x-btn-arrow {
