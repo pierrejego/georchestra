@@ -437,7 +437,7 @@ input[type="checkbox"]:focus{
     font-family: 'latoregular';
     color:#007EC3;
 }
-#tbar .x-btn button, #tbar .x-btn button:hover{
+#tbar .x-btn button {
 	color: white;
 }
 .x-btn .x-btn-text {
@@ -445,11 +445,11 @@ input[type="checkbox"]:focus{
     font-weight:normal;
     padding: 0 6px;
 }
-.x-btn .x-btn-text, .x-btn .x-btn-text:hover, .x-btn .x-btn-text:active, .x-btn .x-btn-text:focus {
+.x-btn .x-btn-text, .x-btn .x-btn-text:hover, .x-btn .x-btn-text:active, .x-btn .x-btn-text:focus, .x-btn-focus {
 	outline: none !important;
 }
 
-.x-btn-tl, .x-btn-tr, .x-btn-tc, .x-btn-ml, .x-btn-mr, .x-btn-mc, .x-btn-bl, .x-btn-br, .x-btn-bc{
+.x-btn-tl, .x-btn-tr, .x-btn-tc, .x-btn-ml, .x-btn-mr, .x-btn-mc, .x-btn-bl, .x-btn-br, .x-btn-bc .x-btn-focus {
 	background-image:none;
 	border-color: #007EC3;
 }
@@ -461,13 +461,7 @@ input[type="checkbox"]:focus{
 =======================================================================================================
 Need to override every style element by element in cascade :)
 */
-.x-btn:hover, .x-btn:hover .x-btn-text{
-	background-color: #C9DFF0;
-	color: #4D4D4D; 
-}
-/* .x-btn .btn-add:hover, .x-btn-text.add:hover {
-    background-image: url("../img/famfamfam/add-white.png");
-} */
+
 
 .x-btn-tl {border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
 .x-btn-tc {border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
@@ -492,15 +486,23 @@ Need to override every style element by element in cascade :)
 #tbar .x-btn-icon td {border: none;}
 #tbar .x-btn-icon em {padding: 0;}
 
-.annotation .x-btn-tl, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tl,
-.annotation .x-btn-tc, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tc,
-.annotation .x-btn-tr, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tr,
-.annotation .x-btn-ml, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-ml,
-.annotation .x-btn-mr, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-mr,
-.annotation .x-btn-bl, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bl,
-.annotation .x-btn-bc, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bc,
-.annotation .x-btn-br, #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-br {border: 0px !important;}
+.annotation .x-btn-tl,
+.annotation .x-btn-tc,
+.annotation .x-btn-tr,
+.annotation .x-btn-ml,
+.annotation .x-btn-mr,
+.annotation .x-btn-bl,
+.annotation .x-btn-bc,
+.annotation .x-btn-br{border: 0px !important;}
 
+/* #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tl,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tc,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tr,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-ml,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-mr,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bl,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bc,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-br {border: 0px !important;} */
 
 #east-tabpanel .geor-tree-node .x-btn-tl, .x-dd-drag-ghost .x-btn-tl,
 #east-tabpanel .geor-tree-node .x-btn-tc, .x-dd-drag-ghost .x-btn-tc,
@@ -511,19 +513,38 @@ Need to override every style element by element in cascade :)
 #east-tabpanel .geor-tree-node .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
 #east-tabpanel .geor-tree-node .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
 
-#east-tabpanel__geor-layerManager {								/* Overriding ext-all.css	*/
-	width: calc(100% - 2px) !important;
+#georchetra-styler-windows .x-panel-bwrap .x-border-panel {								
+	border-bottom: 1px solid #007EC3;
+}
+#georchetra-styler-windows .x-panel-btns {
+	margin-left: 8px;
 }
 #east-tabpanel__geor-layerManager .x-tab-strip-inner {			/* Overriding ext-all.css	*/
 	width: 100% !important;
+	padding-left:0px;
+	padding-right: 0px;
+}
+#east-tabpanel__geobuilder-integration-tab .x-tab-right,
+#east-tabpanel__geobuilder-integration-tab .x-tab-left,
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-inner {
+	width: 100% !important;
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-text,
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-top {
+	padding-left: 0px;
+	padding-right: 0px;
 }
 #east-tabpanel__geor-layerManager .x-tab-right{	
-	background-image: url('images/pwrs/tabs/layers.gif');
+	background-image: url('images/pwrs/tabs/layers.png');
 	background-repeat: no-repeat;
 	background-position: 10px center;
 	padding-left: 30px !important;								/* Overriding ext-all.css	*/
 }
-
+#east-tabpanel__geor-layerManager .x-tab-left {
+	padding-left:0px;
+}
 
 /* .x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
 	background-image: url('../img/famfamfam/add-white.png');
@@ -661,6 +682,16 @@ input.x-tree-node-cb {
 #tbar a, #tbar button {
 	color: white;
 }
+#tbar a:hover, #tbar .x-btn:hover {
+	color: #007EC3;
+}
+.x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active, .x-btn:focus, .x-btn-focus {
+	background-color: #C9DFF0;
+	color: #4D4D4D; 
+}
+/* .x-btn .btn-add:hover, .x-btn-text.add:hover {
+    background-image: url("../img/famfamfam/add-white.png");
+} */
 #tbar .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow-white.png);
     padding-right: 12px;
@@ -1755,7 +1786,11 @@ a.x-menu-item {
     border-color:#d0d0d0;
 }
 .x-window-bc .x-window-footer {
-	border-top: solid 1px #007EC3;
+	border: 0px;
+	margin-left: 8px;
+}
+.x-window-bc .x-window-footer .x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon:last-child {
+	margin-right: 0px;
 }
 #add-layers-windows .x-window-bc .x-window-footer {
 	border-top: 0px;
@@ -1765,6 +1800,7 @@ a.x-menu-item {
 	background-color: #007EC3;
 	margin-top: 5px;
 	padding: 5px;
+	line-height: 16px;
 }
 .x-window-tc {
 	background-image: none;
@@ -1862,7 +1898,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 }
 
 .x-panel-noborder .x-panel-bbar-noborder .x-toolbar {
-    border-top-color:#007EC3;
+    border:0px;
 }
 
 .x-tab-panel-bbar-noborder .x-toolbar {
@@ -1901,18 +1937,18 @@ body.x-body-masked .x-window-plain .x-window-mc {
     background-image:url(images/pwrs/layout/mini-left.gif);
 }
 .x-layout-split-east .x-layout-mini {
-	background-image:url(images/pwrs/layout/mini-right.png);
-	background-position: 8px 6px;
-	background-repeat: no-repeat;
-	background-color: #4D4D4D;
-	position: absolute;
-	left: -20px;
-	display: block;
-	width: 20px;
-	height: 20px;
-	cursor: pointer;
-	opacity: 1;
-	box-shadow:  0 0 5px #4d4d4d;
+    background-image: url(images/pwrs/layout/mini-right.png);
+    background-position: 8px 6px;
+    background-repeat: no-repeat;
+    background-color: #4D4D4D;
+    position: absolute;
+    left: -15px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 1;
+    box-shadow: -1px 0px 2px #4d4d4d;
 }
 .x-layout-collapsed {
 	overflow: visible;
@@ -1922,13 +1958,13 @@ body.x-body-masked .x-window-plain .x-window-mc {
 	background-repeat: no-repeat;
 	background-color: #4D4D4D;
 	position: absolute;
-	left: -20px;
+	left: -18px;
 	display: block;
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
 	opacity: 1;
-	box-shadow:  0 0 5px #4d4d4d;
+	box-shadow:  -1px 0px 2px rgb(77, 77, 77);
 }
 
 .x-layout-split-north .x-layout-mini {
