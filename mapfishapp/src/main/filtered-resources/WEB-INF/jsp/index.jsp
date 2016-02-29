@@ -127,11 +127,11 @@ if(sec_roles != null) {
 
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/ext-all.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/xtheme-pwrs.css" />
-    <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/styler/theme/css/styler.css" />
+    <link rel="stylesheet" type="text/css" href="<%= context %>/app/addons/styler/theme/css/styler.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/externals/geoext/resources/css/popup.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/palettecombobox/palettecombobox.ux.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/colorpicker/colorpicker.css" />
-    <link rel="stylesheet" type="text/css" href="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/spinner/Spinner.css" />
+    <link rel="stylesheet" type="text/css" href="<%= context %>/app/addons/spinner/Spinner.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/openlayers_gray_theme/style.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/main.css" />
     <script type="text/javascript">
