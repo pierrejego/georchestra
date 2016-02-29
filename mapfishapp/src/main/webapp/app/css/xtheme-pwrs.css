@@ -758,7 +758,11 @@ input.x-tree-node-cb {
 }
 
 .x-toolbar .xtb-sep {
+	visibility: hidden;
+}
+#tbar.x-toolbar .xtb-sep {
 	background-image: url(images/pwrs/grid/grid-split.gif);
+	visibility: visible;
 }
 .x-grid3-header-inner {
 	color: white;
