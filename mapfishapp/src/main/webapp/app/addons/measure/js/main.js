@@ -116,8 +116,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
                 tpl: new Ext.Template('<div>{measureP} {unitsPM}<br>{measurePKM} {unitsPKM}</div>'),
                 listeners: {
                     "close": function() {
-                        this.measureAreaControl.deactivate();
-                        this.measureDistanceControl.deactivate();
+                        this.measurePerimeterControl.deactivate();
                         this.popup.destroy();
                         this.popup = null;
                     },
