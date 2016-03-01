@@ -159,7 +159,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
         	var ring = new OpenLayers.Geometry.LinearRing(verticesGeom);
             distGeom = Math.round(ring.getGeodesicLength(this.map.getProjectionObject()));
             distGeomUnits = "m";
-        	console.log(distGeom + ' ' + distGeomUnits); 			
+        	// console.log(distGeom + ' ' + distGeomUnits); // display the measure between the last point and the before last point  			
         	} 
         	if (event.measure > 0) {
                 this.popup.location = points[points.length-1].getBounds().getCenterLonLat();
