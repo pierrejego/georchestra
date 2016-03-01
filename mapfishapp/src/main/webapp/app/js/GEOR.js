@@ -360,7 +360,8 @@ Ext.namespace("GEOR");
                     querierTitle = panelCfg.title;
                     var panel = Ext.apply(panelCfg, {
                         // whatever here
-                        title: querierTitle
+                        title: querierTitle,
+                        id: 'querier-panel'
                     });
                     eastItems[0].add(panel);
                     eastItems[0].getLayout().setActiveItem(1);
