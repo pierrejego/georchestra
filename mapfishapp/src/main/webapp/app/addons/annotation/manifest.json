@@ -120,7 +120,8 @@
             "annotation.fillcolor": "Remplissage",
             "annotation.outlinecolor": "Contour",
             "annotation.name": "Nom",
-            "annotation.no_title": "Sans titre"
+            "annotation.no_title": "Sans titre",
+            "annotation.fillOpacity": "Opacité"
         },
         "de": {
             "annotation.drawing_tools": "Zeichenwerkzeug",

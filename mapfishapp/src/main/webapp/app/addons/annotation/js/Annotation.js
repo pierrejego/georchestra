@@ -114,10 +114,12 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     /** private: property[defaultStyle]
      *  ``Object`` Feature style hash to apply to the default
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
+     *   Default style after create new feature
      */
     defaultStyle: {
         fillColor: "#FF0000",
         strokeColor: "#FF0000",
+        fillOpacity: 0.1, // default feature opacity
         fontColor: "#000000"
     },
 
@@ -605,6 +607,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             // the following line is here for compatibility with
             // GeoExt < 1 (before changeset 2343)
             feature: feature,
+            closeAction:'hide',
             items: [this.featurePanel]
         };
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions,
@@ -647,6 +650,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         // or we could execute commits here also
 
         if (!feature) {
+        
             return;
         }
 
