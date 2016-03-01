@@ -792,7 +792,14 @@ input.x-tree-node-cb {
 /* Geor Toolbar : Calques et couches.
 =============================================================================================================
 */
-
+#querier-panel .x-panel-header {
+	height: 30px;
+    background-color: #4D4D4D;
+    color: white;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: normal;
+}
 .geor-btn-metadata {
     background-image: url(../img/famfamfam/application_view_list.png) !important;
 }

@@ -47,7 +47,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
                         control: this.measurePerimeterControl,
                         map: this.map,
                         group: "_measure",
-                        iconCls: "measure-area"
+                        iconCls: "measure-perimeter"
                     })
               )
         ];
