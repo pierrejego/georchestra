@@ -682,10 +682,10 @@ input.x-tree-node-cb {
 #tbar a {
 	color: white;
 }
-#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, #tbar .x-btn:focus, #tbar .x-btn-focus{
+#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, #tbar .x-btn-pressed {
 	background-color: #99BBE8;
 }
-.x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active, .x-btn:focus, .x-btn-focus {
+.x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active {
 	background-color: #D4E6F4;
 	color: #4D4D4D; 
 }
