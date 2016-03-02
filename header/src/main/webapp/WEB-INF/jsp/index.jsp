@@ -328,11 +328,22 @@ a, a:hover, li, li:hover {
 	<div class="main">
 		<div id="go_head">
 			<ul id="lefthead">
-				<li class="navitem bgicon" id="homelink">
-					<a href="#" id="go_home" title="<fmt:message key='go.home'/>"> 
-						<fmt:message key='logo'/>
-					</a>
-				</li>
+			<c:choose>
+					<c:when test='<%= active.equals("accueil") %>'>
+						<li class="active navitem bgicon" id="homelink">
+							<a href="/accueil" id="go_home" title="<fmt:message key='go.home'/>"> 
+								<fmt:message key='logo'/>
+							</a>
+						</li>
+					</c:when>
+						<c:otherwise>
+						<li class="navitem bgicon" id="homelink">
+							<a href="/accueil" id="go_home" title="<fmt:message key='go.home'/>"> 
+								<fmt:message key='logo'/>
+							</a>
+						</li>
+					</c:otherwise>
+				</c:choose>
 				<c:choose>
 					<c:when test='<%= active.equals("geonetwork") %>'>
 						<li class="active navitem bgicon" id="catalogue">
