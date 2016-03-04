@@ -108,6 +108,8 @@ if(sec_roles != null) {
 
 <head>
 
+<base target="_parent" />
+
 <style type="text/css">
 /* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
 @font-face {
