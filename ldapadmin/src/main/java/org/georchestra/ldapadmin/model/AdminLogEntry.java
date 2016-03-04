@@ -40,7 +40,7 @@ public class AdminLogEntry {
     private UUID target;
     private AdminLogType type;
 
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, name = "log_date")
     private Date date;
 
     public AdminLogEntry() {}
