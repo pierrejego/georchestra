@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.mapfishapp.ws;
 
 import java.io.BufferedReader;
@@ -18,7 +37,7 @@ import org.georchestra.commons.configuration.GeorchestraConfiguration;
 import org.georchestra.mapfishapp.model.ConnectionPool;
 import org.georchestra.mapfishapp.ws.classif.ClassifierCommand;
 import org.georchestra.mapfishapp.ws.classif.SLDClassifier;
-import org.geotools.data.wfs.WFSDataStoreFactory;
+import org.geotools.data.wfs.impl.WFSDataStoreFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -268,8 +287,7 @@ public class DocController {
     private void doClassification(HttpServletRequest request, HttpServletResponse response) {
         try {
             // classification based on client request in json
-            SLDClassifier c = new SLDClassifier(credentials, new ClassifierCommand(getBodyFromRequest(request)),
-            		factory);
+            SLDClassifier c = new SLDClassifier(credentials, new ClassifierCommand(getBodyFromRequest(request)), factory);
 
             // save SLD content under a file
             SLDDocService service = new SLDDocService(this.docTempDir, this.connectionPool);
