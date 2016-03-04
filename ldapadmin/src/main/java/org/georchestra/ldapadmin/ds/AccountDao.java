@@ -1,9 +1,29 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.ldapadmin.ds;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.georchestra.ldapadmin.dto.Account;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.filter.Filter;
 
 /**
@@ -48,15 +68,16 @@ public interface AccountDao {
 	 * @throws DataServiceException
 	 * @throws DuplicatedEmailException
 	 */
-	void insert(final Account account, final String groupID) throws DataServiceException, DuplicatedUidException, DuplicatedEmailException;
+	void insert(final Account account, final String groupID, final String originUUID) throws DataServiceException, DuplicatedUidException, DuplicatedEmailException;
 
 	/**
 	 * Updates the user account
 	 * @param account
+	 * @param originUUID UUID of admin that issue this modification
 	 * @throws DataServiceException
 	 * @throws DuplicatedEmailException
 	 */
-	void update(final Account account) throws DataServiceException, DuplicatedEmailException;
+	void update(final Account account, String originUUID) throws DataServiceException, DuplicatedEmailException;
 
 	/**
 	 * Updates the user account, given the old and the new state of the account
@@ -64,12 +85,13 @@ public interface AccountDao {
 	 *
 	 * @param account
 	 * @param modified
+	 * @param originUUID UUID of admin that issue this modification
 	 *
 	 * @throws DuplicatedEmailException
 	 * @throws DataServiceException
-	 * @throws NotFoundException
+	 * @throws NameNotFoundException
 	 */
-	void update(Account account, Account modified) throws DataServiceException, DuplicatedEmailException, NotFoundException;
+	void update(Account account, Account modified, String originUUID) throws DataServiceException, DuplicatedEmailException, NameNotFoundException;
 
 	/**
 	 * Changes the user password
@@ -85,10 +107,11 @@ public interface AccountDao {
 	 * Deletes the account
 	 * 
 	 * @param uid
+	 * @param originUUID UUID of admin that make request
 	 * @throws DataServiceException
-	 * @throws NotFoundException
+	 * @throws NameNotFoundException
 	 */
-	void delete(final String uid) throws DataServiceException, NotFoundException;
+	void delete(final String uid, final String originUUID) throws DataServiceException, NameNotFoundException;
 
 	/**
 	 * Returns the account that contains the uid provided as parameter.
@@ -98,9 +121,9 @@ public interface AccountDao {
 	 * @return {@link Account}
 	 * 
 	 * @throws DataServiceException
-	 * @throws NotFoundException
+	 * @throws NameNotFoundException
 	 */
-	Account findByUID(final String uid)throws DataServiceException, NotFoundException;
+	Account findByUID(final String uid)throws DataServiceException, NameNotFoundException;
 
     /**
 	 * Returns the account that correspond to specified entryUUID
@@ -110,9 +133,9 @@ public interface AccountDao {
 	 * @return {@link Account}
 	 *
 	 * @throws DataServiceException
-	 * @throws NotFoundException
+	 * @throws NameNotFoundException
 	 */
-	Account findByUUID(UUID uuid) throws DataServiceException, NotFoundException;
+	Account findByUUID(UUID uuid) throws DataServiceException, NameNotFoundException;
 
 	/**
 	 * Returns the account that contains the email provided as parameter.
@@ -121,9 +144,9 @@ public interface AccountDao {
 	 * @return {@link Account}
 	 * 
 	 * @throws DataServiceException
-	 * @throws NotFoundException
+	 * @throws NameNotFoundException
 	 */
-	Account findByEmail(final String email) throws DataServiceException, NotFoundException;
+	Account findByEmail(final String email) throws DataServiceException, NameNotFoundException;
 	
 
 	

@@ -11,7 +11,7 @@ cd ~/myprofile
 git remote rename origin upstream
 ```
 
-First thing to note is that you end up in the stable branch (15.06) matching the latest stable geOrchestra version (also 15.06).
+First thing to note is that you end up in the stable branch (15.12) matching the latest stable geOrchestra version (also 15.12).
 This is exactly what we want, nice !
 
 Remember: every stable geOrchestra version has its own template configuration, hosted in a branch named by the release version.
@@ -23,7 +23,7 @@ This is something to keep in mind when [upgrading](how_to_upgrade.md).
 Let's see what the template configuration looks like:
 
 ```
-user@computer:~/myprofile (15.06)$ tree -L 1
+user@computer:~/myprofile (15.12)$ tree -L 1
 .
 ├── analytics
 ├── build_support
@@ -63,7 +63,7 @@ This file has lots of comments: you should read them all.
 Once you've finished, we think you should **at least** update these shared maven filters:
  * ```shared.server.name```, is the server Fully Qualified Domain Name,
  * ```shared.ldap.admin.password``` is the ldap administrative account password,
- * ```shared.privileged.geoserver.pass``` is the password for a special geOrchestra admin user which is internally used, (see the [ldap setup documentation](setup/openldap.md) and the [ldap repository readme](https://github.com/georchestra/LDAP/blob/master/README.md)),
+ * ```shared.privileged.geoserver.pass``` is the password for a special geOrchestra admin user which is internally used, (see the [LDAP setup documentation](setup/openldap.md)),
  * ```shared.email.*``` are the settings related to email sending (used by ldapadmin and extractorapp)
  * ```shared.administrator.email``` is your email.
 

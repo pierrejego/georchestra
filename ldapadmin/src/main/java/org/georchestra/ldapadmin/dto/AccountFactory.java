@@ -1,5 +1,23 @@
-package org.georchestra.ldapadmin.dto;
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
+package org.georchestra.ldapadmin.dto;
 
 /**
  * Account factory. 
@@ -119,9 +137,14 @@ public class AccountFactory {
 	 * @param locality 
 	 * @param street 
 	 * @param facsimile 
-	 * @param organizationalUnit 
-	 * @param mobile 
-	 * @param roomNumber 
+	 * @param organizationalUnit
+	 * @param homePostalAddress
+	 * @param mobile
+	 * @param roomNumber
+	 * @param stateOrProvince
+	 * @param manager
+	 * @param context
+	 * @param string 
 	 * 
 	 * @return {@link Account}
 	 */
@@ -147,7 +170,9 @@ public class AccountFactory {
 			String homePostalAddress,
 			String mobile, 
 			String roomNumber,
-			String stateOrProvince) {
+			String stateOrProvince,
+			String manager,
+			String context) {
 		
 		
 		Account a = new AccountImpl();
@@ -180,6 +205,8 @@ public class AccountFactory {
 		a.setMobile(mobile);
 		a.setRoomNumber(roomNumber);
 		a.setStateOrProvince(stateOrProvince);
+		a.setManager(manager);
+		a.setContext(context);
 		
 		return a;
 	}
@@ -215,6 +242,11 @@ public class AccountFactory {
 		a.setStateOrProvince(o.getStateOrProvince());
 		a.setOrganizationalUnit(o.getOrganizationalUnit());
 		a.setHomePostalAddress(o.getHomePostalAddress());
+		a.setUUID(o.getUUID());
+		a.setManager(o.getManager());
+		a.setShadowExpire(o.getShadowExpire());
+		a.setContext(o.getContext());
+
 		return a;
 	}
 

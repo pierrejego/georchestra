@@ -1,9 +1,26 @@
-/**
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
  *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ldapadmin.ws.newaccount;
 
 import java.io.IOException;
+
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +29,8 @@ import javax.servlet.http.HttpSession;
 import net.tanesha.recaptcha.ReCaptcha;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.georchestra.ldapadmin.bs.Moderator;
 import org.georchestra.ldapadmin.bs.ReCaptchaParameters;
 import org.georchestra.ldapadmin.ds.AccountDao;
@@ -28,6 +47,7 @@ import org.georchestra.ldapadmin.ws.utils.RecaptchaUtils;
 import org.georchestra.ldapadmin.ws.utils.UserUtils;
 import org.georchestra.ldapadmin.ws.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,6 +72,8 @@ import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @SessionAttributes(types={AccountFormBean.class})
 public final class NewAccountFormController {
+
+	private static final Log LOG = LogFactory.getLog(NewAccountFormController.class.getName());
 
 	private AccountDao accountDao;
 
@@ -116,7 +138,7 @@ public final class NewAccountFormController {
 						 @ModelAttribute AccountFormBean formBean,
 						 BindingResult result,
 						 SessionStatus sessionStatus)
-						 throws IOException {
+			throws IOException {
 
 		String remoteAddr = request.getRemoteAddr();
 
@@ -150,7 +172,14 @@ public final class NewAccountFormController {
 
 			String groupID = this.moderator.moderatedSignup() ? Group.PENDING : Group.SV_USER;
 
-			this.accountDao.insert(account, groupID);
+			String adminUUID = null;
+			try {
+				adminUUID = this.accountDao.findByUID(request.getHeader("sec-username")).getUUID();
+			} catch (NameNotFoundException e) {
+				LOG.error("Unable to find admin/user connected, so no admin log generated when creating uid : " + formBean.getUid());
+			}
+
+			this.accountDao.insert(account, groupID, adminUUID);
 
 			final ServletContext servletContext = request.getSession().getServletContext();
 			if(this.moderator.moderatedSignup() ){

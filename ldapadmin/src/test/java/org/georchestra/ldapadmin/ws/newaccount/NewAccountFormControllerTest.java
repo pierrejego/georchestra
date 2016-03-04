@@ -1,12 +1,11 @@
 package org.georchestra.ldapadmin.ws.newaccount;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
@@ -18,6 +17,8 @@ import org.georchestra.ldapadmin.ds.DataServiceException;
 import org.georchestra.ldapadmin.ds.DuplicatedEmailException;
 import org.georchestra.ldapadmin.ds.DuplicatedUidException;
 import org.georchestra.ldapadmin.dto.Account;
+import org.georchestra.ldapadmin.dto.AccountFactory;
+
 import org.georchestra.ldapadmin.mailservice.EmailFactoryImpl;
 import org.georchestra.ldapadmin.mailservice.MailService;
 import org.georchestra.ldapadmin.ws.utils.Validation;
@@ -25,6 +26,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapRdn;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,7 +47,10 @@ public class NewAccountFormControllerTest {
     private ReCaptcha  rec = Mockito.mock(ReCaptcha.class);
     private ReCaptchaParameters rep = new ReCaptchaParameters();
     private ReCaptchaResponse rer = Mockito.mock(ReCaptchaResponse.class);
-    private HttpServletRequest request = new MockHttpServletRequest();
+    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private LdapTemplate ldapTemplate = Mockito.mock(LdapTemplate.class);
+
+    private Account adminAccount;
 
 
     AccountFormBean formBean = Mockito.mock(AccountFormBean.class);
@@ -74,6 +82,23 @@ public class NewAccountFormControllerTest {
     @Before
     public void setUp() throws Exception {
         ctrl = new NewAccountFormController(dao, srv, mod, rec, rep);
+
+        // Mock admin account
+        DistinguishedName dn = new DistinguishedName();
+        dn.add(new LdapRdn("ou=users"));
+        dn.add("uid", "testadmin");
+        this.adminAccount =  AccountFactory.createBrief("testadmin", "monkey123", "Test", "ADmin",
+                "postmastrer@localhost", "+33123456789", "geOrchestra Project Steering Committee", "admin", "");
+        this.adminAccount.setUUID("3a35deb6-18d0-1035-9273-1163820b7a58");
+        this.request.addHeader("sec-username", "testadmin"); // Set user connected through http header
+        try {
+            Mockito.when(this.dao.findByUID(eq("testadmin"))).thenReturn(this.adminAccount);
+        } catch (DataServiceException e) {
+            assertTrue(false);
+        } catch (NameNotFoundException e) {
+            assertTrue(false);
+        }
+
     }
 
     @After
@@ -160,7 +185,7 @@ public class NewAccountFormControllerTest {
     public void testCreateDuplicatedEmail() throws Exception {
         configureLegitFormBean();
         Mockito.doThrow(new DuplicatedEmailException("User already exists")).
-            when(dao).insert((Account) Mockito.any(), Mockito.anyString());
+            when(dao).insert((Account) Mockito.any(), Mockito.anyString(), Mockito.anyString());
 
         String ret = ctrl.create(request, formBean, result, status);
 
@@ -172,7 +197,7 @@ public class NewAccountFormControllerTest {
     public void testCreateUserWithError() throws Exception {
         configureLegitFormBean();
         Mockito.doThrow(new DataServiceException("Something went wrong when dealing with LDAP")).
-            when(dao).insert((Account) Mockito.any(), Mockito.anyString());
+            when(dao).insert((Account) Mockito.any(), Mockito.anyString(), Mockito.anyString());
 
         try {
             ctrl.create(request, formBean, result, status);
@@ -190,7 +215,7 @@ public class NewAccountFormControllerTest {
     public void testCreateDuplicatedUid() throws Exception {
         configureLegitFormBean();
         Mockito.doThrow(new DuplicatedUidException("User ID already exists")).
-            when(dao).insert((Account) Mockito.any(), Mockito.anyString());
+            when(dao).insert((Account) Mockito.any(), Mockito.anyString(), Mockito.anyString());
 
         String ret = ctrl.create(request, formBean, result, status);
 

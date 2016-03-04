@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.ldapadmin.dto;
 
 /**
@@ -39,11 +58,13 @@ public interface UserSchema {
 
 	public static final String REGISTERED_ADDRESS_KEY =  "registeredAddress";
 	public static final String SHADOW_EXPIRE = "shadowExpire";
+	public static final String MANAGER = "manager";
+	public static final String CONTEXT = "preferredLanguage";
 
 	public static final String[] ATTR_TO_RETRIEVE = {UUID_KEY, UID_KEY, COMMON_NAME_KEY, SURNAME_KEY,
 			GIVEN_NAME_KEY, STREET_KEY, HOME_POSTAL_ADDRESS_KEY, TITLE_KEY, FACSIMILE_KEY, POSTAL_CODE_KEY,
 			MAIL_KEY, POSTAL_ADDRESS_KEY, POST_OFFICE_BOX_KEY, DESCRIPTION_KEY, TELEPHONE_KEY,
 			PHYSICAL_DELIVERY_OFFICE_NAME_KEY, MOBILE_KEY, ROOM_NUMBER_KEY, LOCALITY_KEY, ORG_KEY,
-			STATE_OR_PROVINCE_KEY, ORG_UNIT_KEY, USER_PASSWORD_KEY, REGISTERED_ADDRESS_KEY, SHADOW_EXPIRE};
+			STATE_OR_PROVINCE_KEY, ORG_UNIT_KEY, USER_PASSWORD_KEY, REGISTERED_ADDRESS_KEY, SHADOW_EXPIRE, MANAGER, CONTEXT};
 
 }
