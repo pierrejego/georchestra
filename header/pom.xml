@@ -115,27 +115,6 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.6</version>
       </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>serverConfigCopy</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <tasks>
-                <copy todir="${basedir}/src/main/webapp/" overwrite="true" verbose="true" failonerror="false">
-                  <fileset dir="${confdir}/${project.artifactId}">
-                    <exclude name="**/maven.filter"/>
-                  </fileset>
-                </copy>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <profiles>
