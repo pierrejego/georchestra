@@ -218,10 +218,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
         // 2nd, create new ones from the current active layer
         this.initDrawControls(layer);
-        this.actions.push('-');
+        //this.actions.push('-');
         this.initFeatureControl(layer);
         this.initDeleteAllAction();
-        this.actions.push('-');
+        //this.actions.push('-');
         this.initExportAsKmlAction();
 
         GEOR.Annotation.superclass.constructor.apply(this, arguments);
