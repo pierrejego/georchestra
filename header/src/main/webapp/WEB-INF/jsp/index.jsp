@@ -437,7 +437,7 @@ a, a:hover, li, li:hover {
                 cnxblk = document.querySelector('#go_head p.logged');
             if (a !== null) {
                 url = parent.window.location.href;
-                if (/\/cas\//.test(url)) {
+                if (/\/cas\//.test(url) || /\/accueil\//.test(url)) {
                     a.href = "/cas/login";
                 } else {
                     // removing any existing anchor from URL first:
