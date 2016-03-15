@@ -686,7 +686,7 @@ input.x-tree-node-cb {
 #tbar a {
 	color: white;
 }
-#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, #tbar .x-btn-pressed {
+#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, .x-btn-pressed {
 	background-color: #99BBE8;
 }
 .x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active {
