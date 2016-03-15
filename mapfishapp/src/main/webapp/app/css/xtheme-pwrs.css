@@ -592,6 +592,10 @@ input.x-tree-node-cb {
 .geor-toolbar .x-btn .x-btn-tl, .geor-toolbar .x-btn .x-btn-tc, .geor-toolbar .x-btn .x-btn-tr {
 	display: none;
 }
+.x-btn-pressed .geor-btn-info {
+	background-image: url('../img/famfamfam/info-pressed.png') !important;
+	color: #4D4D4D; 
+}
 .gx-tree-layer-actions .delete {
     background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
     cursor: pointer;
