@@ -349,12 +349,12 @@ a, a:hover, li, li:hover {
 				<c:choose>
 					<c:when test='<%= active.equals("geonetwork") %>'>
 						<li class="active navitem bgicon" id="catalogue">
-							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>
+							<a href="/geonetwork/srv/fre/catalog.search#/search?facet.q=topicCat%2Fhealth%26status%2Fcompleted&resultType=details&from=1&to=20&sortBy=relevance&fast=index&_content_type=json"><fmt:message key="catalogue" /></a>
 						</li>
 					</c:when>
 					<c:otherwise>
 						<li class="navitem bgicon" id="catalogue">
-							<a href="/geonetwork/srv/fre/catalog.search#/search"><fmt:message key="catalogue" /></a>.
+							<a href="/geonetwork/srv/fre/catalog.search#/search?facet.q=topicCat%2Fhealth%26status%2Fcompleted&resultType=details&from=1&to=20&sortBy=relevance&fast=index&_content_type=json"><fmt:message key="catalogue" /></a>.
 						</li>
 					</c:otherwise>
 				</c:choose>
