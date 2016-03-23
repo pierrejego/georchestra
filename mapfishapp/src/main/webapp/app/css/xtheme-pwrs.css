@@ -588,6 +588,7 @@ input.x-tree-node-cb {
 	line-height: 1em;
 	color: #4d4d4d ;
 	background-repeat: no-repeat;
+	background-position: left .1em;
 }
 .geor-toolbar .x-btn .x-btn-tl, .geor-toolbar .x-btn .x-btn-tc, .geor-toolbar .x-btn .x-btn-tr {
 	display: none;
