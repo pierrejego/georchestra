@@ -150,17 +150,7 @@ GEOR.geobuilder_toolbar = (function() {
     	print.setText(tr('Print'));
     	
     	items.push(print);
-    	
-    	/**
-    	 * Ajout du bouton Zoom global
-    	 */
-    	ctrl = new OpenLayers.Control.ZoomToMaxExtent();
-    	items.push(new GeoExt.Action({
-    	    control: ctrl,
-    	    map: map,
-    	    tooltip: tr("zoom to global extent of the map"),
-    	    iconCls: "zoomfull"
-    	}));
+
     	
     	/**
     	 * Ajout du bouton Déplacement de la carte
