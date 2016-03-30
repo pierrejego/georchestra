@@ -588,14 +588,16 @@ input.x-tree-node-cb {
 	line-height: 1em;
 	color: #4d4d4d ;
 	background-repeat: no-repeat;
+	background-position: left .1em;
 }
 .geor-toolbar .x-btn .x-btn-tl, .geor-toolbar .x-btn .x-btn-tc, .geor-toolbar .x-btn .x-btn-tr {
 	display: none;
 }
-.x-btn-pressed .geor-btn-info {
+#east-tabpanel .x-btn-pressed .geor-btn-info {
 	background-image: url('../img/famfamfam/info-pressed.png') !important;
-	color: #4D4D4D; 
-}
+	color: #4D4D4D;
+} 
+
 .gx-tree-layer-actions .delete {
     background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
     cursor: pointer;
@@ -603,11 +605,9 @@ input.x-tree-node-cb {
 .x-btn-disabled *{
 	color:gray !important;
 }
-
 .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow.gif);
 }
-
 .x-btn-mc em.x-btn-split {
     background-image:url(images/pwrs/button/s-arrow.gif);
 }
@@ -686,7 +686,7 @@ input.x-tree-node-cb {
 #tbar a {
 	color: white;
 }
-#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active, .x-btn-pressed {
+#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active,#tbar .x-btn-pressed {
 	background-color: #99BBE8;
 }
 .x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active {
@@ -710,6 +710,8 @@ input.x-tree-node-cb {
 
 #tbar .x-btn-icon .geor-btn-info {
 	background: transparent url("../img/famfamfam/information-white.png") no-repeat scroll center;
+	width: 20px;
+	height: 20px;
 }
 
 .x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label{
