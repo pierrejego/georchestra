@@ -194,7 +194,7 @@ Styler.PointSymbolizer = Ext.extend(Ext.Panel, {
                             this.symbolizer.externalGraphic = value;
                         } else {
                             this.urlField.show();
-                            this.urlField.getEl().up('.x-form-item').setDisplayed(true);
+                            // TODO check why null this.urlField.getEl().up('.x-form-item').setDisplayed(true);
                         }
                         if(!this.external) {
                             this.external = true;
