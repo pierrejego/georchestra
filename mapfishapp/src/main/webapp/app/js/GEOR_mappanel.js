@@ -188,14 +188,20 @@ GEOR.mappanel = (function() {
         	// create layer and delete feature if last feature exist
         		var pointsLayer;
         		var size;
+        		
+        		
         		console.log(map.getLayersByName('georchestra_pointsLayer').length ==0);
         		if (map.getLayersByName('georchestra_pointsLayer').length === 0){
         			pointsLayer = new OpenLayers.Layer.Vector("georchestra_pointsLayer", {
         			displayInLayerSwitcher: false,
         			styleMap: new OpenLayers.StyleMap({
                         "default": {
-                            strokeOpacity : 0,
-                            fillOpacity : 0
+                            //strokeOpacity : 0,
+                            //fillOpacity : 0,
+                        	graphicWidth: 20,
+                            graphicHeight: 32,
+                            graphicYOffset: -28, // shift graphic up 28 pixels
+                            externalGraphic : 'http://www.openstreetlmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png'
                             }
                     })
                 });        		        		
@@ -226,13 +232,6 @@ GEOR.mappanel = (function() {
             				map.setCenter(new OpenLayers.LonLat(point.x, point.y), 16);
             				feature = new OpenLayers.Feature.Vector(point);
                 			pointsLayer.addFeatures(feature);
-                			size = new OpenLayers.Size(20,32);
-                			var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);               			
-                			var icon = new OpenLayers.Icon('http://www.openstreetmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png', size);
-                            var markerslayer = new OpenLayers.Layer.Markers( "Markers" );
-                			markerslayer.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(point.x, point.y), icon));
-                            map.addLayer(markerslayer);
-                			
             		}else{
             			alert("Coordonnées invalides !");
         			}
