@@ -46,7 +46,10 @@
             "annotation.fillcolor": "Fill color",
             "annotation.outlinecolor": "Outline color",
             "annotation.name": "Name",
-            "annotation.no_title": "no title"
+            "annotation.no_title": "no title",
+            "annotation.fontLabel" : "Font",
+            "annotation.fontTooltip" : "Clic to change font style",
+            "annotation.titlePopup" : "Settings"
         },
         "es": {
             "annotation.drawing_tools": "Herramientas de dibujo",
@@ -83,7 +86,12 @@
             "annotation.fillcolor": "Relleno",
             "annotation.outlinecolor": "Contorno",
             "annotation.name": "Nombre",
-            "annotation.no_title": "Sin título"
+            "annotation.no_title": "Sin título",
+            "annotation.fontLabel" : "Fuente",
+            "annotation.fontTooltip" : "Cambiar la fuente",
+            "annotation.titlePopup" : "Ajustes"
+            
+            
         },
         "fr": {
             "annotation.drawing_tools": "Outils de dessin",
@@ -121,7 +129,11 @@
             "annotation.outlinecolor": "Contour",
             "annotation.name": "Nom",
             "annotation.no_title": "Sans titre",
-            "annotation.fillOpacity": "Opacité"
+            "annotation.fillOpacity": "Opacité",
+            "annotation.fontLabel" : "Police",
+            "annotation.fontTooltip" : "Cliquer pour changer la police de caractère",
+            "annotation.titlePopup" : "Paramètres"
+            
         },
         "de": {
             "annotation.drawing_tools": "Zeichenwerkzeug",
@@ -158,7 +170,11 @@
             "annotation.fillcolor": "Füllfarbe",
             "annotation.outlinecolor": "Konturfarbe",
             "annotation.name": "Name",
-            "annotation.no_title": "Ohne Titel"
+            "annotation.no_title": "Ohne Titel",
+            "annotation.fontLabel" : "Schriftart",
+            "annotation.fontTooltip" : "Klicken Sie auf die Schriftart zu ändern",
+            "annotation.titlePopup" : "Einstellungen"
+            
         }
     }
 }

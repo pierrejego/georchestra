@@ -223,6 +223,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         this.initDeleteAllAction();
         //this.actions.push('-');
         this.initExportAsKmlAction();
+        this.initDrawXy();
+
 
         GEOR.Annotation.superclass.constructor.apply(this, arguments);
     },
@@ -472,6 +474,109 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
         this.actions.push(action);
     },
+    
+    /** private: method[initDrawXy]
+     *  Create a Ext.Action object that is set as the exportAsKml property
+     *  and pushed to the actions array.
+     */
+    initDrawXy: function() {
+        var actionOptions = {
+            handler: this.drawXy,
+            scope: this,
+            //text: OpenLayers.i18n('annotation.export_as_kml'),
+            text:'Xy',
+            iconCls: "gx-featureediting-export",
+            iconAlign: 'top',
+            //tooltip: OpenLayers.i18n('annotation.export_as_kml_tip')
+            tooltip: 'Dessiner un point à partir de ses coordonnées'
+        };
+
+        var action = new Ext.Action(actionOptions);
+
+        this.actions.push(action);
+    },
+    
+    /** private: method[drawXy]
+     *  Create a Ext.Action object that is set as the exportAsKml property
+     *  and pushed to the actions array.
+     */
+    drawXy: function() {
+    	var panelXy = new Ext.form.FormPanel({
+            
+            title   : 'Dessiner un point par ses coordonnées',
+            autoHeight: true,
+            width   : 300,            
+            bodyStyle: 'padding: 5px',
+            defaults: {
+                anchor: '0'
+            },
+            items   : [                    
+                    {
+                        xtype : 'compositefield',
+                        anchor: '-20',
+                        msgTarget: 'side',
+                        fieldLabel: 'Full Name',
+                        items : [
+                            {
+                                //the width of this field in the HBox layout is set directly
+                                //the other 2 items are given flex: 1, so will share the rest of the space
+                                xtype:          'combo',
+                                mode:           'local',
+                                value:          '',
+                                triggerAction:  'all',
+                                forceSelection: true,
+                                editable:       false,
+                                fieldLabel:     'Title',
+                                name:           'title',
+                                hiddenName:     'title',
+                                displayField:   'name',
+                                valueField:     'value',
+                                store:          new Ext.data.JsonStore({
+                                    fields : ['name', 'value'],
+                                    data   : [
+                                        {name : '4326',   value: 'WGS 84'},
+                                        {name : '3857',  value: 'Spherical Mercator'},
+                                        {name : '2154', value: 'Lambert 93'}
+                                    ]
+                                })
+                            },
+                            {
+                                xtype: 'numberfield',
+                                flex : 1,
+                                name : 'Lng (x)',
+                                fieldLabel: 'Lng (x)',
+                                allowBlank: false
+                            },
+                            {
+                                xtype: 'numberfield',
+                                flex : 1,
+                                name : 'Lng (x)',
+                                fieldLabel: 'Lng (x)',
+                                allowBlank: false
+                            }
+                        ]
+                    
+                    
+                }
+            ],
+            buttons: [
+               
+                {
+                    text   : 'Ok'
+                },
+                
+                {
+                    text   : 'Annuler'
+                }
+            ]
+        });
+    	return panelXy.show;
+
+    },
+    
+    
+    
+    
 
     /** private: method[exportAsKml]
      *  Called when the exportAsKml is triggered (button pressed).
@@ -598,12 +703,19 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             features: [feature],
             styler: this.styler
         };
+        
+        
+        // get attribute value for label
+        if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point" && feature.isLabel){
+        	console.log(feature.attributes);
+        }
 
         this.featurePanel = new GEOR.FeaturePanel(options);
 
         // display the popup
         popupOptions = {
             location: feature,
+            title:OpenLayers.i18n('annotation.titlePopup'),
             // the following line is here for compatibility with
             // GeoExt < 1 (before changeset 2343)
             feature: feature,
@@ -742,7 +854,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     onFeatureSelect: function(event) {
         var feature = (event.geometry) ? event : event.feature;
         this.applyStyle(feature, 'normal', {'redraw': true});
-    },
+l    },
 
     /** private: method[applyStyles]
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
