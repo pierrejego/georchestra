@@ -187,9 +187,7 @@ GEOR.mappanel = (function() {
         	handler: function (){
         	// create layer and delete feature if last feature exist
         		var pointsLayer;
-        		var size;
-        		
-        		
+        		var size;       		
         		console.log(map.getLayersByName('georchestra_pointsLayer').length ==0);
         		if (map.getLayersByName('georchestra_pointsLayer').length === 0){
         			pointsLayer = new OpenLayers.Layer.Vector("georchestra_pointsLayer", {
