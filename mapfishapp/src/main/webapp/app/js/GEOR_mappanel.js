@@ -199,7 +199,7 @@ GEOR.mappanel = (function() {
                         	graphicWidth: 20,
                             graphicHeight: 32,
                             graphicYOffset: -28, // shift graphic up 28 pixels
-                            externalGraphic : 'http://www.openstreetlmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png'
+                            externalGraphic : 'http://www.openstreetmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png'
                             }
                     })
                 });        		        		
