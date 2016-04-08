@@ -132,8 +132,18 @@
             "annotation.fillOpacity": "Opacité",
             "annotation.fontLabel" : "Police",
             "annotation.fontTooltip" : "Cliquer pour changer la police de caractère",
-            "annotation.titlePopup" : "Paramètres"
-            
+            "annotation.titlePopup" : "Paramètres",
+            "annotation.xyTool":"XY",
+            "annotation.tooltipDrawXy":"Dessiner un point par ses coordonnées",
+            "annotation.drawXyTitle" : "Outil de dessin par localisation",
+            "annotation.projectionSystem":"Système de projection ",
+            "annotation.longitude":"longitude x...",
+            "annotation.Longitude":"Longitude (x) ",
+            "annotation.latitude":"latitude y...",
+            "annotation.Latitude":"Latitude (y) ",
+            "annotation.badXy" : "Coordonnées en dehors de la carte !",
+            "annotation.cancelDrawXy" : "Annuler",
+            "annotation.validDrawXy":"Ok"     
         },
         "de": {
             "annotation.drawing_tools": "Zeichenwerkzeug",
