@@ -141,7 +141,7 @@
             "annotation.Longitude":"Longitude (x) ",
             "annotation.latitude":"latitude y...",
             "annotation.Latitude":"Latitude (y) ",
-            "annotation.badXy" : "Coordonnées en dehors de la carte !",
+            "annotation.badXy" : "Coordonnées hors carte ou invalides !",
             "annotation.cancelDrawXy" : "Annuler",
             "annotation.validDrawXy":"Ok"     
         },
