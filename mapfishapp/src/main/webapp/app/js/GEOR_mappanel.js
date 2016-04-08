@@ -215,7 +215,7 @@ GEOR.mappanel = (function() {
         		// get coordinates from field value
             	var xLong = Ext.getCmp('fieldX').getValue();
         		var yLat = Ext.getCmp('fieldY').getValue();
-        		if (xLong || yLat != null){
+        		if (xLong != null || yLat != null){
         			// directly create point if SRS = projection, else, transform to map SRS
             		if (xyList[2]=== GEOR.config.MAP_SRS){
                 		var point = new OpenLayers.Geometry.Point(xLong,yLat);
