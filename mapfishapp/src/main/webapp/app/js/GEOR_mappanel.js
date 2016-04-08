@@ -135,6 +135,7 @@ GEOR.mappanel = (function() {
             store: srsList,
             value: srsList[0][1],
             editable: false,
+            cls:'bottomButton',
             tpl: [
                 '<tpl for=".">',
                 '<div class="x-combo-list-item" ext:qtip="{field2} - {field1}" >',
@@ -161,7 +162,7 @@ GEOR.mappanel = (function() {
         items.push({
             xtype: 'textfield',
             id:'fieldX',
-            width: 90,
+            width: 80,
             editable: true            
         });
         
@@ -172,7 +173,7 @@ GEOR.mappanel = (function() {
         items.push({
             xtype: 'textfield',
             id:'fieldY',
-            width: 90,
+            width: 80,
             editable: true
         });
         
@@ -181,9 +182,10 @@ GEOR.mappanel = (function() {
         items.push({
         	xtype:'button',
         	id:'buttonCenter',
+        	height:10,
         	text:'Voir',
         	tooltip:'Zoom surl les coordonnées',
-        	cls:'x-btn-smallest',
+        	ctCls:'x-btn-smallest',
         	handler: function (){
         	// create layer and delete feature if last feature exist
         		var pointsLayer;
@@ -199,7 +201,8 @@ GEOR.mappanel = (function() {
                         	graphicWidth: 20,
                             graphicHeight: 32,
                             graphicYOffset: -28, // shift graphic up 28 pixels
-                            externalGraphic : 'http://www.openstreetmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png'
+                            //externalGraphic : 'http://www.openstreetmap.org/assets/images/marker-icon-915e83a6fc798c599e5c9e3f759d6bc065d65151019acd0410d1f4731bcaaf72.png'
+                            externalGraphic : 'app/css/images/pwrs/geoPin.png'
                             }
                     })
                 });        		        		
