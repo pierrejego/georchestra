@@ -740,7 +740,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             // the following line is here for compatibility with
             // GeoExt < 1 (before changeset 2343)
             feature: feature,
-            closeAction:'hide',
+            closeAction:'close',
             items: [this.featurePanel]
         };
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions,
