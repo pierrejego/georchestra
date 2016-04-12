@@ -439,9 +439,7 @@ GEOR.config = (function() {
          */
         POINTER_POSITION_SRS_LIST: getCustomParameter("POINTER_POSITION_SRS_LIST",  [
             ["EPSG:4326", "WGS 84"],
-            ["EPSG:3857", "Spherical Mercator"]
-"]
-            
+            ["EPSG:3857", "Spherical Mercator"]            
         ]),
 
         /**
