@@ -509,10 +509,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     	var srsConfig = GEOR.custom.POINTER_POSITION_SRS_LIST,
     	srsOrigin = srsConfig[0][0];
     	
-    	if (!Ext.getCmp('winXyId')){
-    		console.log('non');
-    	} else {
-    		console.log('oui');
+    	if (Ext.getCmp('winXyId')){
     		Ext.getCmp('winXyId').destroy();
     	}
 
