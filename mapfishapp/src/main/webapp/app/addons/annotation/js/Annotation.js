@@ -485,7 +485,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     initDrawXy: function() {
         var actionOptions = {
             handler: this.drawXy,
+            id:'buttonDrawXy',
             scope: this,
+            group: this.toggleGroup,
+            checked: false,
             text:OpenLayers.i18n('annotation.xyTool'),
             iconCls: 'gx-featureediting-xy',
             iconAlign: 'top',
@@ -504,11 +507,19 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     
     drawXy: function(){
     	var srsConfig = GEOR.config.POINTER_POSITION_SRS_LIST,
-    	srsOrigin = srsConfig[0][0];    	
+    	srsOrigin = srsConfig[0][0];
     	
+    	if (!Ext.getCmp('winXyId')){
+    		console.log('non');
+    	} else {
+    		console.log('oui');
+    		Ext.getCmp('winXyId').destroy();
+    	}
+
 		var window = new Ext.Window({
 			title : OpenLayers.i18n('annotation.drawXyTitle'),
-			width : 250,			
+			width : 250,
+			id:'winXyId',
 			height: 195,
 			resizable: false,
 			items   : [
