@@ -1,8 +1,22 @@
-FROM georchestra/base
+FROM jetty:9.3-jre8
+
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "deb http://httpredir.debian.org/debian jessie contrib" >> /etc/apt/sources.list
+RUN echo "deb http://security.debian.org/ jessie/updates contrib" >> /etc/apt/sources.list
+
+RUN apt-get update && \
+   apt-get install -y ttf-mscorefonts-installer  && \
+   rm -rf /var/lib/apt/lists/*
 
 ADD . /
-ADD https://github.com/georchestra/geoserver_minimal_datadir/archive/master.zip /tmp/datadir.zip
 
-RUN chmod +x /root/start.sh
+VOLUME [ "/var/local/geoserver", "/var/local/geodata", "/var/local/tiles" ]
 
-CMD /root/start.sh
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD [ "java","-Djava.io.tmpdir=/tmp/jetty", "-Dgeorchestra.datadir=/etc/georchestra",                     \
+      "-DGEOSERVER_DATA_DIR=/var/local/geoserver", "-Dgeofence.dir=/etc/georchestra/geoserver/geofence", \
+      "-DGEOWEBCACHE_CACHE_DIR=/var/local/tiles", "-jar","/usr/local/jetty/start.jar" ]
+
