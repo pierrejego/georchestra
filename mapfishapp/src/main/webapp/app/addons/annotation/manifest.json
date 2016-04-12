@@ -59,7 +59,7 @@
             "annotation.latitude":"latitude y...",
             "annotation.Latitude":"Latitude (y) ",
             "annotation.badXy" : "Coordinates are out of map extend or wrong !",
-            "annotation.cancelDrawXy" : "Cancel",
+            "annotation.cancelDrawXy" : "Close",
             "annotation.validDrawXy":"Ok"
         },
         "es": {
@@ -164,7 +164,7 @@
             "annotation.latitude":"latitude y...",
             "annotation.Latitude":"Latitude (y) ",
             "annotation.badXy" : "Coordonnées hors carte ou invalides !",
-            "annotation.cancelDrawXy" : "Annuler",
+            "annotation.cancelDrawXy" : "Fermer",
             "annotation.validDrawXy":"Ok"     
         },
         "de": {

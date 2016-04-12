@@ -506,7 +506,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     
     drawXy: function(){
-    	var srsConfig = GEOR.config.POINTER_POSITION_SRS_LIST,
+    	var srsConfig = GEOR.custom.POINTER_POSITION_SRS_LIST,
     	srsOrigin = srsConfig[0][0];
     	
     	if (!Ext.getCmp('winXyId')){
@@ -576,19 +576,19 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 		                            	 var yLat = Ext.getCmp('LatFieldId').getValue();
 		                            	 var selectSrs = Ext.getCmp('annoComboId').getValue();
 		                            	 if (xLong != null && yLat != null){
-			                            	 if (selectSrs === GEOR.config.MAP_SRS){
+			                            	 if (selectSrs === GEOR.custom.MAP_SRS){
 			                            		 var point = new OpenLayers.Geometry.Point(xLong,yLat);		                            		 
 			                            	 } else { 
 			                         			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
 			                         					new OpenLayers.Projection(selectSrs), // from select srs
-			                         					GEOR.config.MAP_SRS);      			// to map srs
+			                         					GEOR.custom.MAP_SRS);      			// to map srs
 			                         			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
 			                            		}		                            	 
 			                            	// add new point to map and zoom if geom respect map extend
-			                         		if (point.x <= GEOR.config.MAP_XMAX &&
-			                         			point.x >= GEOR.config.MAP_XMIN && 
-			                         			point.y <= GEOR.config.MAP_YMAX && 
-			                         			point.y >= GEOR.config.MAP_YMIN){
+			                         		if (point.x <= GEOR.custom.MAP_XMAX &&
+			                         			point.x >= GEOR.custom.MAP_XMIN && 
+			                         			point.y <= GEOR.custom.MAP_YMAX && 
+			                         			point.y >= GEOR.custom.MAP_YMIN){
 			                         				feature = new OpenLayers.Feature.Vector(point);
 			                             			layer.addFeatures(feature);
 			                         		}else{
