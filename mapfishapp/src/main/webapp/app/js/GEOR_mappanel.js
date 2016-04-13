@@ -190,7 +190,6 @@ GEOR.mappanel = (function() {
         	// create layer and delete feature if last feature exist
         		var pointsLayer;
         		var size;       		
-        		console.log(map.getLayersByName('georchestra_pointsLayer').length ==0);
         		if (map.getLayersByName('georchestra_pointsLayer').length === 0){
         			pointsLayer = new OpenLayers.Layer.Vector("georchestra_pointsLayer", {
         			displayInLayerSwitcher: false,
@@ -214,11 +213,11 @@ GEOR.mappanel = (function() {
         		var yLat = Ext.getCmp('fieldY').getValue();
         		if (xLong != null || yLat != null){
         			// directly create point if SRS = projection, else, transform to map SRS
-            		if (xyList[2]=== GEOR.config.MAP_SRS){
+            		if (xyList[0]=== GEOR.config.MAP_SRS){
                 		var point = new OpenLayers.Geometry.Point(xLong,yLat);
                 	} else { 
             			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
-                            new OpenLayers.Projection(xyList[2]), 
+                            new OpenLayers.Projection(xyList[0]), 
                             GEOR.config.MAP_SRS);      			
             			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
             		}
@@ -254,7 +253,7 @@ GEOR.mappanel = (function() {
                 // transform coordinates to selected projection if srs 
                 // is not map projection
                 if (comboSrs != projFrom){
-                	xyList[2]=comboSrs;
+                	xyList[0]=comboSrs;
                     projTo = new OpenLayers.Projection(comboSrs);
                     lonLatProj = lonLat.transform(projFrom, projTo);
                     lonX=lonLatProj.lon.toFixed(5);
@@ -262,7 +261,7 @@ GEOR.mappanel = (function() {
                 } else {
                 	lonX=lonLat.lon.toFixed(2);
                     latY=lonLat.lat.toFixed(2);
-                    xyList[2]=true;
+                    xyList[0]=projFrom;
                 }
                 
                 Ext.getCmp('fieldX').setValue(lonX);
