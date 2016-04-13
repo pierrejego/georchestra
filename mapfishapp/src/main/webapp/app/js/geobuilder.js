@@ -1,456 +1,711 @@
-;(function(){
-
-    var WORKPLACE_DEFAULT_WIDTH = 600
-    var WORKPLACE_DEFAULT_HEIGHT = 480
 
-
-    var oldSimpleSelection = false;
-    var simpleSelection = false;
-
-    function byid(id) { return document.getElementById(id) }
-
-
-    function setWidgetContent(wrapperId, url, width, height) {
-        byid(wrapperId + '_IFRAME').setAttribute('src', url)
-        var wrapper = byid(wrapperId)
-        if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
-        if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
-    }
-
-    function setWidgetTitle(wrapperId, title) {
-        byid(wrapperId).getElementsByTagName('h4').item(0).innerHTML = title
-    }
-
-    function showWidget(wrapperId, width, height) {
-        var wrapper = byid(wrapperId)
-        wrapper.style.display = 'block'
-        if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
-        if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
-    }
-
-    function hideWidget(wrapperId) {
-        byid(wrapperId).style.display = 'none'
-    }
-
-    function setWaitingWidget(wrapperId) {
-        byid(wrapperId + '_IFRAME').contentWindow.document.write('Chargement ...')
-    }
-
-
-
-
-    var HOSTNAME = '172.16.40.100'
-
-    /**
-     * Fonctions & Helpers privées
-     */
-
-     var currentSelection = []
-
-
-
-    /**
-     * Définition des fonctions à implémenter par le client (définies dans
-     * l'index)
-     */
-
-
-    /**
-     * Affiche la fiche d'un objet GéoBuilder dans l'iframe ggis_featureInfo
-     * @param  {String}
-     * @param  {Number|String}
-     * @return {void}
-     */
-    function showFeatureInfo(featureClass, featureId) {
-        setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId)
-        showWidget('ggis_featureInfo')
-    }
-
-    /**
-     * Masque la fiche Géobuilder
-     */
-    function hideFeatureInfo() {
-        hideWidget('ggis_featureInfo')
-    }
-
-    /**
-     * Ajoute un message dans la console de débug
-     * @param {String} file Fichier d'appel
-     * @param {String} context Contexte d'appel (fonction, processus, etc.)
-     * @param {String} info Informations à afficher
-     * @param {String} errlevel Niveau d'erreur
-     */
-    function addDebug(file, context, info, errlevel) {
-        var args = Array.prototype.slice.call(arguments, 0, 3)
-        console && console[errlevel] && console[errlevel].apply(console, args)
-    }
-
-    /**
-     * Charge une page dans l'iframe zone de travail, en redimensionnant cet
-     * iframe si possible.
-     * @param {String} url URL de la page a afficher dans la zone de travail
-     * @param {Number} width Largeur de la fenêtre (du widget / iframe), WORKPLACE_DEFAULT_WIDTH par défaut
-     * @param {Number} height Hauteur widget / iframe, WORKPLACE_DEFAULT_HEIGHT par défaut
-     * @param {String} title Titre affiché sur le widget, "Zone de travail" par défaut
-     *
-     */
-    function setWorkPlaceContent(url, width, height, title) {
-        title = title || tr("Workspace")
-        setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url, width, height)
-        setWidgetTitle('ggis_workPlace', title)
-        showWorkPlace(width, height)
-    }
-
-
-    /**
-     * Charge une page dans l'iframe popup
-     * @param {String} url URL de la page a afficher dans la popup
-     * @param {Number} width Largeur de l' iframe (600 par défaut)
-     * @param {Number} height Hauteur l'iframe (400 par défaut)
-     * @param {String} title Titre affiché sur le widget, "Popup" par défaut
-     * @return {void}
-     */
-    function showPopup(url, width, height, title) {
-        title = title || 'Popup'
-        width = width || 600
-        height = height || 400
-        setWidgetTitle('ggis_popup', title)
-        setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, width, height)
-        showWidget('ggis_popup')
-
-    }
-
-    /**
-     * Masque le widget popup
-     * @return {void}
-     */
-    function hidePopup(){
-        hideWidget('ggis_popup')
-    }
-
-    /**
-     * Charge une page dans l'iframe menu
-     * @param {String} url URL de la page a afficher dans le menu
-     * @param {String} title Titre affiché sur le widget
-     * @return {void}
-     */
-    function setMenuContent(url, title) {
-        setWidgetTitle('ggis_menu', title)
-        setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
-        showWidget('ggis_menu', 400, 500)
-    }
-
-    /**
-    * Retourne le nom de l'objet
-    * @param {String} idObj: identifiant de type d'objet
-    * @return {String}: nom de l'objet
-    */
-    function getObjectName(idObj) {
-        type_obj_id = idObj || 'undefined'
-        console.log('getObjectName(' + type_obj_id + ')')
-        return 'objet ' + type_obj_id
-    }
-
-    /**
-     * @param {Number} latitude: coordonnée
-     * @param {Number} longitude: coordonnée
-     * @param {Number} width: facteur de zoom
-     */
-    function ZoomEnsemble(latitude, longitude, width){
-
-    }
-
-    /**
-     * Fonction appelée après une opération de digitalisation, pour nettoyer
-     * la couche de dessin.
-     */
-    function ClearDigitization() {
-
-    }
-
-    /**
-     * Renvoie l'objet window contenu dans un iframe, identifié par le nom du
-     * widget
-     * @param  {String} wrapperId Le nom du widget choisi
-     * @return {Window}
-     */
-    function getWidgetIframe(wrapperId) {
-        return byid(wrapperId + '_IFRAME').contentWindow
-    }
-
-
-    /**
-     * Affiche la zone de travail avec certaines dimensions.
-     * @param  {Number} width default = WORKPLACE_DEFAULT_WIDTH
-     * @param  {Number} height default = WORKPLACE_DEFAULT_HEIGHT
-     * @return {void}
-     */
-    function showWorkPlace(width, height) {
-        showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT)
-    }
-
-    /**
-     * Masque la zone de travail
-     * @return {void}
-     */
-    function hideWorkPlace () {
-        hideWidget('ggis_workPlace')
-    }
-
-    /**
-     * Charge une url dans l'iframe du widget invisible
-     * @param {String} url
-     */
-    function setHiddenWidgetContent(url) {
-        setWidgetContent('ggis_hiddenWidget', Fusion.getFusionURL() + url)
-    }
-
-    /**
-     * Affiche la zone de travail avec un message de chargement permettant de
-     * soumettre un formulaire avec son iframe comme cible. Il ne faut donc pas
-     * charger une parge de chargement dans l'iframe afin d'éviter une race
-     * condition avec la soumission du formulaire.
-     * @param  {Number} width Largeur de la zone de travail, avec valeur par défaut
-     * @param  {Number} height Hauteur, idem
-     * @return {void}
-     */
-    function showWaitingWorkPlace(width, height) {
-        setWaitingWidget('ggis_workPlace')
-        showWorkPlace(width, height)
-    }
-
-    /**
-     * Affiche l'URL passée dans la zone de menu correspondant à la
-     * digitalisation
-     * @param {String} url
-     */
-    function setDigitContent(url) {
-        setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
-    }
-
-    /**
-     * Renvoie le nom de la carte courante
-     * @return {String} Le nom de la carte
-     */
-    function getMapName() {
-        return "NoMap"
-    }
-
-    /**
-     * Passe le flag simpleSelection à true en gardant l'ancienne valeur du flag
-     * dans oldSimpleSelection
-     */
-    function setSimpleSelect () {
-        oldSimpleSelection = simpleSelection;
-        simpleSelection = true;
-    };
-
-
-
-    /**
-     * Définition des fonctions à implémenter par le client (définies dans
-     * ggis_jsFramework)
-     */
-
-    /**
-     * definir la selection courante
-     * @param {String} width largeur du zoom
-     * @param {String} lstIdObj: liste des identifiants d'objets séparés par des ";" (ex: 'CAN;INS')
-     * @param {String} lstIds: liste des groupes d'identifiants associés aux idObj (ex: '1,2,3;4,5')
-     *                         (séparateur "," entre 2 ids d'un même objet - séparateur ";" entre 2 ids d'objets différents)
-     * @param {Boolean} isVisSelCtrl: flag de visibilité sélectionnabilité (paramètre optionnel)
-     *                      false: on force la recherche sur toutes les couches independamment des critères de visibilité sélectionnabilité
-     * @return {String} success: "ok" si le traitement s'est bien passé (on a pu définir la sélection)
-     *                           "err_visibilite" si on n'a pas pu définir de sélection (probablement dû à un pb de visibilite/selectionnabilite des couches)
-     *                           "err_geometry" si le traitement n'a pas abouti en raison d'une GEOMETRY incorrecte (nulle ou non définie) de l'objet
-     *                           "err_layerfilter" : le traitement n'a pas abouti en raison d'un filtre sur les données appliqué sur la(les) couche(s) concernée(s)
-     *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
-     */
-    function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
-
-        // effacement de la sélection sur la carte
-        deleteMapSelection(currentSelection)
-
-        var selection = Selection.fromSequences(lstIdObj, lstIds)
-        var idsLists = lstIds.split(';') // ["1,2,3", "4,5,6"]
-        /* global currentSelection */
-        currentSelection = selection.map(function(obj, ids){
-            return {obj: obj, ids: ids}
-        })
-
-        // sélection sur la carte des nouveaux objets
-        addMapSelection(currentSelection)
-
-        // Mise à jour des sélecteurs de fiche
-        var objSelect = d3.select('#currentSelectionFeaturesClasses')
-        var idsSelect = d3.select('#currentSelectionIds')
-        var objOpt = objSelect.selectAll('option')
-            .data(currentSelection, function(o){ return o.obj })
-        objOpt.exit().remove()
-        objOpt.enter().append('option')
-        objOpt.text(function(d) {
-            return d.obj
-        })
-        objSelect.on('change', function(){
-            var obj = d3.event.target.value
-            showIdsSelect({obj: obj, ids: selection.get(obj)})
-        })
-
-        function showIdsSelect(subSel) {
-            var idsOpt = idsSelect.selectAll('option').data(subSel.ids)
-            idsOpt.exit().remove()
-            idsOpt.enter().append('option')
-            idsOpt.text(function(d){return String(d)})
-            idsSelect.on('change', function(){
-                showFeatureInfo(subSel.obj, d3.event.target.value)
-            })
-
-            showFeatureInfo(subSel.obj, subSel.ids[0])
-        }
-
-        showIdsSelect(currentSelection[0])
-
-
-        // Mise à jour de l'input type text
-        d3.select('#text-selection').property('value',
-            currentSelection.reduce(function(acc, subSel){
-                return acc.concat(subSel.ids.map(function(id){
-                    return subSel.obj + ' ' + id
-                }))
-            }, [])
-            .join(';')
-        )
-        console.log('currentSelection',currentSelection)
-        return 'ok'
-    }
-
-    function deleteMapSelection(selection) {
-
-    }
-
-    function addMapSelection(selection) {
-
-    }
-
-    /**
-     * renvoie des couches de la carte
-     * @param {Boolean} visible
-     * @param {Boolean} selectable
-     * @return {Array}
-     */
-    function getLayers(visible, selectable) {
-        return []
-    }
-
-    /**
-     * renvoie des groupes de couches de la carte
-     * @param {Boolean} visible
-     * @param {Boolean} selectable
-     * @return {Array}
-     */
-    function getLayersGroups(visible, selectable) {
-        return []
-    }
-
-    /**
-     * Obtenir la sélection courante
-     *
-     * @param {String} lstIdObj liste des identifiants d'objets séparés par des ";"
-     * @return {String} selectedObjs liste des objets sélectionnés avec leurs ids (ex: 'CAN 10;CAN 20;CAN 30;INS 2;NDS 1;NDS 3')
-     */
-    function getCurrentSelection(lstIdObj) {
-        var currentSelFull = byid('text-selection').value
-        if (lstIdObj && lstIdObj.length) {
-            var selection = Selection.fromPairs(currentSelFull)
-            var objsToKeep = lstIdObj.split(';')
-            return selection.filterClasses(function(obj){
-                return objsToKeep.indexOf(obj) !== -1
-            }).toPairs()
-        } else {
-            return currentSelFull
-        }
-    }
-
-    /**
-     * Doit lancer la digitalisation d'un point par l'utilisateur. Doit ensuite
-     * appelerla callback passée avec une chaine WKT représentant ce point.
-     * @param {Function} callback
-     */
-    function DigitizePoint(callback) {
-        return callback('POINT(0 0)')
-    }
-
-    /**
-     * Doit lancer la digitalisation d'une polyligne par l'utilisateur. Doit
-     * ensuite appelerla callback passée avec une chaine WKT représentant cette
-     * ligne.
-     * @param {Function} callback
-     */
-    function DigitizeLineString(callback) {
-        return callback('LINESTRING(-1 -1,1 1)')
-    }
-
-    /**
-     * Doit lancer la digitalisation d'un polygone par l'utilisateur. Doit
-     * ensuite appelerla callback passée avec une chaine WKT représentant ce
-     * polygone.
-     * @param {Function} callback
-     */
-    function DigitizePolygon(callback) {
-        return callback('POLYGON(-1 -1,-1 1,1 1,1 -1,-1 -1)')
-    }
-
-    /**
-     * Export des fonctions du client dans l'espace global
-     */
-
-    window.Fusion = {
-
-        /**
-         * Renvoie l'URL pointant vers le dossier 'diffos' avec un '/' en fin.
-         * @return {String}
-         */
-        getFusionURL: function() {
-            return this.options.urlGeobuilder
-        },
-
-        getWidgetById: function(id) {
-            if (id === 'Map') return window
-            throw 'getWidgetById + "'+id+'"'
-        }
-    }
-
-    window.addDebug = addDebug
-    window.ClearDigitization = ClearDigitization
-    window.DigitizeLineString = DigitizeLineString
-    window.DigitizePoint = DigitizePoint
-    window.DigitizePolygon = DigitizePolygon
-    window.getCurrentSelection = getCurrentSelection
-    window.getMapName = getMapName
-    window.getObjectName = getObjectName
-    window.getWidgetIframe = getWidgetIframe
-    window.hideFeatureInfo = hideFeatureInfo
-    window.hidePopup = hidePopup
-    window.hideWorkPlace = hideWorkPlace
-    window.setCurrentSelection = setCurrentSelection
-    window.setDigitContent = setDigitContent
-    window.setHiddenWidgetContent = setHiddenWidgetContent
-    window.setSimpleSelect = setSimpleSelect
-    window.setWorkPlaceContent = setWorkPlaceContent
-    window.showFeatureInfo = showFeatureInfo
-    window.showPopup = showPopup
-    window.showWaitingWorkPlace = showWaitingWorkPlace
-    window.showWorkPlace = showWorkPlace
-
-    /*
-     * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
-     * peut être implémenté à partir du JSON renvoyé par wmenu.cfm
-     */
-    window.setMenuContent = setMenuContent
-    /*
-     * setWidgetContent est utilisée pour le chargement du menu qui implémenté
-     * avec un iframe dans cette démo.
-     */
-    window.setWidgetContent = setWidgetContent
+geobuilder = (function() {
+
+	var WORKPLACE_DEFAULT_WIDTH = 600
+	var WORKPLACE_DEFAULT_HEIGHT = 480
+
+
+	var oldSimpleSelection = false
+	var simpleSelection = false
+	var selection = null
+	var geoApiInitialized = false
+	var geoApiDrawControls = {}
+
+	var map = null
+
+	var geoApiStyleMap = GEOR.util.getStyleMap()    
+
+
+
+	function byid(id) { return document.getElementById(id) }
+
+
+	function setWidgetContent(wrapperId, url, width, height) {
+		byid(wrapperId + '_IFRAME').setAttribute('src', url)
+		var wrapper = byid(wrapperId)
+		if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
+		if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
+	}
+
+	function setWidgetTitle(wrapperId, title) {
+		byid(wrapperId).getElementsByTagName('h4').item(0).innerHTML = title
+	}
+
+	function showWidget(wrapperId, width, height) {
+		var wrapper = byid(wrapperId)
+		wrapper.style.display = 'block'
+			wrapper.style.position = 'absolute'
+				if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
+				if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
+	}
+
+	function hideWidget(wrapperId) {
+		byid(wrapperId).style.display = 'none'
+	}
+
+	function setWaitingWidget(wrapperId) {
+		byid(wrapperId + '_IFRAME').contentWindow.document.write('Chargement ...')
+	}
+
+	var HOSTNAME = '172.16.40.100'
+
+	/**
+	 * Affiche la fiche d'un objet GéoBuilder dans l'iframe ggis_featureInfo
+	 * @param  {String}
+	 * @param  {Number|String}
+	 * @return {void}
+	 */
+	function showFeatureInfo(featureClass, featureId) {
+		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 600, 400)
+		showWidget('ggis_featureInfo', 600, 400)
+	}
+
+	/**
+	 * Masque la fiche Géobuilder
+	 */
+	function hideFeatureInfo() {
+		hideWidget('ggis_featureInfo')
+	}
+
+	/**
+	 * Ajoute un message dans la console de débug
+	 * @param {String} file Fichier d'appel
+	 * @param {String} context Contexte d'appel (fonction, processus, etc.)
+	 * @param {String} info Informations à afficher
+	 * @param {String} errlevel Niveau d'erreur
+	 */
+	function addDebug(file, context, info, errlevel) {
+		var args = Array.prototype.slice.call(arguments, 0, 3)
+		console && console[errlevel] && console[errlevel].apply(console, args)
+	}
+
+	/**
+	 * Charge une page dans l'iframe zone de travail, en redimensionnant cet
+	 * iframe si possible.
+	 * @param {String} url URL de la page a afficher dans la zone de travail
+	 * @param {Number} width Largeur de la fenêtre (du widget / iframe), WORKPLACE_DEFAULT_WIDTH par défaut
+	 * @param {Number} height Hauteur widget / iframe, WORKPLACE_DEFAULT_HEIGHT par défaut
+	 * @param {String} title Titre affiché sur le widget, "Zone de travail" par défaut
+	 *
+	 */
+	function setWorkPlaceContent(url, width, height, title) {
+		title = title || tr("Workspace")
+		setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url, width, height)
+		//setWidgetTitle('ggis_workPlace', title)
+		showWorkPlace(width, height)
+
+	}
+
+
+	/**
+	 * Charge une page dans l'iframe popup
+	 * @param {String} url URL de la page a afficher dans la popup
+	 * @param {Number} width Largeur de l' iframe (600 par défaut)
+	 * @param {Number} height Hauteur l'iframe (400 par défaut)
+	 * @param {String} title Titre affiché sur le widget, "Popup" par défaut
+	 * @return {void}
+	 */
+	function showPopup(url, width, height, title) {
+		title = title || 'Popup'
+		width = width || 600
+		height = height || 400
+		setWidgetTitle('ggis_popup', title)
+		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, width, height)
+		showWidget('ggis_popup')
+
+	}
+
+	/**
+	 * Masque le widget popup
+	 * @return {void}
+	 */
+	function hidePopup(){
+		hideWidget('ggis_popup')
+	}
+
+	/**
+	 * Charge une page dans l'iframe menu
+	 * @param {String} url URL de la page a afficher dans le menu
+	 * @param {String} title Titre affiché sur le widget
+	 * @return {void}
+	 */
+	function setMenuContent(url, title) {
+		setWidgetTitle('ggis_menu', title)
+		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
+		showWidget('ggis_menu', 400, 500)
+	}
+
+	/**
+	 * Retourne le nom de l'objet
+	 * @param {String} idObj: identifiant de type d'objet
+	 * @return {String}: nom de l'objet
+	 */
+	function getObjectName(idObj) {
+		type_obj_id = idObj || 'undefined'
+		console.log('getObjectName(' + type_obj_id + ')')
+		return 'objet ' + type_obj_id
+	}
+
+	/**
+	 * @param {Number} latitude: coordonnée
+	 * @param {Number} longitude: coordonnée
+	 * @param {Number} width: facteur de zoom
+	 */
+	function ZoomEnsemble(latitude, longitude, width){
+		position = new OpenLayers.LonLat(longitude, latitude)
+		Fusion.getMap().setCenter(position, width)
+	}
+
+	/**
+	 * Fonction appelée après une opération de digitalisation, pour nettoyer
+	 * la couche de dessin.
+	 */
+	function ClearDigitization() {
+
+	}
+
+	/**
+	 * Renvoie l'objet window contenu dans un iframe, identifié par le nom du
+	 * widget
+	 * @param  {String} wrapperId Le nom du widget choisi
+	 * @return {Window}
+	 */
+	function getWidgetIframe(wrapperId) {
+		return byid(wrapperId + '_IFRAME').contentWindow
+	}
+
+	/**
+	 * Affiche la zone de travail avec certaines dimensions.
+	 * @param  {Number} width default = WORKPLACE_DEFAULT_WIDTH
+	 * @param  {Number} height default = WORKPLACE_DEFAULT_HEIGHT
+	 * @return {void}
+	 */
+	function showWorkPlace(width, height) {
+		showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT)
+	}
+
+	/**
+	 * Masque la zone de travail
+	 * @return {void}
+	 */
+	function hideWorkPlace () {
+		hideWidget('ggis_workPlace')
+	}
+
+	/**
+	 * Charge une url dans l'iframe du widget invisible
+	 * @param {String} url
+	 */
+	function setHiddenWidgetContent(url) {
+		setWidgetContent('ggis_hiddenWidget', Fusion.getFusionURL() + url)
+	}
+
+	/**
+	 * Affiche la zone de travail avec un message de chargement permettant de
+	 * soumettre un formulaire avec son iframe comme cible. Il ne faut donc pas
+	 * charger une parge de chargement dans l'iframe afin d'éviter une race
+	 * condition avec la soumission du formulaire.
+	 * @param  {Number} width Largeur de la zone de travail, avec valeur par défaut
+	 * @param  {Number} height Hauteur, idem
+	 * @return {void}
+	 */
+	function showWaitingWorkPlace(width, height) {
+		setWaitingWidget('ggis_workPlace')
+		showWorkPlace(width, height)
+	}
+
+	/**
+	 * Affiche l'URL passée dans la zone de menu correspondant à la
+	 * digitalisation
+	 * @param {String} url
+	 */
+	function setDigitContent(url) {
+		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
+	}
+
+	/**
+	 * Renvoie le nom de la carte courante
+	 * @return {String} Le nom de la carte
+	 */
+	function getMapName() {
+		return Fusion.getMap().name
+	}
+
+	/**
+	 * Passe le flag simpleSelection à true en gardant l'ancienne valeur du flag
+	 * dans oldSimpleSelection
+	 */
+	function setSimpleSelect () {
+		oldSimpleSelection = simpleSelection
+		simpleSelection = true
+	}
+
+
+	/**
+	 * Définition des fonctions à implémenter par le client (définies dans
+	 * ggis_jsFramework)
+	 */
+
+	function clearSelection() {
+		setCurrentSelection(0, '', '', false)
+	}
+
+	/**
+	 * definir la selection courante
+	 * @param {String} width largeur du zoom
+	 * @param {String} lstIdObj: liste des identifiants d'objets séparés par des ";" (ex: 'CAN;INS')
+	 * @param {String} lstIds: liste des groupes d'identifiants associés aux idObj (ex: '1,2,3;4,5')
+	 *                         (séparateur "," entre 2 ids d'un même objet - séparateur ";" entre 2 ids d'objets différents)
+	 * @param {Boolean} isVisSelCtrl: flag de visibilité sélectionnabilité (paramètre optionnel)
+	 *                      false: on force la recherche sur toutes les couches independamment des critères de visibilité sélectionnabilité
+	 * @return {String} success: "ok" si le traitement s'est bien passé (on a pu définir la sélection)
+	 *                           "err_visibilite" si on n'a pas pu définir de sélection (probablement dû à un pb de visibilite/selectionnabilite des couches)
+	 *                           "err_geometry" si le traitement n'a pas abouti en raison d'une GEOMETRY incorrecte (nulle ou non définie) de l'objet
+	 *                           "err_layerfilter" : le traitement n'a pas abouti en raison d'un filtre sur les données appliqué sur la(les) couche(s) concernée(s)
+	 *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
+	 */
+	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
+
+		//Initialisation du flag indiquant le status du traitement
+		var success = "err"
+			//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
+			if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
+				isVisSelCtrl = true
+			}
+
+		//si tous les paramètres d'entrée obligatoires sont bien transmis
+		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
+
+			if (lstIdObj != '' && lstIds != '') { //si aucune des listes n'est vide
+
+				if (width == null) {
+					width = ""
+				}
+				else {
+					width = new String(width)
+				}
+
+
+
+				var tbIdObj = new Array()
+				tbIdObj = lstIdObj.split(";") //tableau des identifiants d'objets
+				var tbGroupIds = new Array()
+				tbGroupIds = lstIds.split(";") //tableau des listes d'ids correspondants
+				var nbIdObj = tbIdObj.length //nb d'identifiants d'objets passés en entrée
+				var nbGroupIds = tbGroupIds.length //nb de groupes d'ids passés en entrée
+				if (nbIdObj == nbGroupIds) {
+					//TODO recuperer la liste des layers
+					var lstLayerName = ""
+						addDebug("ggis_jsframework.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug")
+						lstLayerName ='geobuilder' // valeur par defaut pour test
+							if (lstLayerName != "") {
+								localise(lstIdObj, lstIds, width)
+								setSelection(lstIdObj, lstIds)
+
+								success = "ok"
+							}
+							else { //si aucune couche n'a été trouvée pour la liste d'idobj
+								success = "err_layer"
+									addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug")
+							}
+
+				}else { //si incohérence dans les paramètres d'entrée (les listes lstIdObj et lstIds n'ont pas le même nb d'éléments)
+					addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: incoherence du nombre d'elements entre lstIdObj ("+nbIdObj+") et lstIds ("+nbGroupIds+" groupes d'ids)", "error")
+				}
+			} else { //si au moins une des listes transmises est vide
+				addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: au moins une des listes transmises (lstIdObj ou lstIds) est vide; pb possible de GEOMETRY sur les objets", "error")
+			}
+		}
+		else { //si tous les paramètres d'entrée obligatoires n'ont pas été transmis
+			addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: certains parametres d'entree n'ont pas ete transmis", "error")
+		}
+		return success
+	}
+
+	function localise(idObj, id, width) {
+
+		var selection = JSON.stringify({
+			lstIdObj: idObj, 
+			lstIds: id
+		})
+		
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
+			for (i=0; i<data.features.length; i++){
+				featureGeom = data.features[i].geometry
+				coorX = []
+				coorY = []
+				if (featureGeom.type == "Point"){
+					coorX.push(featureGeom.coordinates[0])
+					coorY.push(featureGeom.coordinates[1])
+				}
+				else {
+					featureCoordinates = featureGeom.coordinates
+					for ( var j=0; j< featureCoordinates.length; j++) {
+						coorX.push(featureCoordinates[j][0]) 
+						coorY.push(featureCoordinates[j][1]) 
+					}
+				}
+			}
+			minX = Math.min.apply(Math, coorX)
+			maxX = Math.max.apply(Math, coorX)
+			minY = Math.min.apply(Math, coorY)
+			maxY = Math.max.apply(Math, coorY)
+			var centerX = (minX+ maxX)/2
+			var newMinX = centerX - (width/2)
+			var newMaxX = centerX + (width/2)
+			addDebug("geobuilder.js", "setCurrentSelection", "minX=" + newMinX + "minY=" + minY + "maxX=" + newMaxX + "maxY=" + maxY, "debug")
+			var newBound = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
+			Fusion.getMap().zoomToExtent(newBound)
+
+		}, function(status) {
+			alert('Something went wrong.')
+		})
+
+	}
+	function deleteMapSelection(selection) {
+
+	}
+
+	function addMapSelection(selection) {
+
+	}
+	
+	/**
+	 * renvoie des couches de la carte
+	 * @param {Boolean} visible
+	 * @param {Boolean} selectable
+	 * @return {Array}
+	 */
+	function getLayers(visible, selectable) {
+
+		var layers = new Array()
+		var maplayers = Fusion.getMap().layers
+		for(var i = 0; i < mapLayers.length; i++)
+		{
+			var myLayer = mapLayers[i]
+			if(myLayer.getVisibility() == visible)
+			{
+				layers[layers.length] = myLayer
+			}
+		}
+
+		return layers
+	}
+
+	/**
+	 * renvoie des groupes de couches de la carte
+	 * @param {Boolean} visible
+	 * @param {Boolean} selectable
+	 * @return {Array}
+	 */
+	function getLayersGroups(visible, selectable) {
+		var layers = getLayers(visible, selectable)
+		return layers
+	}
+
+	/**
+	 * Obtenir la sélection courante
+	 *
+	 * @param {String} lstIdObj liste des identifiants d'objets séparés par des ";"
+	 * @return {String} selectedObjs liste des objets sélectionnés avec leurs ids (ex: 'CAN 10;CAN 20;CAN 30;INS 2;NDS 1;NDS 3')
+	 */
+	function getCurrentSelection(lstIdObj) {
+		Fusion.getSelection()
+	}
+
+	/**
+	 * Doit lancer la digitalisation d'un point par l'utilisateur. Doit ensuite
+	 * appelerla callback passée avec une chaine WKT représentant ce point.
+	 * @param {Function} callback
+	 */
+	function DigitizePoint(callback) {
+		geoApiStartDigitizing('point', callback)
+	}
+
+
+	/**
+	 * Doit lancer la digitalisation d'une polyligne par l'utilisateur. Doit
+	 * ensuite appelerla callback passée avec une chaine WKT représentant cette
+	 * ligne.
+	 * @param {Function} callback
+	 */
+	function DigitizeLineString(callback) {
+		geoApiStartDigitizing('linestr', callback)
+	}
+
+	/**
+	 * Doit lancer la digitalisation d'un polygone par l'utilisateur. Doit
+	 * ensuite appelerla callback passée avec une chaine WKT représentant ce
+	 * polygone.
+	 * @param {Function} callback
+	 */
+	function DigitizePolygon(callback) {
+		geoApiStartDigitizing('polygon', callback)
+	}
+
+	function setSelection(idObj, id){
+		var myObjSel = {}
+		myObjSel[idObj] = id
+		var sel = objetToString(myObjSel)
+		Fusion.setSelection(sel)
+
+	}
+
+	function showMap() {
+		hideWorkPlace()
+		hideFeatureInfo()
+		Fusion.getMap().baseLayer.redraw()
+	}
+
+	window.Fusion = {
+			map : null,
+			selection : null,
+			/**
+			 * Renvoie l'URL pointant vers le dossier 'diffos' avec un '/' en fin.
+			 * @return {String}
+			 */
+			getFusionURL: function() {
+				return GEOR.config.GEOBUILDER_URL
+			},
+
+			getWidgetById: function(id) {
+				if (id === 'Map') return window
+				throw 'getWidgetById + "'+id+'"'
+			},
+
+			getMap() {
+				this.map = GeoExt.MapPanel.guess().map
+				return this.map
+			},
+
+			setSelection(select){
+				this.selection = select
+			}, 
+			getSelection(){
+				return this.selection
+			}
+	}
+
+	/**
+	 * Export des fonctions du client dans l'espace global
+	 */
+	window.addDebug = addDebug
+	window.ClearDigitization = ClearDigitization
+	window.DigitizeLineString = DigitizeLineString
+	window.DigitizePoint = DigitizePoint
+	window.DigitizePolygon = DigitizePolygon
+	window.getCurrentSelection = getCurrentSelection
+	window.getMapName = getMapName
+	window.getObjectName = getObjectName
+	window.getWidgetIframe = getWidgetIframe
+	window.hideFeatureInfo = hideFeatureInfo
+	window.hidePopup = hidePopup
+	window.hideWorkPlace = hideWorkPlace
+	window.setCurrentSelection = setCurrentSelection
+	window.setDigitContent = setDigitContent
+	window.setHiddenWidgetContent = setHiddenWidgetContent
+	window.setSimpleSelect = setSimpleSelect
+	window.setWorkPlaceContent = setWorkPlaceContent
+	window.showFeatureInfo = showFeatureInfo
+	window.showPopup = showPopup
+	window.showWaitingWorkPlace = showWaitingWorkPlace
+	window.showWorkPlace = showWorkPlace
+	window.getLayers = getLayers
+	window.getLayersGroups = getLayersGroups
+	window.ZoomEnsemble = ZoomEnsemble
+	window.showMap = showMap
+
+	/*
+	 * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
+	 * peut être implémenté à partir du JSON renvoyé par wmenu.cfm
+	 */
+	window.setMenuContent = setMenuContent
+	/*
+	 * setWidgetContent est utilisée pour le chargement du menu qui implémenté
+	 * avec un iframe dans cette démo.
+	 */
+	window.setWidgetContent = setWidgetContent
+
+	/**
+	 * Fonctions & Helpers privées
+	 */
+	function geoApiStartDigitizing(type, user_handler) {
+		geoApiInit()
+		if (user_handler) {
+			var handler = function() {
+				user_handler.apply(this,  arguments)
+			}
+			var control = geoApiDrawControls[type]
+			control.userHandler = handler
+			geoApiActiveControl = control
+			control.activate()
+		}
+	}    	
+
+	function geoApiInit() {
+		if (geoApiInitialized) {
+			return
+		}
+		var map = Fusion.getMap()
+		var layerOptions = OpenLayers.Util.applyDefaults({}, {
+			styleMap : geoApiStyleMap,
+			displayInLayerSwitcher : false,
+			sphericalMercator: true
+		}) 	
+		geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
+		map.addLayer(geoApiDigitizingLayer)
+		geoApiDrawControls = {
+			point: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.Point, {
+				handlerOptions: {
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				}
+			}),
+			line: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.Path, {
+				handlerOptions: {
+					freehandToggle: null,
+					freehand: false,
+					persist: true,
+					style: "default", // this forces default render intent
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				},
+				callbacks: {
+					'point': geoApiCheckLine
+				}
+			}),
+			linestr: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.Path, {
+				handlerOptions: {
+					freehand: false,
+					persist: true,
+					style: "default", // this forces default render intent
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				}
+			}),
+			rectangle: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.RegularPolygon, {
+				handlerOptions: {
+					persist: true,
+					sides: 4,
+					irregular: true,
+					style: "default", // this forces default render intent
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				}
+			}),
+			polygon: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.Polygon, {
+				handlerOptions: {
+					freehand: false,
+					persist: true,
+					style: "default", // this forces default render intent
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				}
+			}),
+			circle: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
+					OpenLayers.Handler.RegularPolygon, {
+				handlerOptions: {
+					persist: true,
+					sides: 40,
+					irregular: false,
+					style: "default", // this forces default render intent
+					layerOptions: {
+						styleMap: geoApiStyleMap
+					}
+				}
+			})
+		}
+
+		for(var key in geoApiDrawControls) {
+			if (geoApiDrawControls[key].events) {
+				geoApiDrawControls[key].events.register('featureadded', null, geoApiCallHandler)
+				map.addControl(geoApiDrawControls[key])
+			}
+		}
+
+	}
+
+	//this callback method for the 'line' control to limit the number of points
+	//in the linestring to 2 - there is an extra point in the feature that gets
+	//removed when the feature is finalized
+	function geoApiCheckLine(point, geom) {
+		if (geom.components.length == 3) {
+			this.handler.dblclick()
+			this.handler.finalize()
+		}
+	}
+
+
+
+	function geoApiCallHandler(evt) {
+		wkt = new OpenLayers.Format.WKT()
+		alert(wkt.write(evt.feature))
+		this.userHandler(wkt.write(evt.feature))
+		//deactivate the control in a separate thread so that the chain of event
+		//handlers has a chance to finish before the deactivation occurs
+		window.setTimeout(geoApiDeactivate, 100)
+
+		return false;
+	}
+
+	function geoApiDeactivate() {
+		if (geoApiActiveControl) {
+			geoApiActiveControl.deactivate()
+			geoApiActiveControl = null
+		}
+	}	
+	/*
+	 * Conversion d'une sélection sous forme d'objet en sélection sous forme de string
+	 */
+	function objetToString(selObject) {
+		var selString = ""
+			for (var cle in selObject) if (selObject.hasOwnProperty(cle)) {
+				if (selObject[cle] != "") {
+					var ids = selObject[cle].split(",")
+					for (var i=0; i<ids.length; i++) {
+						if (selString == "") {
+							selString = cle + " " + ids[i]
+						}
+						else {
+							selString = selString + ";" + cle + " " + ids[i]
+						}
+					}
+				}
+			}
+		return selString
+	}
+
+	var getJSON = function(url, params, successHandler, errorHandler) {
+		var xhr = typeof XMLHttpRequest != 'undefined'
+			? new XMLHttpRequest()
+		: new ActiveXObject('Microsoft.XMLHTTP')
+			xhr.open('post', url, true)
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+			xhr.setRequestHeader('Content-Length', params.length);
+			xhr.onreadystatechange = function() {
+				var status
+				var data
+				if (xhr.readyState == 4) { 
+					status = xhr.status
+					if (status == 200) {
+						data = JSON.parse(xhr.responseText)
+						successHandler && successHandler(data)
+					} else {
+						errorHandler && errorHandler(status)
+					}
+				}
+			}
+			xhr.send(params)
+	}
 
 }())
