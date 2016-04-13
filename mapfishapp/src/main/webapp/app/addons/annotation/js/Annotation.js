@@ -506,7 +506,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     
     drawXy: function(){
-    	var srsConfig = GEOR.custom.POINTER_POSITION_SRS_LIST,
+    	var srsConfig = GEOR.config.POINTER_POSITION_SRS_LIST;
     	srsOrigin = srsConfig[0][0];
     	
     	if (Ext.getCmp('winXyId')){
@@ -519,6 +519,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 			id:'winXyId',
 			height: 195,
 			resizable: false,
+			closeAction:'close',
 			items   : [
 		                {
                 xtype: 'fieldset',
@@ -543,6 +544,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                         },{
                             xtype: 'numberfield',
                             id:'LngFieldId',
+                            decimalPrecision : 6,
+                            decimalSeparator:'.',
                             width:100,
                             flex : 1,
                             enable : false,
@@ -553,6 +556,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                         },{
                             xtype: 'numberfield',
                             id : 'LatFieldId',
+                            decimalPrecision : 6,
+                            decimalSeparator:'.',
                             width: 100,
                             enable : false,
                             flex : 1,
@@ -568,24 +573,25 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 		                        	 text   : OpenLayers.i18n('annotation.validDrawXy'),
 		                        	 width : 55,
 		                             handler: function() {
-		                            	 
+		                            	 // get x, y and srs value
 		                            	 var xLong = Ext.getCmp('LngFieldId').getValue();
 		                            	 var yLat = Ext.getCmp('LatFieldId').getValue();
 		                            	 var selectSrs = Ext.getCmp('annoComboId').getValue();
 		                            	 if (xLong != null && yLat != null){
-			                            	 if (selectSrs === GEOR.custom.MAP_SRS){
-			                            		 var point = new OpenLayers.Geometry.Point(xLong,yLat);		                            		 
+		                            		 // if srs is the same as map SRS create point, else, transform to map SRS
+			                            	 if (selectSrs === GEOR.config.MAP_SRS){			                            		 
+			                                     var point = new OpenLayers.Geometry.Point(xLong, yLat);
 			                            	 } else { 
 			                         			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
 			                         					new OpenLayers.Projection(selectSrs), // from select srs
-			                         					GEOR.custom.MAP_SRS);      			// to map srs
+			                         					GEOR.config.MAP_SRS);      			// to map srs
 			                         			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
 			                            		}		                            	 
 			                            	// add new point to map and zoom if geom respect map extend
-			                         		if (point.x <= GEOR.custom.MAP_XMAX &&
-			                         			point.x >= GEOR.custom.MAP_XMIN && 
-			                         			point.y <= GEOR.custom.MAP_YMAX && 
-			                         			point.y >= GEOR.custom.MAP_YMIN){
+			                         		if (point.x <= GEOR.config.MAP_XMAX &&
+			                         			point.x >= GEOR.config.MAP_XMIN && 
+			                         			point.y <= GEOR.config.MAP_YMAX && 
+			                         			point.y >= GEOR.config.MAP_YMIN){
 			                         				feature = new OpenLayers.Feature.Vector(point);
 			                             			layer.addFeatures(feature);
 			                         		}else{

@@ -124,7 +124,7 @@ GEOR.mappanel = (function() {
         items.push("->");
 
         // Pointer coordinates
-        var srsList = GEOR.custom.POINTER_POSITION_SRS_LIST,
+        var srsList = GEOR.config.POINTER_POSITION_SRS_LIST,
             srs = srsList[0][0];
         
         items.push(tr("Coordonnées en "));
@@ -214,19 +214,19 @@ GEOR.mappanel = (function() {
         		var yLat = Ext.getCmp('fieldY').getValue();
         		if (xLong != null || yLat != null){
         			// directly create point if SRS = projection, else, transform to map SRS
-            		if (xyList[2]=== GEOR.custom.MAP_SRS){
+            		if (xyList[2]=== GEOR.config.MAP_SRS){
                 		var point = new OpenLayers.Geometry.Point(xLong,yLat);
                 	} else { 
             			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
                             new OpenLayers.Projection(xyList[2]), 
-                            GEOR.custom.MAP_SRS);      			
+                            GEOR.config.MAP_SRS);      			
             			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
             		}
             		// add new point to map and zoom if geom respect map extend
-            		if (point.x <= GEOR.custom.MAP_XMAX &&
-            			point.x >= GEOR.custom.MAP_XMIN && 
-            			point.y <= GEOR.custom.MAP_YMAX && 
-            			point.y >= GEOR.custom.MAP_YMIN){
+            		if (point.x <= GEOR.config.MAP_XMAX &&
+            			point.x >= GEOR.config.MAP_XMIN && 
+            			point.y <= GEOR.config.MAP_YMAX && 
+            			point.y >= GEOR.config.MAP_YMIN){
             				map.setCenter(new OpenLayers.LonLat(point.x, point.y), 16);
             				feature = new OpenLayers.Feature.Vector(point);
                 			pointsLayer.addFeatures(feature);
@@ -248,7 +248,7 @@ GEOR.mappanel = (function() {
                 var lonLat = map.getLonLatFromPixel(new OpenLayers.Pixel(last_x,last_y));
 
                 // Get default map projection and get projection from combo
-                var projFrom = GEOR.custom.MAP_SRS;
+                var projFrom = GEOR.config.MAP_SRS;
                 comboSrs = Ext.getCmp('comboSrs').getValue();
                 
                 // transform coordinates to selected projection if srs 
