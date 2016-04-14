@@ -496,12 +496,16 @@ Need to override every style element by element in cascade :)
 .annotation .x-btn-bc,
 .annotation .x-btn-br{border: 0px !important;}
 
+.x-toolbar .x-btn-mc {
+	line-height : 10px;
+}
 
 #buttonCenter {
 	margin: 0 3px;
 }
 #buttonCenter button{
-	height: 11px !important;
+	margin-top : -2px;
+	margin-bottom : -2px;
 }
 
 /* #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tl,
