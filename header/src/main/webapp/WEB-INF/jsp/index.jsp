@@ -324,6 +324,7 @@ a, a:hover, li, li:hover {
 #go_head .expanded>a:after {
 	content: '';
 }
+/*
 @media screen and (max-width: 1370px){
 	*{font-size: 14px;}
 }
@@ -332,10 +333,11 @@ a, a:hover, li, li:hover {
 		#go_head li a {
 			padding: 10px 10px;}
 		.bgicon a {
-			padding: 10px 15px 10px 25px !important;
-			background-position: 3px 7px;
+			padding: 13px 15px 10px 25px !important;
+			background-position: 3px 9px;
 	}
 }
+*/
 </style>
 
 </head>
