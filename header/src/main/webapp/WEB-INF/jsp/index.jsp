@@ -111,7 +111,7 @@ if(sec_roles != null) {
 <base target="_parent" />
 
 <style type="text/css">
-/* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
+/* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol 
 @font-face {
 	font-family: 'montserratbold';
 	src: url('montserrat/montserrat-bold-webfont.eot');
@@ -139,9 +139,25 @@ if(sec_roles != null) {
 	font-weight: normal;
 	font-style: normal;
 }
+*/
+
+@font-face {
+	font-family: 'latoregular';
+    	src: url('lato/lato-regular-webfont.eot');
+    	src: url('lato/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('lato/lato-regular-webfont.woff2') format('woff2'),
+		 url('lato/lato-regular-webfont.woff') format('woff'),
+		 url('lato/lato-regular-webfont.ttf') format('truetype'),
+		 url('lato/lato-regular-webfont.svg#latoregular') format('svg');
+	    font-weight: normal;
+	    font-style: normal;
+}
+
+
+
 
 * {
-	font-family: 'montserratregular', sans-serif;
+	font-family: 'latoregular', sans-serif;
 	font-size: 16px;
 	color: white;
 }
