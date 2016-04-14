@@ -187,9 +187,8 @@ a, a:hover, li, li:hover {
 }
 
 .bgicon a {
-	padding: 10px 20px 10px 40px !important;
 	background-repeat: no-repeat;
-	background-position: 10px 7px;
+	background-position: 10px 9px;
 }
 
 #go_head {
@@ -243,7 +242,7 @@ a, a:hover, li, li:hover {
 }
 #go_head li a {
 	display: block;
-	padding: 10px 30px 10px;
+	padding: 10px 20px 10px 40px;
 	margin: 0px;
 	text-decoration: none;
 	transition: background .3s ease-in;
