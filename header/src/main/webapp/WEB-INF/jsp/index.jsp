@@ -338,6 +338,17 @@ a, a:hover, li, li:hover {
 	}
 }
 */
+@media screen and (max-width: 1045px){
+	#go_head li a {
+		padding : 10px 5px 10px 30px;
+	}
+
+	.bgicon a {
+		background-position: 5px 9px;
+	}
+}
+
+
 </style>
 
 </head>
