@@ -613,8 +613,13 @@ input.x-tree-node-cb {
 	color: #4D4D4D;
 } 
 
+.gx-tree-layer-action {
+	height : 20px;
+	width : 20px;
+}
+
 .gx-tree-layer-actions .delete {
-    background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
+    background: transparent url("../img/famfamfam/cross.gif") no-repeat 100% 100%;
     cursor: pointer;
 }
 .x-btn-disabled *{
