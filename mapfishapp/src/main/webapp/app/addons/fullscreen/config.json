@@ -3,18 +3,36 @@
     "enabled": true,
     "name": "Fullscreen",
     "title": {
+        "en": "Fullscreen with toolbars",
+        "es": "Pantalla Completa con barras de herramientas",
+        "fr": "Plein écran avec barres d'outils",
+        "de": "Vollbild mit Symbolleisten"
+    },
+    "options": {
+        "toolbars": true
+    },
+    "description": {
+        "en": "Make the map go fullscreen, keeping the toolbars",
+        "es": "Mostrar el mapa en pantalla completa con barras de herramientas",
+        "fr": "Voir la carte avec ses barres d'outils en plein écran",
+        "de": "Siehe Vollbildkarte mit Symbolleisten"
+    },    
+    "preloaded":true
+},{
+    "id": "fullscreen_1",
+    "enabled": true,
+    "name": "Fullscreen",
+    "title": {
         "en": "Fullscreen",
         "es": "Pantalla Completa",
         "fr": "Plein écran",
         "de": "Vollbild"
-    },
-    "options": {
-        "toolbars": false
     },
     "description": {
         "en": "Make the map go fullscreen",
         "es": "Mostrar el mapa en pantalla completa",
         "fr": "Voir la carte en plein écran",
         "de": "Siehe Vollbildkarte"
-    }
+    },    
+    "preloaded":false
 }]
