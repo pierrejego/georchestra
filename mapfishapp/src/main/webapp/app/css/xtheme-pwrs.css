@@ -470,6 +470,11 @@ input[type="checkbox"]:focus{
 .x-btn-click .x-btn-text, .x-btn-menu-active .x-btn-text, .x-btn-pressed .x-btn-text{
     color:#000;
 }
+
+.x-btn-pressed {
+	background-color : rgba(170, 204, 246, 0.63);
+}
+
 /* Buttons definitions 
 =======================================================================================================
 Need to override every style element by element in cascade :)
