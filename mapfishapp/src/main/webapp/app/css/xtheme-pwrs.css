@@ -292,6 +292,15 @@ ul.x-tab-strip li {
 .x-form-field-wrap .x-form-trigger{
     background-image:url(images/pwrs/form/trigger.gif);
     height : 100%;
+    border-bottom : 0;
+}
+
+.x-form-field-wrap .x-form-twin-triggers .x-form-trigger {
+	height: 22px;
+}
+
+.x-small-editor .x-form-field-wrap .x-form-trigger {
+	height: 20px;
 }
 
 .x-form-field-wrap .x-form-date-trigger{
