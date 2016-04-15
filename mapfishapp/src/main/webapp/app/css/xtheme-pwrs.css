@@ -636,6 +636,17 @@ input.x-tree-node-cb {
     background: transparent url("../img/famfamfam/cross.gif") no-repeat 100% 100%;
     cursor: pointer;
 }
+
+.gx-tree-layer-actions .up {
+	background: transparent url(../img/famfamfam/bullet_arrow_up.png) no-repeat 100% 100%;
+	cursor: pointer;
+}
+
+.gx-tree-layer-actions .down {
+	background: transparent url(../img/famfamfam/bullet_arrow_down.png) no-repeat 100% 100%;
+	cursor: pointer;
+}
+
 .x-btn-disabled *{
 	color:gray !important;
 }
