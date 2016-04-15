@@ -291,7 +291,7 @@ ul.x-tab-strip li {
 
 .x-form-field-wrap .x-form-trigger{
     background-image:url(images/pwrs/form/trigger.gif);
-    border-bottom-color:#b5b8c8;
+    height : 100%;
 }
 
 .x-form-field-wrap .x-form-date-trigger{
