@@ -448,6 +448,7 @@ input[type="checkbox"]:focus{
 .x-btn button{
     font:normal;
     font-family: 'latoregular';
+    font-size : 13px;
     color:#007EC3;
 }
 #tbar .x-btn button {
