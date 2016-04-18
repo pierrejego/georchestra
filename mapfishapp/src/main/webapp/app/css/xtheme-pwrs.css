@@ -595,6 +595,11 @@ Need to override every style element by element in cascade :)
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+
+.geor-tree-node .x-tree-node-anchor {
+	right : 70px;
+}
+
 #east-tabpanel #geor-layerManager .x-panel-btns {
 	border-top: solid 1px #007EC3;
 	padding-top: 14px;
