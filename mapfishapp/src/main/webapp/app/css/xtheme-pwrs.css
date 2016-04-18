@@ -749,7 +749,7 @@ input.x-tree-node-cb {
 } */
 #tbar .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow-white.png);
-    padding-right: 12px;
+    padding-right: 16px;
 	background-position: right 6px center;
 }
 #tbar .mf-print-action {
