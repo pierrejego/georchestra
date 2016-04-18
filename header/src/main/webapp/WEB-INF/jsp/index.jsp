@@ -202,6 +202,7 @@ a, a:hover, li, li:hover {
 
 #catalogue a {
 	background-image: url('img/catalogue.png');
+	background-position: 10px 10px;
 }
 
 #map a {
