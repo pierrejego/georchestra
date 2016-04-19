@@ -515,9 +515,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
 		var window = new Ext.Window({
 			title : OpenLayers.i18n('annotation.drawXyTitle'),
-			width : 250,
 			id:'winXyId',
-			height: 195,
 			resizable: false,
 			closeAction:'close',
 			items   : [
@@ -525,7 +523,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 xtype: 'fieldset',
                 collapsible: false,
                 bodyStyle: 'padding: 2px',
-                heigth : 145,
                 items:  [{
                             xtype: 'combo',
                             id: 'annoComboId',

@@ -111,7 +111,7 @@ if(sec_roles != null) {
 <base target="_parent" />
 
 <style type="text/css">
-/* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol */
+/* see https://github.com/georchestra/georchestra/issues/147 for missing http protocol 
 @font-face {
 	font-family: 'montserratbold';
 	src: url('montserrat/montserrat-bold-webfont.eot');
@@ -139,9 +139,25 @@ if(sec_roles != null) {
 	font-weight: normal;
 	font-style: normal;
 }
+*/
+
+@font-face {
+	font-family: 'latoregular';
+    	src: url('lato/lato-regular-webfont.eot');
+    	src: url('lato/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('lato/lato-regular-webfont.woff2') format('woff2'),
+		 url('lato/lato-regular-webfont.woff') format('woff'),
+		 url('lato/lato-regular-webfont.ttf') format('truetype'),
+		 url('lato/lato-regular-webfont.svg#latoregular') format('svg');
+	    font-weight: normal;
+	    font-style: normal;
+}
+
+
+
 
 * {
-	font-family: 'montserratregular', sans-serif;
+	font-family: 'latoregular', sans-serif;
 	font-size: 16px;
 	color: white;
 }
@@ -171,9 +187,8 @@ a, a:hover, li, li:hover {
 }
 
 .bgicon a {
-	padding: 10px 20px 10px 40px !important;
 	background-repeat: no-repeat;
-	background-position: 10px 7px;
+	background-position: 10px 9px;
 }
 
 #go_head {
@@ -187,6 +202,7 @@ a, a:hover, li, li:hover {
 
 #catalogue a {
 	background-image: url('img/catalogue.png');
+	background-position: 10px 10px;
 }
 
 #map a {
@@ -227,7 +243,7 @@ a, a:hover, li, li:hover {
 }
 #go_head li a {
 	display: block;
-	padding: 10px 30px 10px;
+	padding: 10px 20px 10px 40px;
 	margin: 0px;
 	text-decoration: none;
 	transition: background .3s ease-in;
@@ -309,6 +325,7 @@ a, a:hover, li, li:hover {
 #go_head .expanded>a:after {
 	content: '';
 }
+/*
 @media screen and (max-width: 1370px){
 	*{font-size: 14px;}
 }
@@ -317,10 +334,22 @@ a, a:hover, li, li:hover {
 		#go_head li a {
 			padding: 10px 10px;}
 		.bgicon a {
-			padding: 10px 15px 10px 25px !important;
-			background-position: 3px 7px;
+			padding: 13px 15px 10px 25px !important;
+			background-position: 3px 9px;
 	}
 }
+*/
+@media screen and (max-width: 1045px){
+	#go_head li a {
+		padding : 10px 5px 10px 30px;
+	}
+
+	.bgicon a {
+		background-position: 5px 9px;
+	}
+}
+
+
 </style>
 
 </head>
