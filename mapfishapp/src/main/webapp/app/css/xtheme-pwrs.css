@@ -441,6 +441,17 @@ input[type="checkbox"]:focus{
     color:#4D4D4D;
     font-size: 14px;
 }
+
+#georchetra-styler-windows .x-fieldset {
+	border-top : solid 1px #007EC3;
+	margin-bottom : 5px;
+	padding-bottom : 10px;
+}
+
+#georchetra-styler-windows .x-panel-bbar  .x-toolbar {
+	border : none;
+}
+
 .x-btn{
 	font:normal;
 }
