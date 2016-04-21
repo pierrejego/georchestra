@@ -448,6 +448,10 @@ input[type="checkbox"]:focus{
 	padding-bottom : 10px;
 }
 
+#georchetra-styler-windows .x-fieldset legend input {
+	margin-top : 1px;
+}
+
 #georchetra-styler-windows .x-panel-bbar  .x-toolbar {
 	border : none;
 }
