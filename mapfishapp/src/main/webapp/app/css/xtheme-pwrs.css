@@ -452,6 +452,11 @@ input[type="checkbox"]:focus{
 	border : none;
 }
 
+#georchetra-styler-windows  .x-toolbar-left > table {
+	border-spacing : 10px 0;
+	margin-left : -10px;
+}
+
 .x-btn{
 	font:normal;
 }
