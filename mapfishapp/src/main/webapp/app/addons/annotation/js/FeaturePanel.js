@@ -177,6 +177,7 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
         		xtype: "gx_fontcombo",
         		fieldLabel: OpenLayers.i18n('annotation.fontLabel'),
                 width: 110,
+                value : feature.style.fontFamily,
                 tooltip: OpenLayers.i18n('annotation.fontTooltip'),
                 forceSelection: true,
                 listeners: {
