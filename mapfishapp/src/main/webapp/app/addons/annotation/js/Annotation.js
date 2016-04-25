@@ -206,6 +206,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
         this.map.addLayer(layer);
+        // set display order for this annotation layer
+        // layer.setZIndex(500);
 
         layer.events.on({
             "beforefeatureselected": this.onBeforeFeatureSelect,
