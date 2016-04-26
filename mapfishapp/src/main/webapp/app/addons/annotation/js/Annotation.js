@@ -190,7 +190,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             'vertices': new OpenLayers.Style({
                  pointRadius: 5,
                  graphicName: "square",
-                 fillColor: "white",
+                 fillColor: "red",
                  fillOpacity: 0.6,
                  strokeWidth: 1,
                  strokeOpacity: 1,
@@ -203,6 +203,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 displayInLayerSwitcher: false
             }
         );
+        
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
         this.map.addLayer(layer);
@@ -715,7 +716,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     onModificationStart: function(event) {
         var feature = (event.geometry) ? event : event.feature;
-
+        
+        /*
         // to keep the state before any modification, useful when hitting the
         // 'cancel' button
         /*
@@ -731,6 +733,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         if (drawControl) {
             drawControl.deactivate();
             this.featureControl.activate();
+            
         }
 
         var options = {
@@ -738,10 +741,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             styler: this.styler
         };
         
-        
         // get attribute value for label
         if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point" && feature.isLabel){
-        	console.log(feature.attributes);
         }
 
         this.featurePanel = new GEOR.FeaturePanel(options);
