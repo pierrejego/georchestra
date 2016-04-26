@@ -521,6 +521,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 			id:'winXyId',
 			resizable: false,
 			closeAction:'close',
+			cls:'x-winXyCls',
 			items   : [
 		                {
                 xtype: 'fieldset',
@@ -568,45 +569,46 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                             }
                         ]},
 		               ],
-		               buttons: [{
-		                             xtype  : 'button',
-		                        	 text   : OpenLayers.i18n('annotation.validDrawXy'),
-		                        	 width : 55,
-		                             handler: function() {
-		                            	 // get x, y and srs value
-		                            	 var xLong = Ext.getCmp('LngFieldId').getValue();
-		                            	 var yLat = Ext.getCmp('LatFieldId').getValue();
-		                            	 var selectSrs = Ext.getCmp('annoComboId').getValue();
-		                            	 if (xLong != null && yLat != null){
-		                            		 // if srs is the same as map SRS create point, else, transform to map SRS
-			                            	 if (selectSrs === GEOR.config.MAP_SRS){			                            		 
-			                                     var point = new OpenLayers.Geometry.Point(xLong, yLat);
-			                            	 } else { 
-			                         			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
-			                         					new OpenLayers.Projection(selectSrs), // from select srs
-			                         					GEOR.config.MAP_SRS);      			// to map srs
-			                         			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
-			                            		}		                            	 
-			                            	// add new point to map and zoom if geom respect map extend
-			                         		if (point.x <= GEOR.config.MAP_XMAX &&
-			                         			point.x >= GEOR.config.MAP_XMIN && 
-			                         			point.y <= GEOR.config.MAP_YMAX && 
-			                         			point.y >= GEOR.config.MAP_YMIN){
-			                         				feature = new OpenLayers.Feature.Vector(point);
-			                             			layer.addFeatures(feature);
-			                         		}else{
-			                         			alert(OpenLayers.i18n('annotation.badXy'));
-			                     			}
-		                            	 }
-		                             }
-		                         },{
-		                        	 xtype  : 'button',
-		                        	 width  : 55,
-		                             text   : OpenLayers.i18n('annotation.cancelDrawXy'),
-		                             handler: function() {
-		                            	 window.destroy();
-		                             }
-		                         }]
+               buttons: [{
+                             xtype  : 'button',
+                        	 text   : OpenLayers.i18n('annotation.validDrawXy'),
+                        	 width : 55,
+                             handler: function() {
+                            	 // get x, y and srs value
+                            	 var xLong = Ext.getCmp('LngFieldId').getValue();
+                            	 var yLat = Ext.getCmp('LatFieldId').getValue();
+                            	 var selectSrs = Ext.getCmp('annoComboId').getValue();
+                            	 if (xLong != null && yLat != null){
+                            		 // if srs is the same as map SRS create point, else, transform to map SRS
+	                            	 if (selectSrs === GEOR.config.MAP_SRS){			                            		 
+	                                     var point = new OpenLayers.Geometry.Point(xLong, yLat);
+	                            	 } else { 
+	                         			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
+	                         					new OpenLayers.Projection(selectSrs), // from select srs
+	                         					GEOR.config.MAP_SRS);      			// to map srs
+	                         			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
+	                            		}		                            	 
+	                            	// add new point to map and zoom if geom respect map extend
+	                         		if (point.x <= GEOR.config.MAP_XMAX &&
+	                         			point.x >= GEOR.config.MAP_XMIN && 
+	                         			point.y <= GEOR.config.MAP_YMAX && 
+	                         			point.y >= GEOR.config.MAP_YMIN){
+	                         				feature = new OpenLayers.Feature.Vector(point);
+	                             			layer.addFeatures(feature);
+	                         		}else{
+	                         			alert(OpenLayers.i18n('annotation.badXy'));
+	                     			}
+                            	 }
+                             }
+                         },{
+                        	 xtype  : 'button',
+                        	 width  : 55,
+                        	 align:'right',
+                             text   : OpenLayers.i18n('annotation.cancelDrawXy'),
+                             handler: function() {
+                            	 window.destroy();
+                             }
+                         }]
 		});
     	return window.show();
     },

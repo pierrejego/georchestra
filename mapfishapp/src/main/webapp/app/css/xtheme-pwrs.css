@@ -2178,3 +2178,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 .x-window-dlg .ext-mb-error {
     background-image:url(images/pwrs/window/icon-error.gif);
 }
+
+body .x-winXyCls{
+	width:230px;
+}
