@@ -149,7 +149,11 @@ GEOR.geobuilder_toolbar = (function() {
     	//Ajout du text sur le bouton
     	print.setText(tr('Print'));
     	
-    	items.push(print);
+    	
+    	if(!GEOR.config.ANONYMOUS){
+    		items.push(print);	
+    	}
+    	
 
     	
     	/**
