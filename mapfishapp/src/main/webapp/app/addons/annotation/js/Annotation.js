@@ -190,7 +190,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             'vertices': new OpenLayers.Style({
                  pointRadius: 5,
                  graphicName: "square",
-                 fillColor: "red",
+                 fillColor: "white",
                  fillOpacity: 0.6,
                  strokeWidth: 1,
                  strokeOpacity: 1,
@@ -743,10 +743,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             styler: this.styler
         };
         
-        // get attribute value for label
-        if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point" && feature.isLabel){
-        }
-
         this.featurePanel = new GEOR.FeaturePanel(options);
 
         // display the popup
@@ -766,7 +762,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             border: false,
             width: 280
         });
-
+        
         var popup = new GeoExt.Popup(popupOptions);
         feature.popup = popup;
         this.popup = popup;

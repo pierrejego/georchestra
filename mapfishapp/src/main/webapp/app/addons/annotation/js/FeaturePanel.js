@@ -182,7 +182,6 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                 forceSelection: true,
                 listeners: {
                     select: function(combo, record) {
-                    	console.log(feature);
                         var f = feature;
                         var style = {};
                         style.fontFamily = record.get("field1");
@@ -290,15 +289,12 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                     }
                 }
             }]
-        });
-        
+        });        
 
         // Add item within feature panel for polygon, rectangle and ring  
-        if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Polygon" ) {
-            if (!feature.isLabel) {
+        if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Polygon" && !feature.isLabel ) {            
                 // Opacity
                 oItems.push({
-                	id:'opacitySlider',
                 	xtype: 'sliderfield',
                     name: 'Opacity',
                     fieldLabel: OpenLayers.i18n('annotation.fillOpacity'),
@@ -306,6 +302,7 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                     width: 100,
                     minValue: 0,
                     maxValue: 1,
+                    closeAction:'close',
                     decimalPrecision: 2,
                     increment: 0.01,
                     tipText: function(thumb){
@@ -319,9 +316,9 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                             feature.style.fillOpacity = slider.value;
                             feature.layer.drawFeature(feature);
                         },
+                        scope : this
                     }
-                });
-            }
+                });            
         }
   
         Ext.apply(this, {items: oItems});
