@@ -104,7 +104,12 @@ GEOR.mappanel = (function() {
      *     an array of toolbar items.
      */
     var buildBbarCfg = function(map) {
-        var div, items = [];
+    	// div to push element
+        var div;
+        // Srs select by user
+        var xySelect;        
+        // list of items to push in bbar
+        var items = [];
 
         // Scale combobox
         items.push(Ext.apply({
@@ -133,7 +138,7 @@ GEOR.mappanel = (function() {
             id:'comboSrs',
             width: 130,
             store: srsList,
-            value: srsList[0][1],
+            value: srsList[1][0],
             editable: false,
             cls:'bottomButton',
             tpl: [
@@ -177,7 +182,6 @@ GEOR.mappanel = (function() {
             editable: true
         });
         
-         xyList = [];      
         // create button to set center on feature
         items.push({
         	xtype:'button',
@@ -213,11 +217,11 @@ GEOR.mappanel = (function() {
         		var yLat = Ext.getCmp('fieldY').getValue();
         		if (xLong != null || yLat != null){
         			// directly create point if SRS = projection, else, transform to map SRS
-            		if (xyList[0]=== GEOR.config.MAP_SRS){
+            		if (xySelect=== GEOR.config.MAP_SRS){
                 		var point = new OpenLayers.Geometry.Point(xLong,yLat);
                 	} else { 
             			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
-                            new OpenLayers.Projection(xyList[0]), 
+                            new OpenLayers.Projection(xySelect), 
                             GEOR.config.MAP_SRS);      			
             			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
             		}
@@ -253,7 +257,7 @@ GEOR.mappanel = (function() {
                 // transform coordinates to selected projection if srs 
                 // is not map projection
                 if (comboSrs != projFrom){
-                	xyList[0]=comboSrs;
+                	xySelect=comboSrs;
                     projTo = new OpenLayers.Projection(comboSrs);
                     lonLatProj = lonLat.transform(projFrom, projTo);
                     lonX=lonLatProj.lon.toFixed(5);
@@ -261,7 +265,7 @@ GEOR.mappanel = (function() {
                 } else {
                 	lonX=lonLat.lon.toFixed(2);
                     latY=lonLat.lat.toFixed(2);
-                    xyList[0]=projFrom;
+                    xySelect=projFrom;
                 }
                 
                 Ext.getCmp('fieldX').setValue(lonX);
