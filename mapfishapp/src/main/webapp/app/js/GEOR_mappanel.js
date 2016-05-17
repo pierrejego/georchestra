@@ -123,7 +123,12 @@ GEOR.mappanel = (function() {
             cls: "olControlScaleLine"
         });
         items.push(div);
-        map.addControl(new OpenLayers.Control.ScaleLine({div: div}));
+        var scaleOptions = {
+        		geodesic : true,
+        		div:div
+        
+        };
+        map.addControl(new OpenLayers.Control.ScaleLine(scaleOptions));
 
         // greedy spacer
         items.push("->");

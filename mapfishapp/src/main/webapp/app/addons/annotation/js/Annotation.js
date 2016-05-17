@@ -488,15 +488,28 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     initDrawXy: function() {
         var actionOptions = {
             handler: this.drawXy,
-            id:'buttonDrawXy',
+            map:this.map,
+            id: 'DrawXyButtonId',
+            // button options
+            toggleGroup: this.toggleGroup,
+            allowDepress: false,
+            pressed:false,
             scope: this,
             group: this.toggleGroup,
             checked: false,
             text:OpenLayers.i18n('annotation.xyTool'),
             iconCls: 'gx-featureediting-xy',
             iconAlign: 'top',
-            tooltip: OpenLayers.i18n("annotation.tooltipDrawXy")
+            tooltip: OpenLayers.i18n("annotation.tooltipDrawXy"),
+            toggleHandler: onItemToggle
+            
         };
+        
+    	function onItemToggle(item, pressed){
+    		if(!pressed){
+    			Ext.getCmp('winXyId').destroy();    			
+    		}
+    	}
 
         var action = new Ext.Action(actionOptions);
 
@@ -607,6 +620,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                              text   : OpenLayers.i18n('annotation.cancelDrawXy'),
                              handler: function() {
                             	 window.destroy();
+                            	 Ext.getCmp('DrawXyButtonId').toggle(false);                            	 
                              }
                          }]
 		});
