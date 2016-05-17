@@ -502,11 +502,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             iconAlign: 'top',
             tooltip: OpenLayers.i18n("annotation.tooltipDrawXy"),
             toggleHandler: onItemToggle
-            
         };
         
     	function onItemToggle(item, pressed){
-    		if(!pressed){
+    		if(!pressed && Ext.getCmp('winXyId')){
     			Ext.getCmp('winXyId').destroy();    			
     		}
     	}
