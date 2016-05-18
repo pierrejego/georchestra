@@ -32,6 +32,9 @@ GEOR.Addons.Annotation = Ext.extend(GEOR.Addons.Base, {
                 "hide": function() {
                     this.item && this.item.setChecked(false);
                     this.components && this.components.toggle(false);
+                    if (Ext.getCmp('winXyId')){
+                		Ext.getCmp('winXyId').destroy();
+                	}
                 },
                 scope: this
             }
