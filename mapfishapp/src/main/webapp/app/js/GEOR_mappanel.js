@@ -161,31 +161,68 @@ GEOR.mappanel = (function() {
                         new OpenLayers.Projection(record.data['field1']);
                     mpControl.formatOutput = 
                         formatMousePositionOutput(record.data['field1']);
+                    projName = mpControl.displayProjection.proj.projName;
+                    if(projName === 'longlat'){
+                    	Ext.getCmp('textX').setValue('Lon = ');
+                    	Ext.getCmp('textY').setValue('Lat = ');
+                    } else {
+                    	Ext.getCmp('textX').setValue('X = ');
+                        Ext.getCmp('textY').setValue('Y = ');
+                    }
                 }
             }
         });
         
-        items.push(
-        		tr("Lng (x) = ")        		        		
-        );
+        
+        items.push({
+        		xtype:'textfield',
+        		id:'textX',
+        		width: 34,
+        		cls:'fieldXY',
+        		value:'X = ',
+        		readOnly:true
+        });
         
         items.push({
             xtype: 'textfield',
-            id:'fieldX',
-            width: 80,
-            editable: true            
-        });
+            id:'fieldX',           
+            width: 82,
+            editable: true,
+            listeners:{
+            	afterrender:destroyPoint
+            },
+            regex:/^[0-9.-]+$/, // allow . and - and number 0 - 9 only
+        });      
         
-        items.push(
-        		tr("Lat (y) = ")   		
-        );
+        items.push({
+    		xtype:'textfield',
+    		id:'textY',
+    		width: 34,
+    		cls:'fieldXY',
+    		value:'Y = ',
+    		readOnly:true
+    	});
         
         items.push({
             xtype: 'textfield',
             id:'fieldY',
-            width: 80,
-            editable: true
+            width: 82,
+            editable: true,
+            listeners:{
+            	afterrender:destroyPoint
+            },
+            regex:/^[0-9.-]+$/, // allow . and - and number 0 - 9 only
         });
+        
+        // If user dblclick on one field, destroy point result
+        function destroyPoint(field){
+        	field.getEl().on('dblclick',function(event,el){
+    			if (map.getLayersByName('georchestra_pointsLayer').length > 0){
+    				lastResult = map.getLayersByName('georchestra_pointsLayer')[0];
+        			lastResult.removeAllFeatures();
+    			}
+    		});
+        }
         
         // create button to set center on feature
         items.push({
