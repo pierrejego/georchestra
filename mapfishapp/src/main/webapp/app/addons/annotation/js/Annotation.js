@@ -534,6 +534,9 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 			resizable: false,
 			closeAction:'close',
 			cls:'x-winXyCls',
+			listeners:{
+				'close':onClose
+			},
 			items   : [
 		                {
                 xtype: 'fieldset',
@@ -623,7 +626,13 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                              }
                          }]
 		});
-    	return window.show();
+		
+    	function onClose(){
+    		window.destroy();
+    		Ext.getCmp('DrawXyButtonId').toggle(false);
+    	}
+    	
+		return window.show();    	
     },
 
     
