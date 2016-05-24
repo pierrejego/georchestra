@@ -2182,3 +2182,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 body .x-winXyCls{
 	width:240px;
 }
+
+body .fieldXY{
+	border-width:0px;
+}
