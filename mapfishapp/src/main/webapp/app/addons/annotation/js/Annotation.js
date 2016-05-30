@@ -251,7 +251,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             this.toggleGroup = this.map.id;
         }
     },
-
+    
     /** private: method[initFeatureControl]
      *  :param layer: ``OpenLayers.Layer.Vector``
      *  Create a ModifyFeature control linked to the passed layer and
@@ -458,7 +458,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 this.layer.destroyFeatures();
             }
         },
-        this);
+        this);            width: 280,
+            minHeight:180,
+            minWidth:280
+        
     },
 
     /** private: method[initExportAsKmlAction]
@@ -782,7 +785,9 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions, {
             layout: 'fit',
             border: false,
-            width: 280
+            width: 280,
+            minHeight:180,
+            minWidth:280
         });
         
         var popup = new GeoExt.Popup(popupOptions);
@@ -792,8 +797,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             close: function() {
                 if (OpenLayers.Util.indexOf(this.layer.selectedFeatures, feature) > -1) {
                     this.featureControl.unselectFeature(feature);
-                    this.featureControl.deactivate();
-                }
+                    this.featureControl.deactivate();                }
             },
             scope: this
         });
@@ -909,7 +913,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     onFeatureSelect: function(event) {
         var feature = (event.geometry) ? event : event.feature;
         this.applyStyle(feature, 'normal', {'redraw': true});
-l    },
+    },
 
     /** private: method[applyStyles]
      *  :param style: ``String`` Mandatory.  Can be "normal" or "faded".
