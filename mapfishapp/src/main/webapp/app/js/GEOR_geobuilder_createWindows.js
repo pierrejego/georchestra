@@ -10,17 +10,12 @@ GEOR.geobuilder_createPopupWindow = function (title) {
 		layout: 'fit',
 		height: 400,
 		width: 500,
+		title: title,
 		modal: true,
 		closeAction: 'hide',
-		contentEl: 'ggis_popup',
-		buttons: [{
-            text: tr('Close'),
-            handler: function(){
-            	globalElem.popupWindow.hide();
-            }
-		}]
+		contentEl: 'ggis_popup_IFRAME',
 	});
-	popupWindow.show();
+	return popupWindow;
 
 };
 
@@ -29,20 +24,16 @@ GEOR.geobuilder_createCardWindow = function (title) {
 	// Traduction
 	var tr = OpenLayers.i18n;
 	
-	return globalElem.cardWindow = new Ext.Window({
+	featureWindow = new Ext.Window({
 		id: 'geo-window-featureInfo',
 		layout: 'fit',
 		height: 400,
 		width: 500,
+		title: title,
 		closeAction: 'hide',
-		contentEl: 'ggis_featureInfo',
-		buttons: [{
-            text: tr('Close'),
-            handler: function(){
-            	globalElem.cardWindow.hide();
-            }
-		}]
-	}).show();
+		contentEl: 'ggis_featureInfo_IFRAME',
+	});
+	return featureWindow;
 	
 };
 
@@ -56,12 +47,6 @@ GEOR.geobuilder_createWorkplaceWindow = function (title) {
 		width: 500,
 		closeAction: 'hide',
 		contentEl: 'ggis_workPlace_IFRAME',
-		buttons: [{
-            text: 'Close',
-            handler: function() {
-            	workplaceWindow.hide();
-            }
-		}]
 	});
 	return workplaceWindow;
 };
