@@ -251,7 +251,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             this.toggleGroup = this.map.id;
         }
     },
-    
+        
     /** private: method[initFeatureControl]
      *  :param layer: ``OpenLayers.Layer.Vector``
      *  Create a ModifyFeature control linked to the passed layer and
@@ -458,10 +458,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 this.layer.destroyFeatures();
             }
         },
-        this);            width: 280,
-            minHeight:180,
-            minWidth:280
-        
+        this);
     },
 
     /** private: method[initExportAsKmlAction]
