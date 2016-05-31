@@ -48,28 +48,30 @@ GEOR.geobuilder_loadIFRAMES = function () {
         tag : 'iframe',
         id : 'ggis_featureInfo_IFRAME',
         frameBorder : 0,
-        width : 0,
-        height : 0,
+        width : '100%',
+        height : '100%',
         css : 'display:none;visibility:hidden;height:0px;',
         src : ''
     });
 
 	// ggis_workPlace IFRAME
+	
 	Ext.DomHelper.append(document.body, {
 		tag: 'div',
 		cls: 'iframe-wrapper',
 		id: 'ggis_workPlace',
 		css: 'display:none;'
 	});
+
 	Ext.DomHelper.append(document.getElementById('ggis_workPlace'), {
-        tag : 'iframe',
-        id : 'ggis_workPlace_IFRAME',
-        frameBorder : 0,
-        width : 500,
-        height : 400,
-        css : 'display:none;visibility:hidden;height:0px;',
-        src : ''
-    });
+		tag : 'iframe',
+		id : 'ggis_workPlace_IFRAME',
+		frameBorder : 0,
+		width : '100%',
+		height : '100%',
+		css : 'display:none;visibility:hidden;height:0px;',
+		src : ''
+	});
 
 	// ggis_popup IFRAME
 	Ext.DomHelper.append(document.body, {

@@ -13,10 +13,6 @@ geobuilder = (function() {
 
 	var map = null
 
-	var geoApiStyleMap = GEOR.util.getStyleMap()    
-
-
-
 	function byid(id) { return document.getElementById(id) }
 
 
@@ -56,7 +52,12 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showFeatureInfo(featureClass, featureId) {
-		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 600, 400)
+		var winWorkplace = Ext.getCmp('geo-window-featureInfo')
+		if (!winWorkplace) {
+			winWorkplace = GEOR.geobuilder_createCardWindow("Info")
+		}
+		winWorkplace.show()
+		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 400, 500)
 		showWidget('ggis_featureInfo', 600, 400)
 	}
 
@@ -64,6 +65,8 @@ geobuilder = (function() {
 	 * Masque la fiche Géobuilder
 	 */
 	function hideFeatureInfo() {
+		var winWorkplace = Ext.getCmp('geo-window-featureInfo')
+		winWorkplace.hide()
 		hideWidget('ggis_featureInfo')
 	}
 
@@ -109,7 +112,12 @@ geobuilder = (function() {
 		title = title || 'Popup'
 		width = width || 600
 		height = height || 400
-		setWidgetTitle('ggis_popup', title)
+		//setWidgetTitle('ggis_popup', title)
+		var winWorkplace = Ext.getCmp('geo-window-popup')
+		if (!winWorkplace) {
+			winWorkplace = GEOR.geobuilder_createPopupWindow(title)
+		}
+		winWorkplace.show()
 		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, width, height)
 		showWidget('ggis_popup')
 
@@ -120,6 +128,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hidePopup(){
+		var winWorkplace = Ext.getCmp('geo-window-popup')
+		winWorkplace.hide()
 		hideWidget('ggis_popup')
 	}
 
@@ -181,6 +191,11 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showWorkPlace(width, height) {
+		var winWorkplace = Ext.getCmp('geo-window-workplace')
+		if (!winWorkplace) {
+			winWorkplace = GEOR.geobuilder_createWorkplaceWindow("zone de travail")
+		}
+		winWorkplace.show()
 		showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT)
 	}
 
@@ -189,6 +204,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hideWorkPlace () {
+		var winWorkplace = Ext.getCmp('geo-window-workplace')
+		winWorkplace.hide()
 		hideWidget('ggis_workPlace')
 	}
 
@@ -266,33 +283,25 @@ geobuilder = (function() {
 	 */
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
 
-		//Initialisation du flag indiquant le status du traitement
 		var success = "err"
 			//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
 			if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
 				isVisSelCtrl = true
 			}
-
-		//si tous les paramètres d'entrée obligatoires sont bien transmis
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
-
-			if (lstIdObj != '' && lstIds != '') { //si aucune des listes n'est vide
-
+			if (lstIdObj != '' && lstIds != '') { 
 				if (width == null) {
 					width = ""
 				}
 				else {
 					width = new String(width)
 				}
-
-
-
 				var tbIdObj = new Array()
-				tbIdObj = lstIdObj.split(";") //tableau des identifiants d'objets
+				tbIdObj = lstIdObj.split(";")
 				var tbGroupIds = new Array()
-				tbGroupIds = lstIds.split(";") //tableau des listes d'ids correspondants
-				var nbIdObj = tbIdObj.length //nb d'identifiants d'objets passés en entrée
-				var nbGroupIds = tbGroupIds.length //nb de groupes d'ids passés en entrée
+				tbGroupIds = lstIds.split(";")
+				var nbIdObj = tbIdObj.length
+				var nbGroupIds = tbGroupIds.length
 				if (nbIdObj == nbGroupIds) {
 					//TODO recuperer la liste des layers
 					var lstLayerName = ""
@@ -304,19 +313,19 @@ geobuilder = (function() {
 
 								success = "ok"
 							}
-							else { //si aucune couche n'a été trouvée pour la liste d'idobj
+							else {
 								success = "err_layer"
 									addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug")
 							}
 
-				}else { //si incohérence dans les paramètres d'entrée (les listes lstIdObj et lstIds n'ont pas le même nb d'éléments)
+				}else {
 					addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: incoherence du nombre d'elements entre lstIdObj ("+nbIdObj+") et lstIds ("+nbGroupIds+" groupes d'ids)", "error")
 				}
-			} else { //si au moins une des listes transmises est vide
+			} else {
 				addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: au moins une des listes transmises (lstIdObj ou lstIds) est vide; pb possible de GEOMETRY sur les objets", "error")
 			}
 		}
-		else { //si tous les paramètres d'entrée obligatoires n'ont pas été transmis
+		else {
 			addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: certains parametres d'entree n'ont pas ete transmis", "error")
 		}
 		return success
@@ -380,9 +389,9 @@ geobuilder = (function() {
 
 		var layers = new Array()
 		var maplayers = Fusion.getMap().layers
-		for(var i = 0; i < mapLayers.length; i++)
+		for(var i = 0; i < maplayers.length; i++)
 		{
-			var myLayer = mapLayers[i]
+			var myLayer = maplayers[i]
 			if(myLayer.getVisibility() == visible)
 			{
 				layers[layers.length] = myLayer
@@ -403,6 +412,11 @@ geobuilder = (function() {
 		return layers
 	}
 
+	function isDisplayed(layerName)
+	{
+
+		return true
+	}
 	/**
 	 * Obtenir la sélection courante
 	 *
@@ -459,7 +473,7 @@ geobuilder = (function() {
 
 	window.Fusion = {
 			map : null,
-			selection : null,
+			selection : "CAN 1",
 			/**
 			 * Renvoie l'URL pointant vers le dossier 'diffos' avec un '/' en fin.
 			 * @return {String}
@@ -511,6 +525,7 @@ geobuilder = (function() {
 	window.showWaitingWorkPlace = showWaitingWorkPlace
 	window.showWorkPlace = showWorkPlace
 	window.getLayers = getLayers
+	window.isDisplayed = isDisplayed
 	window.getLayersGroups = getLayersGroups
 	window.ZoomEnsemble = ZoomEnsemble
 	window.showMap = showMap
@@ -547,6 +562,7 @@ geobuilder = (function() {
 			return
 		}
 		var map = Fusion.getMap()
+		var geoApiStyleMap = GEOR.util.getStyleMap({"default" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}, "select" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}})
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			styleMap : geoApiStyleMap,
 			displayInLayerSwitcher : false,
@@ -635,9 +651,6 @@ geobuilder = (function() {
 
 	}
 
-	//this callback method for the 'line' control to limit the number of points
-	//in the linestring to 2 - there is an extra point in the feature that gets
-	//removed when the feature is finalized
 	function geoApiCheckLine(point, geom) {
 		if (geom.components.length == 3) {
 			this.handler.dblclick()
@@ -645,14 +658,10 @@ geobuilder = (function() {
 		}
 	}
 
-
-
 	function geoApiCallHandler(evt) {
 		wkt = new OpenLayers.Format.WKT()
-		alert(wkt.write(evt.feature))
+		//alert(wkt.write(evt.feature))
 		this.userHandler(wkt.write(evt.feature))
-		//deactivate the control in a separate thread so that the chain of event
-		//handlers has a chance to finish before the deactivation occurs
 		window.setTimeout(geoApiDeactivate, 100)
 
 		return false;
