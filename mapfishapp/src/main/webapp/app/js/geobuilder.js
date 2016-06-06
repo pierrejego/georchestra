@@ -9,6 +9,7 @@ geobuilder = (function() {
 	var simpleSelection = false
 	var selection = null
 	var geoApiInitialized = false
+	var geoApiDigitizingLayer = null
 	var geoApiDrawControls = {}
 
 	var map = null
@@ -171,7 +172,9 @@ geobuilder = (function() {
 	 * la couche de dessin.
 	 */
 	function ClearDigitization() {
-
+		if (geoApiDigitizingLayer) {
+			geoApiDigitizingLayer.removeFeatures(geoApiDigitizingLayer.features)
+		}
 	}
 
 	/**
@@ -284,10 +287,10 @@ geobuilder = (function() {
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
 
 		var success = "err"
-			//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
-			if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
-				isVisSelCtrl = true
-			}
+		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
+		if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
+			isVisSelCtrl = true
+		}
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
 			if (lstIdObj != '' && lstIds != '') { 
 				if (width == null) {
@@ -305,18 +308,18 @@ geobuilder = (function() {
 				if (nbIdObj == nbGroupIds) {
 					//TODO recuperer la liste des layers
 					var lstLayerName = ""
-						addDebug("ggis_jsframework.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug")
-						lstLayerName ='geobuilder' // valeur par defaut pour test
-							if (lstLayerName != "") {
-								localise(lstIdObj, lstIds, width)
-								setSelection(lstIdObj, lstIds)
+					lstLayerName ='geobuilder' // valeur par defaut pour test
+						addDebug("geobuilder.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug")
+						if (lstLayerName != "") {
+							localise(lstIdObj, lstIds, width)
+							setSelection(lstIdObj, lstIds)
 
-								success = "ok"
-							}
-							else {
-								success = "err_layer"
-									addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug")
-							}
+							success = "ok"
+						}
+						else {
+							success = "err_layer"
+								addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug")
+						}
 
 				}else {
 					addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: incoherence du nombre d'elements entre lstIdObj ("+nbIdObj+") et lstIds ("+nbGroupIds+" groupes d'ids)", "error")
@@ -341,17 +344,20 @@ geobuilder = (function() {
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
 			for (i=0; i<data.features.length; i++){
 				featureGeom = data.features[i].geometry
+				layerProj = data.features[i].projection
 				coorX = []
 				coorY = []
 				if (featureGeom.type == "Point"){
-					coorX.push(featureGeom.coordinates[0])
-					coorY.push(featureGeom.coordinates[1])
+					point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
+					coorX.push(point.x)
+					coorY.push(point.y)
 				}
 				else {
 					featureCoordinates = featureGeom.coordinates
 					for ( var j=0; j< featureCoordinates.length; j++) {
-						coorX.push(featureCoordinates[j][0]) 
-						coorY.push(featureCoordinates[j][1]) 
+						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
+						coorX.push(point.x)
+						coorY.push(point.y) 
 					}
 				}
 			}
@@ -371,6 +377,19 @@ geobuilder = (function() {
 		})
 
 	}
+	
+	function projection(coorX, coorY, layerProj){
+		var epsgMap   = new OpenLayers.Projection(Fusion.getMap().projection)
+		if (layerProj != ""){
+			var projectionCode = 'EPSG:' + layerProj
+			var epsgLayer = new OpenLayers.Projection(projectionCode)
+			var point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap)
+		} else {
+			var point = new OpenLayers.Geometry.Point(coorX, coorY)
+		}
+	    return point
+	}
+	
 	function deleteMapSelection(selection) {
 
 	}
@@ -466,8 +485,8 @@ geobuilder = (function() {
 	}
 
 	function showMap() {
-		hideWorkPlace()
-		hideFeatureInfo()
+		//hideWorkPlace()
+		//hideFeatureInfo()
 		Fusion.getMap().baseLayer.redraw()
 	}
 
