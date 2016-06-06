@@ -1,7 +1,9 @@
 Ext.namespace("GEOR");
 
 //TODO a supprimer lorsque la nouvelle gestion du loin par header sera mise en place par geobuilder
+/*
 GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
+	console.log('Login with profile %s', idProfil)
 	// Connect to geobuilder server and create session + token for authentication
     Ext.Ajax.request
     ({
@@ -13,7 +15,7 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         	site: '1'
         },
         success: function(response)
-        {   
+        {
         	var data = Ext.util.JSON.decode(response.responseText);
         	if (data && data.data && data.data.token) {
 	        	var token = data.data.token;
@@ -73,19 +75,20 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
     });
 	
 };
+*/
 
 //TODO a mettre à place de l'autre méthode lorsque la nouvelle gestion du loin par header sera mise en place par geobuilder
-/*GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
+GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 	// Connect to geobuilder server and create session 
     var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_LOGIN;
 	
-	var params = {};
+	var params = {site: 1};
 	
 	if (idProfil) {  
 		//On passe unqiuement le trigramme a geobuilder
 		var profils = idProfil.split(GEOR.config.GEOBUILDER_GROUPE_LDAP);
 		if (profils.length === 2) {
-			params.propro = profils[1];
+			params.idPro = profils[1];
 		}
 	}
 	
@@ -94,6 +97,9 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         url: url,
         method: 'GET',
         params: params,
+        headers: {
+        	Accept: 'application/json'
+        },
         success: function (response) {
         	
         	//Si on se reconnecte, il faut supprimer le menu geobuilder et le tab panel geobuilder
@@ -121,4 +127,4 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         }
     });
 	
-};*/
+};
