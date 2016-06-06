@@ -157,6 +157,7 @@ if(sec_roles != null) {
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/main.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/css/xtheme-pwrs.css" />
     <link rel="stylesheet" type="text/css" href="<%= context %>/app/js/spinner/Spinner.css" />
+    <link rel="stylesheet" type="text/css" href="<%= context %>/app/js/styler/theme/css/styler.css" />
     
     <script type="text/javascript">
     var cssFileName = "<%= request.getParameter("module") %>";
