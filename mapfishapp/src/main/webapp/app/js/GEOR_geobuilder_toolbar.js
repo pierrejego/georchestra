@@ -65,7 +65,62 @@ GEOR.geobuilder_toolbar = (function() {
         var map = layerStore.map, tbar = new Ext.Toolbar({id: "tbar"}), ctrl, items = [];
 
         //Creation du menu de la toolbar
-        	
+	 	
+    	/**
+    	 * Ajout du bouton Partager
+    	 */	
+    	//Method: shareLink
+    	//Creates handlers for map link sharing
+    	var shareLink = function(options) {
+    	    return function() {
+    	        GEOR.waiter.show();
+    	        OpenLayers.Request.POST({
+    	            url: GEOR.config.PATHNAME + "/ws/wmc/",
+    	            data: GEOR.wmc.write({
+    	            	title: ""
+    	            }),
+    	            success: function(response) {
+    	            	var o = Ext.decode(response.responseText),
+    	            	id =  /^.+(\w{32}).wmc$/.exec(o.filepath)[1];
+    	            	var url = new Ext.XTemplate(options.url).apply({
+    	            		"context_url": encodeURIComponent(GEOR.util.getValidURI(o.filepath)),
+    	            		"map_url": GEOR.util.getValidURI('map/' + id),
+    	            		"id": id
+    	                });
+    	                window.open(url);
+    	            },
+    	            scope: this
+    	        });
+    	    }
+    	};
+    	
+    	//Creation de la liste du menu Partager
+    	var getShareMenu = function() {
+    	    var menu = [], cfg;
+    	    Ext.each(GEOR.config.SEND_MAP_TO, function(item) {
+    	        cfg = {
+    	            text: tr(item.name),
+    	            handler: shareLink.call(this, {
+    	                url: item.url
+    	            })
+    	        };
+    	        if (item.qtip) {
+    	            cfg.qtip = tr(item.qtip);
+    	        }
+    	        if (item.iconCls) {
+    	            cfg.iconCls = item.iconCls;
+    	        }
+    	        menu.push(cfg);
+    	    });
+    	    return menu;
+    	};
+    	 
+    	items.push({
+    		text: tr("Partager"),
+    		menu: getShareMenu(),
+    		iconCls: "geor-share"
+    	});
+    		
     	/**
     	 * Ajout du bouton Imprimer
     	 */
@@ -99,73 +154,8 @@ GEOR.geobuilder_toolbar = (function() {
     		items.push(print);	
     	}
     	
-    	/**
-    	 * Ajout du bouton Partager
-    	 */	
-    	//Method: shareLink
-    	//Creates handlers for map link sharing
-    	var shareLink = function(options) {
-    	    return function() {
-    	        GEOR.waiter.show();
-    	        OpenLayers.Request.POST({
-    	            url: GEOR.config.PATHNAME + "/ws/wmc/",
-    	            data: GEOR.wmc.write({
-    	            	title: ""
-    	            }),
-    	            success: function(response) {
-    	            	var o = Ext.decode(response.responseText),
-    	            	id =  /^.+(\w{32}).wmc$/.exec(o.filepath)[1];
-    	            	var url = new Ext.XTemplate(options.url).apply({
-    	            		"context_url": encodeURIComponent(GEOR.util.getValidURI(o.filepath)),
-    	            		"map_url": GEOR.util.getValidURI('map/' + id),
-    	            		"id": id
-    	                });
-    	                window.open(url);
-    	            },
-    	            scope: this
-    	        });
-    	    }
-    	};
-    	
-    	if (GEOR.config.SEND_MAP_TO.length == 1) {
-    		var item = GEOR.config.SEND_MAP_TO[0];
-    		items.push({
-    			iconCls: "geor-share",
-    			handler: shareLink.call(this, {
-    				url: item.url
-    				}),
-    			tooltip : tr(item.qtip)
-    		});
-    		
-    	} else {
-    		var getShareMenu = function() {
-        	    var menu = [], cfg;
-        	    Ext.each(GEOR.config.SEND_MAP_TO, function(item) {
-        	        cfg = {
-        	            text: tr(item.name),
-        	            handler: shareLink.call(this, {
-        	                url: item.url
-        	            })
-        	        };
-        	        if (item.qtip) {
-        	            cfg.qtip = tr(item.qtip);
-        	        }
-        	        if (item.iconCls) {
-        	            cfg.iconCls = item.iconCls;
-        	        }
-        	        menu.push(cfg);
-        	    });
-        	    return menu;
-        	};
 
-    		items.push({
-        		text: tr("Partager"),
-        		menu: getShareMenu(),
-        		iconCls: "geor-share"
-        	});    		
-    	}
     	
-
     	/**
     	 * Ajout du bouton Déplacement de la carte
     	 */
