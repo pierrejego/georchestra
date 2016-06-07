@@ -1,10 +1,14 @@
 GEOR.createEastTabPanel = function (layerStore) {
 
 	var recenteringItems = [
+        /*
+         * Comment to deactive this panel and use openLs extension. 
+         * Uncomment to active this tab in south region beside "Referential" tab         
         Ext.apply({
             title: tr("Cities"),
             tabTip: tr("Recentering on GeoNames cities")
         }, GEOR.geonames.create(layerStore.map)),
+        */        
         Ext.apply({
             title: tr("Referentials"),
             tabTip: tr("Recentering on a selection of referential layers")
