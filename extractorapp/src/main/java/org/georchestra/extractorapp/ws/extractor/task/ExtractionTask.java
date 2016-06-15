@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.extractorapp.ws.extractor.task;
 
 import java.io.*;
@@ -68,7 +87,7 @@ public class ExtractionTask implements Runnable, Comparable<ExtractionTask> {
 					+ tmpExtractionBundle);
 
 			final File failureFile = new File(tmpExtractionBundle,
-					"failures.html");
+					"failures.txt");
 			final List<String> successes = new ArrayList<String>();
 			final List<String> failures = new ArrayList<String>();
 			final List<String> oversized = new ArrayList<String>();
@@ -140,8 +159,6 @@ public class ExtractionTask implements Runnable, Comparable<ExtractionTask> {
 					}
 				}
 			}
-
-			closeFailuresFile(failureFile);
 
 			File archive = archiveExtraction(tmpExtractionBundle);
 			long fileSize = archive.length();
@@ -235,92 +252,25 @@ public class ExtractionTask implements Runnable, Comparable<ExtractionTask> {
 		e.printStackTrace(new PrintWriter(stackTrace));
 		openFailuresFile(failureFile);
 		String message = String
-				.format("<li>Erreur d'accès à la couche: %s \n"
-						+ "  <ul>\n"
-						+ "    <li>Serveur: %s</li>\n"
-						+ "    <li>Couche: %s</li>\n"
-						+ "    <li>Exception (à destination de l'administrateur): <![CDATA[%s]]></li>\n"
-						+ "    <li><pre><code style=\"font-size: 1.2em;\"><![CDATA[%s]]></code></pre></li>\n"
-						+ "  </ul>\n" + "</li>\n", request._layerName,
+				.format("\nError accessing layer: %s \n"
+						+ "\n"
+						+ " * Service: %s \n"
+						+ " * Layer: %s \n"
+						+ " * Exception: \n"
+						+ " %s \n", request._layerName,
 						request._url, request._layerName, e.getLocalizedMessage().substring(0, Math.min(200,
-						e.getLocalizedMessage().length())).replaceAll("<","&lt;"),
-						stackTrace.toString().replaceAll("<","&lt;"));
+						e.getLocalizedMessage().length())),
+						stackTrace.toString());
 		writeToFile(failureFile, message, true);
 	}
 
 	private void openFailuresFile(File failureFile) {
 		if (!failureFile.exists()) {
-			String msg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-					+ "<html>\n"
-					+ "<head>\n"
-					+ "<title>"
-					+ "Erreurs lors de l'extraction"
-					+ "</title>\n" +
-					"<style type=\"text/css\">" +
-					"html { margin: 0; padding: 0; }\n" +
-					"body {  font: 75% georgia, sans-serif; line-height: 1.88889; color: #555753;  background: #fff url(blossoms.jpg) " +
-					"no-repeat bottom right;  margin: 0;  padding: 0; }\n" +
-					"p {  margin-top: 0;  text-align: justify; }\n" +
-					"h3 {  font: italic normal 1.4em georgia, sans-serif; letter-spacing: 1px;  margin-bottom: 0;  color: #7D775C; }\n" +
-					"a:link {  font-weight: bold;  text-decoration: none;  color: #B7A5DF; }\n" +
-					"a:visited {  font-weight: bold;  text-decoration: none;  color: #D4CDDC; }\n" +
-					"a:hover, a:focus, a:active {  text-decoration: underline;  color: #9685BA; }\n" +
-					"abbr { border-bottom: none; }\n" +
-					"\n" +
-					"\n" +
-					"/* specific divs */\n" +
-					".page-wrapper {  background: url(zen-bg.jpg) no-repeat top left;  padding: 0 175px 0 110px;   margin: 0;  " +
-					"position: relative; }\n" +
-					"\n" +
-					".intro {  min-width: 470px; width: 100%; }\n" +
-					"\n" +
-					"header h1 {  background: transparent url(h1.gif) no-repeat top left; margin-top: 10px; display: block; width: " +
-					"219px; height: 87px; float: left; text-indent: 100%; white-space: nowrap; overflow: hidden; }\n" +
-					"header h2 {  background: transparent url(h2.gif) no-repeat top left;  margin-top: 58px;  margin-bottom: 40px;  " +
-					"width: 200px;  height: 18px;  float: right; text-indent: 100%; white-space: nowrap; overflow: hidden; }\n" +
-					"header { padding-top: 20px; height: 87px;}\n" +
-					"\n" +
-					".summary { clear: both;  margin: 20px 20px 20px 10px;  width: 160px;  float: left; }\n" +
-					".summary p { font: italic 1.1em/2.2 georgia;  text-align: center; }\n" +
-					"\n" +
-					".preamble { clear: right;  padding: 0px 10px 0 10px; }\n" +
-					".supporting {\t padding-left: 10px;  margin-bottom: 40px; }\n" +
-					"\n" +
-					"footer {  text-align: center;  }\n" +
-					"footer a:link, footer a:visited {  margin-right: 20px;  }\n" +
-					"\n" +
-					".sidebar { margin-left: 600px;  position: absolute;  top: 0;  right: 0; }\n" +
-					".sidebar .wrapper {  font: 10px verdana, sans-serif;  background: transparent url(paper-bg.jpg) top left repeat-y;" +
-					"  padding: 10px;  margin-top: 150px;  width: 130px;  }\n" +
-					".sidebar h3.select {  background: transparent url(h3.gif) no-repeat top left;  margin: 10px 0 5px 0;  width: 97px;" +
-					"  height: 16px; text-indent: 100%; white-space: nowrap; overflow: hidden; }\n" +
-					".sidebar h3.archives {  background: transparent url(h5.gif) no-repeat top left;  margin: 25px 0 5px 0;  " +
-					"width:57px;  height: 14px; text-indent: 100%; white-space: nowrap; overflow: hidden; }\n" +
-					".sidebar h3.resources {  background: transparent url(h6.gif) no-repeat top left;  margin: 25px 0 5px 0;  " +
-					"width:63px;  height: 10px; text-indent: 100%; white-space: nowrap; overflow: hidden; }\n" +
-					"\n" +
-					"\n" +
-					".sidebar ul { margin: 0; padding: 0; }\n" +
-					".sidebar li { line-height: 1.3em;  background: transparent url(cr1.gif) no-repeat top center;  display: block;  " +
-					"padding-top: 5px;  margin-bottom: 5px; list-style-type: none; }\n" +
-					".sidebar li a:link { color: #988F5E; }\n" +
-					".sidebar li a:visited { color: #B3AE94; }\n" +
-					"\n" +
-					"\n" +
-					".extra1 { background: transparent url(cr2.gif) top left no-repeat;  position: absolute;  top: 40px;  right: 0;  width: 148px;  height: 110px; }"
-					+ "</style></head><body>\n"
-					+ "L'extraction a échoué pour certaines données.  "
-					+ "Contacter l'administrateur concernant les serveurs/couches suivants\n"
-					+ "\n\nToutes les couches ont été contactées "
+			String msg = "There were errors during the extraction process\n"
+					+ "All services have been polled "
 					+ EXTRACTION_ATTEMPTS
-					+ " fois afin d'extraire les données.\n\n" + "<ul>";
+					+ " times.\n";
 			writeToFile(failureFile, msg, false);
-		}
-	}
-
-	private void closeFailuresFile(File failureFile) {
-		if (failureFile.exists()) {
-			writeToFile(failureFile, "</ul></body></html>", true);
 		}
 	}
 
@@ -386,7 +336,8 @@ public class ExtractionTask implements Runnable, Comparable<ExtractionTask> {
 		WfsExtractor extractor = new WfsExtractor(requestBaseDir,
 				requestConfig.adminCredentials.getUserName(),
 				requestConfig.adminCredentials.getPassword(),
-				requestConfig.secureHost);
+				requestConfig.secureHost,
+				requestConfig.userAgent);
 
 		extractor.checkPermission(request, requestConfig.secureHost, requestConfig.username, requestConfig.roles);
 
@@ -408,7 +359,7 @@ public class ExtractionTask implements Runnable, Comparable<ExtractionTask> {
 
 		String cswHost = request._isoMetadataURL.getHost();
 
-		CSWExtractor extractor = new CSWExtractor(layerDirectory, adminUserName, adminPassword, cswHost);
+		CSWExtractor extractor = new CSWExtractor(layerDirectory, adminUserName, adminPassword, cswHost, requestConfig.userAgent);
 
 		extractor.checkPermission(request, requestConfig.username, requestConfig.roles);
 

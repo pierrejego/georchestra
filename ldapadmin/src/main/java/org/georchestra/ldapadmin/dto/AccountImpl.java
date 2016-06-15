@@ -1,6 +1,22 @@
-/**
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
  *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ldapadmin.dto;
 
 import java.io.Serializable;
@@ -72,27 +88,44 @@ public class AccountImpl implements Serializable, Account, Comparable<Account>{
 
 	private Date shadowExpire;
 
+	private String manager;
+	
+	private String context;
+
 	@Override
 	public String toString() {
-		return "AccountImpl [uid=" + uid + ", commonName=" + commonName
-				+ ", surname=" + surname + ", org=" + org
-				+ ", email=" + email + ", phone=" + phone + ", description="
-				+ description + ", password=" + password + ", newPassword="
-				+ newPassword + ", givenName=" + givenName + ", title=" + title
-				+ ", postalAddress=" + postalAddress + ", postalCode="
-				+ postalCode + ", registeredAddress=" + registeredAddress
-				+ ", postOfficeBox=" + postOfficeBox
-				+ ", physicalDeliveryOfficeName=" + physicalDeliveryOfficeName
-				+ ", street=" + street + ", locality=" + locality
-				+ ", facsimile=" + facsimile + ", mobile=" + mobile
-				+ ", roomNumber=" + roomNumber + ", stateOrProvince="
-				+ stateOrProvince + ", organizationalUnit="
-				+ organizationalUnit + ", homePostalAddress=" + homePostalAddress
-				+ ", UUID=" + this.uuid + ", shadowExpire=" + String.valueOf(this.shadowExpire)
-				+ "]";
+		return "AccountImpl{" +
+				"manager='" + manager + '\'' +
+				", uid='" + uid + '\'' +
+				", commonName='" + commonName + '\'' +
+				", surname='" + surname + '\'' +
+				", org='" + org + '\'' +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", description='" + description + '\'' +
+				", password='" + password + '\'' +
+				", newPassword='" + newPassword + '\'' +
+				", givenName='" + givenName + '\'' +
+				", title='" + title + '\'' +
+				", postalAddress='" + postalAddress + '\'' +
+				", postalCode='" + postalCode + '\'' +
+				", registeredAddress='" + registeredAddress + '\'' +
+				", postOfficeBox='" + postOfficeBox + '\'' +
+				", physicalDeliveryOfficeName='" + physicalDeliveryOfficeName + '\'' +
+				", street='" + street + '\'' +
+				", locality='" + locality + '\'' +
+				", facsimile='" + facsimile + '\'' +
+				", mobile='" + mobile + '\'' +
+				", roomNumber='" + roomNumber + '\'' +
+				", stateOrProvince='" + stateOrProvince + '\'' +
+				", organizationalUnit='" + organizationalUnit + '\'' +
+				", homePostalAddress='" + homePostalAddress + '\'' +
+				", uuid='" + uuid + '\'' +
+				", shadowExpire=" + shadowExpire + '\'' +
+				", context=" + context +
+				'}';
 	}
-	
-	
+
 	@Override
 	public String toVcf() {
 	    VCard v = new VCard();
@@ -174,7 +207,7 @@ public class AccountImpl implements Serializable, Account, Comparable<Account>{
 		csv.append(CSV_DELIMITER);// Home Country
 		csv.append(CSV_DELIMITER);// Spouse
 		csv.append(CSV_DELIMITER);// Children
-		csv.append(CSV_DELIMITER); // Manager's Name
+		csv.append(toFormatedString(manager)); // Manager's Name
 		csv.append(CSV_DELIMITER);// Assistant's Name
 		csv.append(CSV_DELIMITER); // Referred By
 		csv.append(CSV_DELIMITER);// Company Main Phone
@@ -273,7 +306,10 @@ public class AccountImpl implements Serializable, Account, Comparable<Account>{
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 			res.put("shadowExpire", dateFormat.format(this.shadowExpire));
 		}
-
+		if(this.manager != null)
+			res.put("manager", this.manager);
+		if(this.context != null)
+			res.put("context", this.context);
 		return res;
 	}
 
@@ -524,9 +560,29 @@ public class AccountImpl implements Serializable, Account, Comparable<Account>{
 	@Override
 	public Date getShadowExpire() { return this.shadowExpire; }
 
+	@Override
+	public String getManager() {
+		return manager;
+	}
+
+	@Override
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
+	
+	@Override
+	public String getContext() {
+		return context;
+	}
+
+	@Override
+	public void setContext(String context) {
+		this.context = context;
+	}
+
 	/* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
+         * @see java.lang.Object#hashCode()
+         */
 	@Override
     public int hashCode() {
 	    final int prime = 31;

@@ -5,3 +5,7 @@
 .measure-area {
   background-image: url(../img/ruler_square.png) !important;
 }
+
+.measure-perimeter {
+  background-image: url(../img/ruler_perimeter.png) !important;
+}

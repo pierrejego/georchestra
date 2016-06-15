@@ -1,10 +1,24 @@
-/**
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
  *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ldapadmin.ds;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -19,10 +33,13 @@ import javax.naming.directory.SearchControls;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.georchestra.ldapadmin.dao.AdminLogDao;
 import org.georchestra.ldapadmin.dto.Account;
 import org.georchestra.ldapadmin.dto.AccountFactory;
 import org.georchestra.ldapadmin.dto.Group;
 import org.georchestra.ldapadmin.dto.UserSchema;
+import org.georchestra.ldapadmin.model.AdminLogEntry;
+import org.georchestra.ldapadmin.model.AdminLogType;
 import org.georchestra.ldapadmin.ws.newaccount.UidGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
@@ -52,6 +69,9 @@ public final class AccountDaoImpl implements AccountDao {
     private String uniqueNumberField = "employeeNumber";
     private LdapRdn userSearchBaseDN;
     private AtomicInteger uniqueNumberCounter = new AtomicInteger(-1);
+
+    @Autowired
+    private AdminLogDao logDao;
 
     private static final Log LOG = LogFactory.getLog(AccountDaoImpl.class.getName());
 
@@ -86,11 +106,15 @@ public final class AccountDaoImpl implements AccountDao {
         this.userSearchBaseDN = new LdapRdn(userSearchBaseDN);
     }
 
+    public void setLogDao(AdminLogDao logDao) {
+        this.logDao = logDao;
+    }
+
     /**
-     * @see {@link AccountDao#insert(Account, String)}
+     * @see {@link AccountDao#insert(Account, String, String)}
      */
     @Override
-    public synchronized void insert(final Account account, final String groupID) throws DataServiceException,
+    public synchronized void insert(final Account account, final String groupID, final String originUUID) throws DataServiceException,
             DuplicatedUidException, DuplicatedEmailException {
 
         assert account != null;
@@ -117,7 +141,7 @@ public final class AccountDaoImpl implements AccountDao {
 
             throw new DuplicatedEmailException("there is a user with this email: " + account.getEmail());
 
-        } catch (NotFoundException e1) {
+        } catch (NameNotFoundException e1) {
             // if no other accounts with the same e-mail exists yet, then the
             // new account can be added.
             LOG.debug("No account with the mail " + account.getEmail() + ", account can be created.");
@@ -140,9 +164,9 @@ public final class AccountDaoImpl implements AccountDao {
 
             this.ldapTemplate.bind(dn, context, null);
 
-            this.groupDao.addUser(groupID, account.getUid());
+            this.groupDao.addUser(groupID, account.getUid(), originUUID);
 
-        } catch (NotFoundException e) {
+        } catch (NameNotFoundException e) {
             throw new DataServiceException(e);
         }
     }
@@ -198,10 +222,10 @@ public final class AccountDaoImpl implements AccountDao {
     }
 
     /**
-     * @see {@link AccountDao#update(Account)}
+     * @see {@link AccountDao#update(Account, String)}
      */
     @Override
-    public synchronized void update(final Account account) throws DataServiceException, DuplicatedEmailException {
+    public synchronized void update(final Account account, String originUUID) throws DataServiceException, DuplicatedEmailException {
 
         // checks mandatory fields
         if (account.getUid().length() == 0) {
@@ -229,7 +253,7 @@ public final class AccountDaoImpl implements AccountDao {
                         + account.getEmail());
             }
 
-        } catch (NotFoundException e1) {
+        } catch (NameNotFoundException e1) {
             // if it doesn't exist an account with this e-mail the it can be
             // part of the updated account.
             LOG.debug("Updated account with email " + account.getEmail() + " does not exist, update possible.");
@@ -242,32 +266,43 @@ public final class AccountDaoImpl implements AccountDao {
         mapToContext(null /* don't update number */, account, context);
 
         ldapTemplate.modifyAttributes(context);
+
+        // Add log entry for this modification
+        if(originUUID != null) {
+            UUID admin = UUID.fromString(originUUID);
+            UUID target = UUID.fromString(account.getUUID());
+            AdminLogEntry log = new AdminLogEntry(admin, target, AdminLogType.LDAP_ATTRIBUTE_CHANGE, new Date());
+            this.logDao.save(log);
+        }
     }
 
     /**
-     * @see {@link AccountDao#update(Account, Account)}
+     * @see {@link AccountDao#update(Account, Account, String)}
      */
     @Override
-    public synchronized void update(Account account, Account modified) throws DataServiceException, DuplicatedEmailException, NotFoundException {
+    public synchronized void update(Account account, Account modified, String originUUID) throws DataServiceException, DuplicatedEmailException, NameNotFoundException {
        if (! account.getUid().equals(modified.getUid())) {
            ldapTemplate.rename(buildDn(account.getUid()), buildDn(modified.getUid()));
            for (Group g : groupDao.findAllForUser(account.getUid())) {
                groupDao.modifyUser(g.getName(), account.getUid(), modified.getUid());
            }
        }
-       update(modified);
+       update(modified, originUUID);
     }
 
     /**
      * Removes the user account and the reference included in the group
      *
-     * @see {@link AccountDao#delete(Account)}
+     * @param uid user to delete from LDAP
+     * @param originUUID  UUID of admin that request deletion
+     *
+     * @see {@link AccountDao#delete(String, String)}
      */
     @Override
-    public synchronized void delete(final String uid) throws DataServiceException, NotFoundException {
-        this.ldapTemplate.unbind(buildDn(uid), true);
+    public synchronized void delete(final String uid, final String originUUID) throws DataServiceException, NameNotFoundException {
 
-        this.groupDao.deleteUser(uid);
+        this.groupDao.deleteUser(uid, originUUID);
+        this.ldapTemplate.unbind(buildDn(uid), true);
 
     }
 
@@ -309,7 +344,10 @@ public final class AccountDaoImpl implements AccountDao {
      * @see {@link AccountDao#findByUID(String)}
      */
     @Override
-    public Account findByUID(final String uid) throws NameNotFoundException {
+    public Account findByUID(final String uid) throws NameNotFoundException{
+
+        if(uid == null)
+            throw new NameNotFoundException("Cannot find user with uid : " + uid + " in LDAP server");
 
         Account a = (Account) ldapTemplate.lookup(buildDn(uid.toLowerCase()), UserSchema.ATTR_TO_RETRIEVE, new AccountContextMapper());
         if(a == null)
@@ -323,14 +361,14 @@ public final class AccountDaoImpl implements AccountDao {
      * @see {@link AccountDao#findByUID(String)}
      */
     @Override
-    public Account findByUUID(final UUID uuid) throws DataServiceException, NotFoundException {
+    public Account findByUUID(final UUID uuid) throws DataServiceException, NameNotFoundException {
         SearchControls sc = new SearchControls();
         sc.setReturningAttributes(UserSchema.ATTR_TO_RETRIEVE);
         sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
         EqualsFilter filter = new EqualsFilter("entryUUID", uuid.toString());
         List<Account> accounts = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), sc, new AccountContextMapper());
         if(accounts.size() < 1)
-            throw new NotFoundException("Cannot find Ldap entry with UUID = " + uuid);
+            throw new NameNotFoundException("Cannot find Ldap entry with UUID = " + uuid);
         if(accounts.size() > 1)
             throw new DataServiceException("Invalid response from ldap server, entryUUID should be unique");
         return accounts.get(0);
@@ -340,7 +378,7 @@ public final class AccountDaoImpl implements AccountDao {
      * @see {@link AccountDao#findByEmail(String)}
      */
     @Override
-    public Account findByEmail(final String email) throws DataServiceException, NotFoundException {
+    public Account findByEmail(final String email) throws DataServiceException, NameNotFoundException {
 
         SearchControls sc = new SearchControls();
         sc.setReturningAttributes(UserSchema.ATTR_TO_RETRIEVE);
@@ -355,7 +393,7 @@ public final class AccountDaoImpl implements AccountDao {
         List<Account> accountList = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(),sc,
                 new AccountContextMapper());
         if (accountList.isEmpty()) {
-            throw new NotFoundException("There is no user with this email: " + email);
+            throw new NameNotFoundException("There is no user with this email: " + email);
         }
         Account account = accountList.get(0);
 
@@ -395,18 +433,18 @@ public final class AccountDaoImpl implements AccountDao {
 
         // required by the account entry
         if (a.getUid().length() <= 0) {
-            throw new IllegalArgumentException("uid is requird");
+            throw new IllegalArgumentException("uid is required");
         }
 
         // required field in Person object
         if (a.getGivenName().length() <= 0) {
-            throw new IllegalArgumentException("Given name (cn) is requird");
+            throw new IllegalArgumentException("Given name (cn) is required");
         }
         if (a.getSurname().length() <= 0) {
-            throw new IllegalArgumentException("surname name (sn) is requird");
+            throw new IllegalArgumentException("surname name (sn) is required");
         }
         if (a.getEmail().length() <= 0) {
-            throw new IllegalArgumentException("email is requird");
+            throw new IllegalArgumentException("email is required");
         }
 
     }
@@ -473,6 +511,11 @@ public final class AccountDaoImpl implements AccountDao {
         setAccountField(context, UserSchema.ORG_UNIT_KEY, account.getOrganizationalUnit());
         
         setAccountField(context, UserSchema.HOME_POSTAL_ADDRESS_KEY, account.getHomePostalAddress());
+
+        if(account.getManager() != null)
+            setAccountField(context, UserSchema.MANAGER, account.getManager());
+        
+        setAccountField(context, UserSchema.CONTEXT, account.getContext());
     }
 
     private void setAccountField(DirContextOperations context, String fieldName, Object value) {
@@ -492,7 +535,7 @@ public final class AccountDaoImpl implements AccountDao {
         }
     }
 
-    private static class AccountContextMapper implements ContextMapper {
+    public static class AccountContextMapper implements ContextMapper {
 
         @Override
         public Object mapFromContext(Object ctx) {
@@ -525,7 +568,9 @@ public final class AccountDaoImpl implements AccountDao {
                     context.getStringAttribute(UserSchema.HOME_POSTAL_ADDRESS_KEY),
                     context.getStringAttribute(UserSchema.MOBILE_KEY),
                     context.getStringAttribute(UserSchema.ROOM_NUMBER_KEY),
-                    context.getStringAttribute(UserSchema.STATE_OR_PROVINCE_KEY));
+                    context.getStringAttribute(UserSchema.STATE_OR_PROVINCE_KEY),
+                    context.getStringAttribute(UserSchema.MANAGER),
+                    context.getStringAttribute(UserSchema.CONTEXT));
 
             account.setUUID(context.getStringAttribute(UserSchema.UUID_KEY));
             String rawShadowExpire = context.getStringAttribute(UserSchema.SHADOW_EXPIRE);

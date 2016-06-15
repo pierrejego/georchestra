@@ -16,7 +16,6 @@ import org.georchestra.ldapadmin.ds.AccountDaoImpl;
 import org.georchestra.ldapadmin.ds.DataServiceException;
 import org.georchestra.ldapadmin.ds.DuplicatedEmailException;
 import org.georchestra.ldapadmin.ds.GroupDaoImpl;
-import org.georchestra.ldapadmin.ds.NotFoundException;
 import org.georchestra.ldapadmin.dto.Account;
 import org.georchestra.ldapadmin.dto.AccountFactory;
 import org.georchestra.ldapadmin.dto.UserSchema;
@@ -30,6 +29,7 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapRdn;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.AndFilter;
@@ -40,6 +40,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 public class UsersControllerTest {
     private LdapTemplate ldapTemplate ;
     private LdapContextSource contextSource ;
+    private LdapRdn userSearchBaseDN = new LdapRdn("ou=users");
 
     private UsersController usersCtrl ;
     private AccountDaoImpl dao ;
@@ -48,11 +49,12 @@ public class UsersControllerTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
+    private Account adminAccount;
 
     @Before
     public void setUp() throws Exception {
         userRule = new UserRule();
-        userRule.setListOfprotectedUsers(Arrays.asList(new String[] { "geoserver_privileged_user" }));
+        userRule.setListOfprotectedUsers(new String[] { "geoserver_privileged_user" });
 
         ldapTemplate = Mockito.mock(LdapTemplate.class);
         contextSource = Mockito.mock(LdapContextSource.class);
@@ -76,12 +78,26 @@ public class UsersControllerTest {
 
         usersCtrl = new UsersController(dao, userRule);
 
+        this.adminAccount = AccountFactory.createBrief("testadmin", "monkey123", "Test", "ADmin",
+                "postmastrer@localhost", "+33123456789", "geOrchestra Project Steering Committee", "admin", "");
+
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
+
+        // Set user connected through http header
+        request.addHeader("sec-username", "testadmin");
     }
 
     @After
     public void tearDown() throws Exception {
+    }
+
+    private DistinguishedName buildDn(String uid) {
+        DistinguishedName dn = new DistinguishedName();
+        dn.add(userSearchBaseDN);
+        dn.add("uid", uid);
+
+        return dn;
     }
 
     @Test
@@ -120,7 +136,7 @@ public class UsersControllerTest {
 
     @Test
     public void testFindByUidNotFound() throws Exception {
-        Mockito.doThrow(NotFoundException.class).when(ldapTemplate).lookup((Name) Mockito.any(), (ContextMapper) Mockito.any());
+        Mockito.doThrow(NameNotFoundException.class).when(ldapTemplate).lookup((Name) Mockito.any(), (ContextMapper) Mockito.any());
 
         usersCtrl.findByUid("notfounduser", response);
 
@@ -177,7 +193,7 @@ public class UsersControllerTest {
                 put("o", "GeoServer");
         request.setRequestURI("/ldapadmin/users/geoserver");
         // geoserver_privileged_user is not a valid username automatically generated
-        userRule.setListOfprotectedUsers(Arrays.asList(new String[]{"geoserver_privileged_user", "ggeoserverprivilegeduser"}));
+        userRule.setListOfprotectedUsers(new String[]{"geoserver_privileged_user", "ggeoserverprivilegeduser"});
         request.setContent(reqUsr.toString().getBytes());
         Mockito.doThrow(NameNotFoundException.class).when(ldapTemplate).lookup((Name) Mockito.any());
 
@@ -236,38 +252,6 @@ public class UsersControllerTest {
         assertFalse(ret.getBoolean("success"));
         assertTrue(ret.getString("error").equals("duplicated_email"));
     }
-
-    @Test
-    public void testCreateDataServiceException() throws Exception {
-        JSONObject reqUsr = new JSONObject().
-                put("sn", "geoserver privileged user").
-                put("mail","tomcat@localhost").
-                put("givenName", "GS Priv User").
-                put("telephoneNumber", "+331234567890").
-                put("facsimileTelephoneNumber", "+33123456788").
-                put("street", "Avenue des Ducs de Savoie").
-                put("postalCode", "73000").
-                put("l", "Chambéry").
-                put("postOfficeBox", "1234").
-                put("o", "GeoServer");
-        request.setRequestURI("/ldapadmin/users/geoserver");
-        request.setContent(reqUsr.toString().getBytes());
-        //Mockito.doThrow(DataServiceException.class).when(ldapTemplate).lookup((Name) Mockito.any());
-        Mockito.doThrow(NameNotFoundException.class).when(ldapTemplate).lookup((Name) Mockito.any());
-        Mockito.doThrow(DataServiceException.class).when(ldapTemplate).lookup((Name) Mockito.any(), eq(UserSchema.ATTR_TO_RETRIEVE), (ContextMapper) Mockito.any());
-
-
-        try {
-            usersCtrl.create(request, response);
-            assertTrue(false);
-        } catch (Throwable e) {
-            JSONObject ret = new JSONObject(response.getContentAsString());
-            assertTrue(e instanceof IOException);
-            assertTrue(response.getStatus() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            assertFalse(ret.getBoolean("success"));
-        }
-    }
-
 
     @Test
     public void createUser() throws Exception {
@@ -552,7 +536,7 @@ public class UsersControllerTest {
     @Test
     public void testDeleteNotFoundExceptionCaught() throws Exception {
         request.setRequestURI("/ldapadmin/users/pmauduitnotfound");
-        Mockito.doThrow(NotFoundException.class).when(ldapTemplate).unbind((Name) Mockito.any(), eq(true));
+        Mockito.doThrow(NameNotFoundException.class).when(ldapTemplate).unbind((Name) Mockito.any(), eq(true));
 
         usersCtrl.delete(request, response);
 

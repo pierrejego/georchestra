@@ -46,7 +46,21 @@
             "annotation.fillcolor": "Fill color",
             "annotation.outlinecolor": "Outline color",
             "annotation.name": "Name",
-            "annotation.no_title": "no title"
+            "annotation.no_title": "no title",
+            "annotation.fontLabel" : "Font",
+            "annotation.fontTooltip" : "Clic to change font style",
+            "annotation.titlePopup" : "Settings",
+            "annotation.xyTool":"XY",
+            "annotation.tooltipDrawXy":"Draw point by its coordinates",
+            "annotation.drawXyTitle" : "Drawing tool by location",
+            "annotation.projectionSystem":"Projection system ",
+            "annotation.longitude":"longitude x...",
+            "annotation.Longitude":"Longitude (x) ",
+            "annotation.latitude":"latitude y...",
+            "annotation.Latitude":"Latitude (y) ",
+            "annotation.badXy" : "Coordinates are out of map extend or wrong !",
+            "annotation.cancelDrawXy" : "Close",
+            "annotation.validDrawXy":"Ok"
         },
         "es": {
             "annotation.drawing_tools": "Herramientas de dibujo",
@@ -83,7 +97,23 @@
             "annotation.fillcolor": "Relleno",
             "annotation.outlinecolor": "Contorno",
             "annotation.name": "Nombre",
-            "annotation.no_title": "Sin título"
+            "annotation.no_title": "Sin título",
+            "annotation.fontLabel" : "Fuente",
+            "annotation.fontTooltip" : "Cambiar la fuente",
+            "annotation.titlePopup" : "Ajustes",
+            "annotation.xyTool":"XY",
+            "annotation.tooltipDrawXy":"Dibujar un punto por sus coordenadas",
+            "annotation.drawXyTitle" : "Herramienta de dibujo por ubicación",
+            "annotation.projectionSystem":"Sistema de proyección ",
+            "annotation.longitude":"longitude x...",
+            "annotation.Longitude":"Longitude (x) ",
+            "annotation.latitude":"latitude y...",
+            "annotation.Latitude":"Latitude (y) ",
+            "annotation.badXy" : "Coordenadas no válidas !",
+            "annotation.cancelDrawXy" : "Cancelar",
+            "annotation.validDrawXy":"Ok"
+            
+            
         },
         "fr": {
             "annotation.drawing_tools": "Outils de dessin",
@@ -120,7 +150,22 @@
             "annotation.fillcolor": "Remplissage",
             "annotation.outlinecolor": "Contour",
             "annotation.name": "Nom",
-            "annotation.no_title": "Sans titre"
+            "annotation.no_title": "Sans titre",
+            "annotation.fillOpacity": "Opacité",
+            "annotation.fontLabel" : "Police",
+            "annotation.fontTooltip" : "Cliquer pour changer la police de caractère",
+            "annotation.titlePopup" : "Paramètres",
+            "annotation.xyTool":"XY",
+            "annotation.tooltipDrawXy":"Dessiner un point par ses coordonnées",
+            "annotation.drawXyTitle" : "Outil de dessin par localisation",
+            "annotation.projectionSystem":"Projection ",
+            "annotation.longitude":"longitude x...",
+            "annotation.Longitude":"Longitude (x) ",
+            "annotation.latitude":"latitude y...",
+            "annotation.Latitude":"Latitude (y) ",
+            "annotation.badXy" : "Coordonnées hors carte ou invalides !",
+            "annotation.cancelDrawXy" : "Fermer",
+            "annotation.validDrawXy":"Ok"     
         },
         "de": {
             "annotation.drawing_tools": "Zeichenwerkzeug",
@@ -157,7 +202,22 @@
             "annotation.fillcolor": "Füllfarbe",
             "annotation.outlinecolor": "Konturfarbe",
             "annotation.name": "Name",
-            "annotation.no_title": "Ohne Titel"
+            "annotation.no_title": "Ohne Titel",
+            "annotation.fontLabel" : "Schriftart",
+            "annotation.fontTooltip" : "Klicken Sie auf die Schriftart zu ändern",
+            "annotation.titlePopup" : "Einstellungen",
+            "annotation.xyTool":"XY",
+            "annotation.tooltipDrawXy":"Zeichnen Sie einen Punkt durch seine Koordinaten",
+            "annotation.drawXyTitle" : "Ziehwerkzeug nach Ort",
+            "annotation.projectionSystem":"Projektionssystem ",
+            "annotation.longitude":"longitude x...",
+            "annotation.Longitude":"Longitude (x) ",
+            "annotation.latitude":"latitude y...",
+            "annotation.Latitude":"Latitude (y) ",
+            "annotation.badXy" : "Falsche Koordinaten !",
+            "annotation.cancelDrawXy" : "Stornieren",
+            "annotation.validDrawXy":"Ok"    
+            
         }
     }
 }

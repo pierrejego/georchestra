@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.georchestra.extractorapp.ws.extractor;
 
 import java.io.BufferedReader;
@@ -71,6 +90,7 @@ public class ExtractorController implements ServletContextAware {
     private CheckFormAcceptance checkFormAcceptance;
 
     private ExtractionManager extractionManager;
+    private String userAgent;
 
     @Autowired
     private GeorchestraConfiguration georConfig;
@@ -306,7 +326,7 @@ public class ExtractorController implements ServletContextAware {
                 String username = request.getHeader("sec-username");
                 String roles = request.getHeader("sec-roles");
                 RequestConfiguration requestConfig = new RequestConfiguration(requests, requestUuid, email, servletContext, testing, username, roles,
-                        adminCredentials, secureHost, extractionFolderPrefix, maxCoverageExtractionSize, remoteReproject, useCommandLineGDAL, postData);
+                        adminCredentials, secureHost, extractionFolderPrefix, maxCoverageExtractionSize, remoteReproject, useCommandLineGDAL, postData, this.userAgent);
                 ExtractionTask extractor = new ExtractionTask(requestConfig);
 
                 LOG.info("Sending mail to user");
@@ -441,5 +461,13 @@ public class ExtractorController implements ServletContextAware {
 
     public void setEmailFactory(AbstractEmailFactory emailFactory) {
         this.emailFactory = emailFactory;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
     }
 }

@@ -25,6 +25,7 @@
 Ext.namespace("GEOR");
 
 GEOR.mappanel = (function() {
+	
 
     /**
      * Property: tr
@@ -37,7 +38,7 @@ GEOR.mappanel = (function() {
      * {OpenLayers.Control.MousePosition}
      */
     var mpControl = null;
-
+    
     /**
      * Method: formatMousePositionOutput
      * creates a mouse position formatter 
@@ -69,7 +70,7 @@ GEOR.mappanel = (function() {
                 secondPrefix, format(lonlat.lat)].join('');
         }
     };
-
+    
     /**
      * Method: buildMousePositionCtrl
      * Build a mouse position control.
@@ -84,10 +85,12 @@ GEOR.mappanel = (function() {
     var buildMousePositionCtrl = function(projCode, div) {
         return new OpenLayers.Control.MousePosition({
             div: div,
+            id:'mouseControlId',
             displayProjection: new OpenLayers.Projection(projCode),
             formatOutput: formatMousePositionOutput(projCode)
         });
     };
+
 
     /**
      * Method: buildBbarCfg
@@ -101,7 +104,12 @@ GEOR.mappanel = (function() {
      *     an array of toolbar items.
      */
     var buildBbarCfg = function(map) {
-        var div, items = [];
+    	// div to push element
+        var div;
+        // Srs select by user
+        var xySelect;        
+        // list of items to push in bbar
+        var items = [];
 
         // Scale combobox
         items.push(Ext.apply({
@@ -115,7 +123,12 @@ GEOR.mappanel = (function() {
             cls: "olControlScaleLine"
         });
         items.push(div);
-        map.addControl(new OpenLayers.Control.ScaleLine({div: div}));
+        var scaleOptions = {
+        		geodesic : true,
+        		div:div
+        
+        };
+        map.addControl(new OpenLayers.Control.ScaleLine(scaleOptions));
 
         // greedy spacer
         items.push("->");
@@ -127,10 +140,12 @@ GEOR.mappanel = (function() {
         items.push(tr("Coordonnées en "));
         items.push({
             xtype: 'combo',
-            width: 110,
+            id:'comboSrs',
+            width: 130,
             store: srsList,
-            value: srsList[0][1],
+            value: srsList[1][0],
             editable: false,
+            cls:'bottomButton',
             tpl: [
                 '<tpl for=".">',
                 '<div class="x-combo-list-item" ext:qtip="{field2} - {field1}" >',
@@ -146,18 +161,171 @@ GEOR.mappanel = (function() {
                         new OpenLayers.Projection(record.data['field1']);
                     mpControl.formatOutput = 
                         formatMousePositionOutput(record.data['field1']);
+                    projName = mpControl.displayProjection.proj.projName;
+                    if(projName === 'longlat'){
+                    	Ext.getCmp('textX').setValue('Lon = ');
+                    	Ext.getCmp('textY').setValue('Lat = ');
+                    } else {
+                    	Ext.getCmp('textX').setValue('X = ');
+                        Ext.getCmp('textY').setValue('Y = ');
+                    }
                 }
             }
         });
+        
+        
+        items.push({
+        		xtype:'textfield',
+        		id:'textX',
+        		width: 34,
+        		cls:'fieldXY',
+        		value:'X = ',
+        		readOnly:true
+        });
+        
+        items.push({
+            xtype: 'textfield',
+            id:'fieldX',           
+            width: 82,
+            editable: true,
+            listeners:{
+            	afterrender:destroyPoint
+            },
+            regex:/^[0-9.-]+$/, // allow . and - and number 0 - 9 only
+        });      
+        
+        items.push({
+    		xtype:'textfield',
+    		id:'textY',
+    		width: 34,
+    		cls:'fieldXY',
+    		value:'Y = ',
+    		readOnly:true
+    	});
+        
+        items.push({
+            xtype: 'textfield',
+            id:'fieldY',
+            width: 82,
+            editable: true,
+            listeners:{
+            	afterrender:destroyPoint
+            },
+            regex:/^[0-9.-]+$/, // allow . and - and number 0 - 9 only
+        });
+        
+        // If user dblclick on one field, destroy point result
+        function destroyPoint(field){
+        	field.getEl().on('dblclick',function(event,el){
+    			if (map.getLayersByName('georchestra_pointsLayer').length > 0){
+    				lastResult = map.getLayersByName('georchestra_pointsLayer')[0];
+        			lastResult.removeAllFeatures();
+    			}
+    		});
+        }
+        
+        // create button to set center on feature
+        items.push({
+        	xtype:'button',
+        	id:'buttonCenter',
+        	height:10,
+        	text:'Voir',
+        	tooltip:'Zoom surl les coordonnées',
+        	ctCls:'x-btn-smallest',
+        	handler: function (){
+        	// create layer and delete feature if last feature exist
+        		var pointsLayer;
+        		var size;       		
+        		if (map.getLayersByName('georchestra_pointsLayer').length === 0){
+        			pointsLayer = new OpenLayers.Layer.Vector("georchestra_pointsLayer", {
+        			displayInLayerSwitcher: false,
+        			styleMap: new OpenLayers.StyleMap({
+                        "default": {
+                        	graphicWidth: 20,
+                            graphicHeight: 32,
+                            graphicYOffset: -28, // shift graphic up 28 pixels
+                            externalGraphic : 'app/css/images/pwrs/geoPin.png'
+                            }
+                    })
+                });        		        		
+                map.addLayer(pointsLayer);
+                
+        		} else {
+        			pointsLayer = map.getLayersByName('georchestra_pointsLayer')[0];
+        			pointsLayer.removeAllFeatures();
+        		}        		
+        		// get coordinates from field value
+            	var xLong = Ext.getCmp('fieldX').getValue();
+        		var yLat = Ext.getCmp('fieldY').getValue();
+        		if (xLong != null || yLat != null){
+        			// directly create point if SRS = projection, else, transform to map SRS
+            		if (xySelect=== GEOR.config.MAP_SRS){
+                		var point = new OpenLayers.Geometry.Point(xLong,yLat);
+                	} else { 
+            			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
+                            new OpenLayers.Projection(xySelect), 
+                            GEOR.config.MAP_SRS);      			
+            			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
+            		}
+            		// add new point to map and zoom if geom respect map extend
+            		if (point.x <= GEOR.config.MAP_XMAX &&
+            			point.x >= GEOR.config.MAP_XMIN && 
+            			point.y <= GEOR.config.MAP_YMAX && 
+            			point.y >= GEOR.config.MAP_YMIN){
+            				map.setCenter(new OpenLayers.LonLat(point.x, point.y), 16);
+            				feature = new OpenLayers.Feature.Vector(point);
+                			pointsLayer.addFeatures(feature);
+            		}else{
+            			alert("Coordonnées invalides !");
+        			}
+        		}
+        		
+            }
+        });
+        
+        // create event to get coordinates from mouse position control and display to field
+        var events = map.events;
+        events.register("mousemove",map,function(e){
+            var mapMousePosition = map.getControlsBy("id","mouseControlId")[0];
+        	if (mapMousePosition.lastXy != null){
+        		var last_x = mapMousePosition.lastXy.x;
+                var last_y = mapMousePosition.lastXy.y;
+                var lonLat = map.getLonLatFromPixel(new OpenLayers.Pixel(last_x,last_y));
+
+                // Get default map projection and get projection from combo
+                var projFrom = GEOR.config.MAP_SRS;
+                comboSrs = Ext.getCmp('comboSrs').getValue();
+                
+                // transform coordinates to selected projection if srs 
+                // is not map projection
+                if (comboSrs != projFrom){
+                	xySelect=comboSrs;
+                    projTo = new OpenLayers.Projection(comboSrs);
+                    lonLatProj = lonLat.transform(projFrom, projTo);
+                    lonX=lonLatProj.lon.toFixed(5);
+                    latY=lonLatProj.lat.toFixed(5);
+                } else {
+                	lonX=lonLat.lon.toFixed(2);
+                    latY=lonLat.lat.toFixed(2);
+                    xySelect=projFrom;
+                }
+                
+                Ext.getCmp('fieldX').setValue(lonX);
+                Ext.getCmp('fieldY').setValue(latY);      
+                  return true;
+        	}
+            
+        },true);
 
         div = Ext.DomHelper.append(Ext.getBody(), {
             tag: "div",
-            cls: "mouseposition"
+            cls: "mouseposition",
+            hidden:'true'
         });
         items.push(div);
-        mpControl = buildMousePositionCtrl(srs, div);
+        mpControl = buildMousePositionCtrl(srs,div);
         map.addControl(mpControl);
-
+          
         return {
             id: "bbar",
             items: items

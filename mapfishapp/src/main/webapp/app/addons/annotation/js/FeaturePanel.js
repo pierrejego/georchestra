@@ -163,11 +163,61 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                 listeners: {
                     keyup: function(field) {
                         feature.style.label = field.getValue();
+                        feature.attributes.label = field.getValue();
                         feature.layer.drawFeature(feature);
                     }
                 }
             });
         }
+        
+        // label font combo
+        if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point" && feature.isLabel){
+        	var text = feature.attributes.label;
+        	oItems.push({
+        		xtype: "gx_fontcombo",
+        		fieldLabel: OpenLayers.i18n('annotation.fontLabel'),
+                width: 110,
+                value : feature.style.fontFamily,
+                tooltip: OpenLayers.i18n('annotation.fontTooltip'),
+                forceSelection: true,
+                listeners: {
+                    select: function(combo, record) {
+                        var f = feature;
+                        var style = {};
+                        style.fontFamily = record.get("field1");
+                        f.style = OpenLayers.Util.extend(f.style, style);
+                        f.layer.drawFeature(f);
+                    },
+                    scope: this
+                }});
+        }     
+        
+        if (feature.geometry.CLASS_NAME !== "OpenLayers.Geometry.Point" ||
+                feature.isLabel) {
+                // font size or stroke width
+                var attribute = feature.isLabel ? 'fontSize' : 'strokeWidth';
+                oItems.push({
+                    xtype: 'spinnerfield',
+                    name: 'stroke',
+                    fieldLabel: OpenLayers.i18n('annotation.' + attribute.toLowerCase()),
+                    value: feature.style[attribute] || ((feature.isLabel) ? 16 : 1),
+                    width: 40,
+                    minValue: feature.isLabel ? 8 : 1,
+                    maxValue: feature.isLabel ? 36 : 10,
+                    listeners: {
+                        spin: function(spinner) {
+                            var f = feature;
+                            var style = {};
+                            style[attribute] = spinner.field.getValue() +
+                                (f.isLabel ? 'px' : '');
+                            f.style = OpenLayers.Util.extend(f.style, style);
+                            f.layer.drawFeature(f);
+                        },
+                        scope: this
+                    }
+                });
+            }
+        
 
         if (feature.geometry.CLASS_NAME !== "OpenLayers.Geometry.LineString" &&
             !feature.isLabel) {
@@ -239,34 +289,38 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
                     }
                 }
             }]
-        });
+        });        
 
-        if (feature.geometry.CLASS_NAME !== "OpenLayers.Geometry.Point" ||
-            feature.isLabel) {
-            // font size or stroke width
-            var attribute = feature.isLabel ? 'fontSize' : 'strokeWidth';
-            oItems.push({
-                xtype: 'spinnerfield',
-                name: 'stroke',
-                fieldLabel: OpenLayers.i18n('annotation.' + attribute.toLowerCase()),
-                value: feature.style[attribute] || ((feature.isLabel) ? 16 : 1),
-                width: 40,
-                minValue: feature.isLabel ? 8 : 1,
-                maxValue: feature.isLabel ? 36 : 10,
-                listeners: {
-                    spin: function(spinner) {
-                        var f = feature;
-                        var style = {};
-                        style[attribute] = spinner.field.getValue() +
-                            (f.isLabel ? 'px' : '');
-                        f.style = OpenLayers.Util.extend(f.style, style);
-                        f.layer.drawFeature(f);
+        // Add item within feature panel for polygon, rectangle and ring  
+        if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.Polygon" && !feature.isLabel ) {            
+                // Opacity
+                oItems.push({
+                	xtype: 'sliderfield',
+                    name: 'Opacity',
+                    fieldLabel: OpenLayers.i18n('annotation.fillOpacity'),
+                    value: feature.style.fillOpacity || 1,
+                    width: 100,
+                    minValue: 0,
+                    maxValue: 1,
+                    closeAction:'close',
+                    decimalPrecision: 2,
+                    increment: 0.01,
+                    tipText: function(thumb){
+                    	var valOpacity = thumb.value;
+                        return String(Math.round(valOpacity*100)) + '%';
                     },
-                    scope: this
-                }
-            });
+                    // Get default opacity value, give it to the feature style properties
+                    // and draw feature if value change
+                    listeners : {
+                        valid: function(slider) {
+                            feature.style.fillOpacity = slider.value;
+                            feature.layer.drawFeature(feature);
+                        },
+                        scope : this
+                    }
+                });            
         }
-
+  
         Ext.apply(this, {items: oItems});
     },
 

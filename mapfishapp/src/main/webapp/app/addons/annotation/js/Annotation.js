@@ -26,6 +26,8 @@ Ext.namespace("GEOR");
  *      Create a FeatureEditing main controler.
  */
 GEOR.Annotation = Ext.extend(Ext.util.Observable, {
+	
+	
 
     /** api: property[map]
      *  ``OpenLayers.Map``  A configured map object.
@@ -114,10 +116,12 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     /** private: property[defaultStyle]
      *  ``Object`` Feature style hash to apply to the default
      *   OpenLayers.Feature.Vector.style['default'] if no style was specified.
+     *   Default style after create new feature
      */
     defaultStyle: {
         fillColor: "#FF0000",
         strokeColor: "#FF0000",
+        fillOpacity: 0.1, // default feature opacity
         fontColor: "#000000"
     },
 
@@ -199,9 +203,12 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
                 displayInLayerSwitcher: false
             }
         );
+        
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
         this.map.addLayer(layer);
+        // set display order for this annotation layer
+        // layer.setZIndex(500);
 
         layer.events.on({
             "beforefeatureselected": this.onBeforeFeatureSelect,
@@ -215,12 +222,14 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         });
 
         // 2nd, create new ones from the current active layer
+        this.initDrawXy();
         this.initDrawControls(layer);
-        this.actions.push('-');
+        //this.actions.push('-');
         this.initFeatureControl(layer);
         this.initDeleteAllAction();
-        this.actions.push('-');
+        //this.actions.push('-');
         this.initExportAsKmlAction();
+
 
         GEOR.Annotation.superclass.constructor.apply(this, arguments);
     },
@@ -242,7 +251,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             this.toggleGroup = this.map.id;
         }
     },
-
+        
     /** private: method[initFeatureControl]
      *  :param layer: ``OpenLayers.Layer.Vector``
      *  Create a ModifyFeature control linked to the passed layer and
@@ -468,8 +477,165 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
         var action = new Ext.Action(actionOptions);
 
+
         this.actions.push(action);
     },
+    
+    /** private: method[initDrawXy]
+     *  Create a Ext.Action object that is set as the exportAsKml property
+     *  and pushed to the actions array.
+     */
+    initDrawXy: function() {
+        var actionOptions = {
+            handler: this.drawXy,
+            map:this.map,
+            id: 'DrawXyButtonId',
+            // button options
+            toggleGroup: this.toggleGroup,
+            allowDepress: false,
+            pressed:false,
+            scope: this,
+            group: this.toggleGroup,
+            checked: false,
+            text:OpenLayers.i18n('annotation.xyTool'),
+            iconCls: 'gx-featureediting-xy',
+            iconAlign: 'top',
+            tooltip: OpenLayers.i18n("annotation.tooltipDrawXy"),
+            toggleHandler: onItemToggle
+        };
+        
+    	function onItemToggle(item, pressed){
+    		if(!pressed && Ext.getCmp('winXyId')){
+    			Ext.getCmp('winXyId').destroy();    			
+    		}
+    	}
+
+        var action = new Ext.Action(actionOptions);
+
+        this.actions.push(action);
+    },
+    
+    /** private: method[drawXy]
+     *  Create a Ext.Action object that is set as the exportAsKml property
+     *  and pushed to the actions array.
+     */
+    
+    drawXy: function(){
+    	var srsConfig = GEOR.config.POINTER_POSITION_SRS_LIST;
+    	srsOrigin = srsConfig[0][0];
+    	
+    	if (Ext.getCmp('winXyId')){
+    		Ext.getCmp('winXyId').destroy();
+    	}
+
+		var window = new Ext.Window({
+			title : OpenLayers.i18n('annotation.drawXyTitle'),
+			id:'winXyId',
+			resizable: false,
+			closeAction:'close',
+			cls:'x-winXyCls',
+			listeners:{
+				'close':onClose
+			},
+			items   : [
+		                {
+                xtype: 'fieldset',
+                collapsible: false,
+                bodyStyle: 'padding: 2px',
+                items:  [{
+                            xtype: 'combo',
+                            id: 'annoComboId',
+                            width:100,
+                            minWidth:100,
+                            mode: 'local',
+                            value: srsConfig[0][0],
+                            triggerAction:  'all',
+                            forceSelection: true,
+                            editable: false,
+                            fieldLabel: OpenLayers.i18n('annotation.projectionSystem'),
+                            name: 'SRS ',
+                            displayField: 'name',
+                            valueField: 'value',
+                            store: srsConfig
+                        },{
+                            xtype: 'numberfield',
+                            id:'LngFieldId',
+                            decimalPrecision : 6,
+                            decimalSeparator:'.',
+                            width:100,
+                            flex : 1,
+                            enable : false,
+                            emptyText:OpenLayers.i18n('annotation.longitude'), 
+                            name : 'Longitude',
+                            fieldLabel: OpenLayers.i18n('annotation.Longitude'), 
+                            allowBlank: false
+                        },{
+                            xtype: 'numberfield',
+                            id : 'LatFieldId',
+                            decimalPrecision : 6,
+                            decimalSeparator:'.',
+                            width: 100,
+                            enable : false,
+                            flex : 1,
+                            emptyText:OpenLayers.i18n('annotation.latitude'), 
+                            name : 'Latitude',
+                            fieldLabel: OpenLayers.i18n('annotation.Latitude'),
+                            allowBlank: false
+                            }
+                        ]},
+		               ],
+               buttons: [{
+                             xtype  : 'button',
+                        	 text   : OpenLayers.i18n('annotation.validDrawXy'),
+                        	 width : 55,
+                             handler: function() {
+                            	 // get x, y and srs value
+                            	 var xLong = Ext.getCmp('LngFieldId').getValue();
+                            	 var yLat = Ext.getCmp('LatFieldId').getValue();
+                            	 var selectSrs = Ext.getCmp('annoComboId').getValue();
+                            	 if (xLong != null && yLat != null){
+                            		 // if srs is the same as map SRS create point, else, transform to map SRS
+	                            	 if (selectSrs === GEOR.config.MAP_SRS){			                            		 
+	                                     var point = new OpenLayers.Geometry.Point(xLong, yLat);
+	                            	 } else { 
+	                         			var coord = new OpenLayers.LonLat(xLong, yLat).transform(
+	                         					new OpenLayers.Projection(selectSrs), // from select srs
+	                         					GEOR.config.MAP_SRS);      			// to map srs
+	                         			var point = new OpenLayers.Geometry.Point(coord.lon,coord.lat);        			
+	                            		}		                            	 
+	                            	// add new point to map and zoom if geom respect map extend
+	                         		if (point.x <= GEOR.config.MAP_XMAX &&
+	                         			point.x >= GEOR.config.MAP_XMIN && 
+	                         			point.y <= GEOR.config.MAP_YMAX && 
+	                         			point.y >= GEOR.config.MAP_YMIN){
+	                         				feature = new OpenLayers.Feature.Vector(point);
+	                             			layer.addFeatures(feature);
+	                         		}else{
+	                         			alert(OpenLayers.i18n('annotation.badXy'));
+	                     			}
+                            	 }
+                             }
+                         },{
+                        	 xtype  : 'button',
+                        	 width  : 55,
+                        	 align:'right',
+                             text   : OpenLayers.i18n('annotation.cancelDrawXy'),
+                             handler: function() {
+                            	 window.destroy();
+                            	 Ext.getCmp('DrawXyButtonId').toggle(false);                            	 
+                             }
+                         }]
+		});
+		
+    	function onClose(){
+    		window.destroy();
+    		Ext.getCmp('DrawXyButtonId').toggle(false);
+    	}
+    	
+		return window.show();    	
+    },
+
+    
 
     /** private: method[exportAsKml]
      *  Called when the exportAsKml is triggered (button pressed).
@@ -574,7 +740,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     onModificationStart: function(event) {
         var feature = (event.geometry) ? event : event.feature;
-
+        
+        /*
         // to keep the state before any modification, useful when hitting the
         // 'cancel' button
         /*
@@ -590,21 +757,24 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         if (drawControl) {
             drawControl.deactivate();
             this.featureControl.activate();
+            
         }
 
         var options = {
             features: [feature],
             styler: this.styler
         };
-
+        
         this.featurePanel = new GEOR.FeaturePanel(options);
 
         // display the popup
         popupOptions = {
             location: feature,
+            title:OpenLayers.i18n('annotation.titlePopup'),
             // the following line is here for compatibility with
             // GeoExt < 1 (before changeset 2343)
             feature: feature,
+            closeAction:'close',
             items: [this.featurePanel]
         };
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions,
@@ -612,9 +782,11 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         popupOptions = OpenLayers.Util.applyDefaults(popupOptions, {
             layout: 'fit',
             border: false,
-            width: 280
+            width: 280,
+            minHeight:180,
+            minWidth:280
         });
-
+        
         var popup = new GeoExt.Popup(popupOptions);
         feature.popup = popup;
         this.popup = popup;
@@ -622,8 +794,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
             close: function() {
                 if (OpenLayers.Util.indexOf(this.layer.selectedFeatures, feature) > -1) {
                     this.featureControl.unselectFeature(feature);
-                    this.featureControl.deactivate();
-                }
+                    this.featureControl.deactivate();                }
             },
             scope: this
         });
@@ -647,6 +818,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         // or we could execute commits here also
 
         if (!feature) {
+        
             return;
         }
 

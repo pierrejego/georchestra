@@ -1,6 +1,22 @@
-/**
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
  *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.georchestra.ldapadmin.ws.edituserdetails;
 
 import java.io.IOException;
@@ -16,6 +32,7 @@ import org.georchestra.ldapadmin.dto.Account;
 import org.georchestra.ldapadmin.ws.utils.UserUtils;
 import org.georchestra.ldapadmin.ws.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -100,7 +117,6 @@ public class EditUserDetailsFormController {
 	 * Creates a form based on the account data.
 	 *
 	 * @param account input data
-	 * @param formBean (out)
 	 */
 	private EditUserDetailsFormBean createForm(final Account account) {
 
@@ -168,8 +184,14 @@ public class EditUserDetailsFormController {
 		try {
 
 			Account account = modify(this.accountBackup, formBean);
-
-			this.accountDao.update(account);
+			String adminUUID;
+			try {
+				Account adminAccount = this.accountDao.findByUID(request.getHeader("sec-username"));
+				adminUUID = adminAccount == null ? null : adminAccount.getUUID();
+			} catch (NameNotFoundException ex){
+				adminUUID = null;
+			}
+			this.accountDao.update(account, adminUUID);
 
 			model.addAttribute("success", true);
 

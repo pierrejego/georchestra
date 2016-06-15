@@ -177,6 +177,8 @@ ul.x-tab-strip li {
 
 .x-tab-strip-top .x-tab-right, .x-tab-strip-top .x-tab-left, .x-tab-strip-top .x-tab-strip-inner{
 	background-color: #808080;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 .x-tab-strip-active a,
 .x-tab-strip-active a em,
@@ -184,7 +186,6 @@ ul.x-tab-strip li {
 	background-color: white !important;
 	color: #4d4d4d;
 }
-
 .x-tab-strip-over a,
 .x-tab-strip-over a em,
 .x-tab-strip-over .x-tab-strip-inner,
@@ -290,7 +291,16 @@ ul.x-tab-strip li {
 
 .x-form-field-wrap .x-form-trigger{
     background-image:url(images/pwrs/form/trigger.gif);
-    border-bottom-color:#b5b8c8;
+    height : 100%;
+    border-bottom : 0;
+}
+
+.x-form-field-wrap .x-form-twin-triggers .x-form-trigger {
+	height: 22px;
+}
+
+.x-small-editor .x-form-field-wrap .x-form-trigger {
+	height: 20px;
 }
 
 .x-form-field-wrap .x-form-date-trigger{
@@ -368,37 +378,112 @@ ul.x-tab-strip li {
     background-image:url(images/pwrs/form/exclamation.gif);
 }
 
+/* Replacing extJs input styling
+=======================================================================
+*/
+/* .x-form-cb-label {
+	margin-left: 1.5em !important;			Override ext-all.css
+	top: -2px;
+}
+input[type="radio"], input[type="checkbox"] {
+    position: absolute;
+    overflow: hidden;
+    width: 13px;
+    height: 13px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0px none transparent;
+}
+input[type="radio"] {
+    background: transparent url("images/pwrs/form/radio.gif") no-repeat scroll;
+}
+input[type="radio"]:checked {
+	    background-position: -13px -13px;
+}
+input[type="radio"]:not(:checked) {
+	    background-position: 0px 0px;
+}
+input[type="checkbox"] {
+    background: transparent url("images/pwrs/form/checkbox.gif") no-repeat scroll;
+    position: absolute;
+    overflow: hidden;
+    width: 13px;
+    height: 13px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0px none transparent;
+}
+input[type="checkbox"]:not(:checked) {
+	    background-position: 0px 0px;
+}
+input[type="checkbox"]:checked {
+	    background-position: -13px -13px;
+}
+input[type="checkbox"]:focus{
+        outline:0;
+    } */
+/* END input styling ============================================ */
+
 .x-fieldset {
-    border-color:#CCCCCC;
+    border : none;
+    padding-left : 5px;
+    margin : 0;
+    padding-bottom:0;
+}
+.x-fieldset legend input:active, .x-fieldset legend input:focus {
+	outline: none;
+}
+.x-fieldset legend {
+    font-weight:bold;
+    font-family: 'latobold';
+    color:#4D4D4D;
+    font-size: 14px;
 }
 
-.x-fieldset legend {
-    font:bold;
-    font-family: 'latobold'
-    color:#777777;
-}.x-btn{
+#georchetra-styler-windows .x-fieldset {
+	border-top : solid 1px #007EC3;
+	margin-bottom : 5px;
+	padding-bottom : 10px;
+}
+
+#georchetra-styler-windows .x-fieldset legend input {
+	margin-top : 1px;
+}
+
+#georchetra-styler-windows .x-panel-bbar  .x-toolbar {
+	border : none;
+}
+
+#georchetra-styler-windows  .x-toolbar-left > table {
+	border-spacing : 10px 0;
+	margin-left : -10px;
+}
+
+.x-btn{
 	font:normal;
 }
 
 .x-btn button{
     font:normal;
     font-family: 'latoregular';
+    font-size : 13px;
     color:#007EC3;
 }
-#tbar .x-btn button{
+#tbar .x-btn button {
 	color: white;
 }
-
 .x-btn .x-btn-text {
     font-style:normal;
     font-weight:normal;
     padding: 0 6px;
 }
-.x-btn .x-btn-text, .x-btn .x-btn-text:hover, .x-btn .x-btn-text:active, .x-btn .x-btn-text:focus {
+.x-btn .x-btn-text, .x-btn .x-btn-text:hover, .x-btn .x-btn-text:active, .x-btn .x-btn-text:focus, .x-btn-focus {
 	outline: none !important;
 }
 
-.x-btn-tl, .x-btn-tr, .x-btn-tc, .x-btn-ml, .x-btn-mr, .x-btn-mc, .x-btn-bl, .x-btn-br, .x-btn-bc{
+.x-btn-tl, .x-btn-tr, .x-btn-tc, .x-btn-ml, .x-btn-mr, .x-btn-mc, .x-btn-bl, .x-btn-br, .x-btn-bc .x-btn-focus {
 	background-image:none;
 	border-color: #007EC3;
 }
@@ -406,17 +491,16 @@ ul.x-tab-strip li {
 .x-btn-click .x-btn-text, .x-btn-menu-active .x-btn-text, .x-btn-pressed .x-btn-text{
     color:#000;
 }
+
+.x-btn-pressed {
+	background-color : rgba(170, 204, 246, 0.63);
+}
+
 /* Buttons definitions 
 =======================================================================================================
 Need to override every style element by element in cascade :)
 */
-.x-btn:hover, .x-btn:hover .x-btn-text{
-	background-color: #92C0E3;
-	color: white;
-}
-.x-btn .btn-add:hover, .x-btn-text.add:hover {
-    background-image: url("../img/famfamfam/add-white.png");
-}
+
 
 .x-btn-tl {border-top: 1px; border-left: 1px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
 .x-btn-tc {border-top: 1px; border-left: 0px; border-bottom: 0px; border-right: 0px; border-style: solid; border-color: #007EC3;}
@@ -448,8 +532,28 @@ Need to override every style element by element in cascade :)
 .annotation .x-btn-mr,
 .annotation .x-btn-bl,
 .annotation .x-btn-bc,
-.annotation .x-btn-br {border: 0px !important;}
+.annotation .x-btn-br{border: 0px !important;}
 
+.x-toolbar .x-btn-mc {
+	line-height : 10px;
+}
+
+#buttonCenter {
+	margin: 0 3px;
+}
+#buttonCenter button{
+	margin-top : -2px;
+	margin-bottom : -2px;
+}
+
+/* #georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tl,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tc,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-tr,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-ml,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-mr,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bl,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-bc,
+#georchetra-styler-windows .x-panel-bwrap .x-toolbar-right-row .x-btn-br {border: 0px !important;} */
 
 #east-tabpanel .geor-tree-node .x-btn-tl, .x-dd-drag-ghost .x-btn-tl,
 #east-tabpanel .geor-tree-node .x-btn-tc, .x-dd-drag-ghost .x-btn-tc,
@@ -460,9 +564,42 @@ Need to override every style element by element in cascade :)
 #east-tabpanel .geor-tree-node .x-btn-bc, .x-dd-drag-ghost .x-btn-bc,
 #east-tabpanel .geor-tree-node .x-btn-br, .x-dd-drag-ghost .x-btn-br {border: 0px !important;}
 
-.x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
-	background-image: url('../img/famfamfam/add-white.png');
+#georchetra-styler-windows .x-panel-bwrap .x-border-panel {								
+	border-bottom: 1px solid #007EC3;
 }
+#georchetra-styler-windows .x-panel-btns {
+	margin-left: 8px;
+}
+#east-tabpanel__geor-layerManager .x-tab-strip-inner {			/* Overriding ext-all.css	*/
+	width: 100% !important;
+	padding-left:0px;
+	padding-right: 0px;
+}
+#east-tabpanel__geobuilder-integration-tab .x-tab-right,
+#east-tabpanel__geobuilder-integration-tab .x-tab-left,
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-inner {
+	width: 100% !important;
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-text,
+#east-tabpanel__geobuilder-integration-tab .x-tab-strip-top {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+#east-tabpanel__geor-layerManager .x-tab-right{	
+	background-image: url('images/pwrs/tabs/layers.png');
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	padding-left: 30px !important;								/* Overriding ext-all.css	*/
+}
+#east-tabpanel__geor-layerManager .x-tab-left {
+	padding-left:0px;
+}
+
+/* .x-btn-text-icon.x-item-disabled:hover .x-btn-text.btn-add {
+	background-image: url('../img/famfamfam/add-white.png');
+} */
 
 /* #east-tabpanel #geor-layerManager .x-btn:hover,
 #east-tabpanel #geor-layerManager .x-btn:hover .x-btn-text {
@@ -479,6 +616,11 @@ Need to override every style element by element in cascade :)
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+
+.geor-tree-node .x-tree-node-anchor {
+	right : 70px;
+}
+
 #east-tabpanel #geor-layerManager .x-panel-btns {
 	border-top: solid 1px #007EC3;
 	padding-top: 14px;
@@ -497,21 +639,46 @@ input.x-tree-node-cb {
 }
 
 .gx-tree-layer-panel .x-btn button{
+	font-size: 14px;
+	line-height: 1em;
 	color: #4d4d4d ;
 	background-repeat: no-repeat;
+	background-position: left .1em;
 }
+.geor-toolbar .x-btn .x-btn-tl, .geor-toolbar .x-btn .x-btn-tc, .geor-toolbar .x-btn .x-btn-tr {
+	display: none;
+}
+#east-tabpanel .x-btn-pressed .geor-btn-info {
+	background-image: url('../img/famfamfam/info-pressed.png') !important;
+	color: #4D4D4D;
+} 
+
+.gx-tree-layer-action {
+	height : 20px;
+	width : 20px;
+}
+
 .gx-tree-layer-actions .delete {
-    background: transparent url("../img/famfamfam/cross.gif") repeat scroll 0% 0%;
+    background: transparent url("../img/famfamfam/cross.gif") no-repeat 100% 100%;
     cursor: pointer;
 }
+
+.gx-tree-layer-actions .up {
+	background: transparent url(../img/famfamfam/bullet_arrow_up.png) no-repeat 100% 100%;
+	cursor: pointer;
+}
+
+.gx-tree-layer-actions .down {
+	background: transparent url(../img/famfamfam/bullet_arrow_down.png) no-repeat 100% 100%;
+	cursor: pointer;
+}
+
 .x-btn-disabled *{
 	color:gray !important;
 }
-
 .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow.gif);
 }
-
 .x-btn-mc em.x-btn-split {
     background-image:url(images/pwrs/button/s-arrow.gif);
 }
@@ -584,16 +751,25 @@ input.x-tree-node-cb {
 */
 #tbar{
 	border:none;
-    background-color:#007EC3;
-    color: white;
+    background-color:#007EC3; 
     padding: 7px 14px;
 }
-#tbar a, #tbar button {
+#tbar a {
 	color: white;
 }
+#tbar a:hover, #tbar .x-btn:hover, #tbar .x-btn:hover .x-btn-text, #tbar .x-btn:active,#tbar .x-btn-pressed {
+	background-color: #99BBE8;
+}
+.x-btn:hover, .x-btn:hover .x-btn-text, .x-btn:active {
+	background-color: #D4E6F4;
+	color: #4D4D4D; 
+}
+/* .x-btn .btn-add:hover, .x-btn-text.add:hover {
+    background-image: url("../img/famfamfam/add-white.png");
+} */
 #tbar .x-btn-mc em.x-btn-arrow {
     background-image:url(images/pwrs/button/arrow-white.png);
-    padding-right: 12px;
+    padding-right: 16px;
 	background-position: right 6px center;
 }
 #tbar .mf-print-action {
@@ -605,6 +781,8 @@ input.x-tree-node-cb {
 
 #tbar .x-btn-icon .geor-btn-info {
 	background: transparent url("../img/famfamfam/information-white.png") no-repeat scroll center;
+	width: 20px;
+	height: 20px;
 }
 
 .x-toolbar td,.x-toolbar span,.x-toolbar input,.x-toolbar div,.x-toolbar select,.x-toolbar label{
@@ -623,7 +801,7 @@ input.x-tree-node-cb {
 .x-toolbar .x-toolbar-left .x-toolbar-cell .x-btn-icon{
 	margin-right: 0px;
 }
-.x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon {
+#tbar.x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon {
 	margin-right: 6px;
 }
 #tbar .x-toolbar-right .x-btn-mc em.x-btn-arrow {
@@ -657,7 +835,11 @@ input.x-tree-node-cb {
 }
 
 .x-toolbar .xtb-sep {
+	visibility: hidden;
+}
+#tbar.x-toolbar .xtb-sep {
 	background-image: url(images/pwrs/grid/grid-split.gif);
+	visibility: visible;
 }
 .x-grid3-header-inner {
 	color: white;
@@ -687,7 +869,14 @@ input.x-tree-node-cb {
 /* Geor Toolbar : Calques et couches.
 =============================================================================================================
 */
-
+#querier-panel .x-panel-header {
+	height: 30px;
+    background-color: #4D4D4D;
+    color: white;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: normal;
+}
 .geor-btn-metadata {
     background-image: url(../img/famfamfam/application_view_list.png) !important;
 }
@@ -1104,10 +1293,10 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
     width:15px;
     height:15px;
 }
-.ext-gecko .x-form-text, .ext-ie8 .x-form-text {
+/* .ext-gecko .x-form-text, .ext-ie8 .x-form-text {
     padding-top: 0px;
     padding-bottom: 2px;
-}
+} */
 .x-tree-lines .x-tree-elbow{
 	background-image:url(images/pwrs/tree/elbow.gif);
 }
@@ -1176,7 +1365,9 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 .x-tree-node a, .x-dd-drag-ghost a{
 	color:#000;
 }
-
+.geor-tree-node a.x-tree-node-anchor span {
+	font-weight: normal !important;
+}
 .x-tree-node a span, .x-dd-drag-ghost a span{
 	color:#000;
 }
@@ -1683,13 +1874,21 @@ a.x-menu-item {
     border-color:#d0d0d0;
 }
 .x-window-bc .x-window-footer {
-	border-top: solid 1px #007EC3;
+	border: 0px;
+	margin-left: 8px;
+}
+.x-window-bc .x-window-footer .x-toolbar .x-toolbar-right .x-toolbar-cell .x-btn-noicon:last-child {
+	margin-right: 0px;
+}
+#add-layers-windows .x-window-bc .x-window-footer {
+	border-top: 0px;
 }
 .x-window-tl .x-window-header {
     color:white;
 	background-color: #007EC3;
 	margin-top: 5px;
 	padding: 5px;
+	line-height: 16px;
 }
 .x-window-tc {
 	background-image: none;
@@ -1787,7 +1986,7 @@ body.x-body-masked .x-window-plain .x-window-mc {
 }
 
 .x-panel-noborder .x-panel-bbar-noborder .x-toolbar {
-    border-top-color:#007EC3;
+    border:0px;
 }
 
 .x-tab-panel-bbar-noborder .x-toolbar {
@@ -1826,18 +2025,18 @@ body.x-body-masked .x-window-plain .x-window-mc {
     background-image:url(images/pwrs/layout/mini-left.gif);
 }
 .x-layout-split-east .x-layout-mini {
-	background-image:url(images/pwrs/layout/mini-right.png);
-	background-position: 8px 6px;
-	background-repeat: no-repeat;
-	background-color: #4D4D4D;
-	position: absolute;
-	left: -20px;
-	display: block;
-	width: 20px;
-	height: 20px;
-	cursor: pointer;
-	opacity: 1;
-	box-shadow:  0 0 5px #4d4d4d;
+    background-image: url(images/pwrs/layout/mini-right.png);
+    background-position: 8px 6px;
+    background-repeat: no-repeat;
+    background-color: #4D4D4D;
+    position: absolute;
+    left: -15px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 1;
+    box-shadow: -1px 0px 2px #4d4d4d;
 }
 .x-layout-collapsed {
 	overflow: visible;
@@ -1847,13 +2046,13 @@ body.x-body-masked .x-window-plain .x-window-mc {
 	background-repeat: no-repeat;
 	background-color: #4D4D4D;
 	position: absolute;
-	left: -20px;
+	left: -18px;
 	display: block;
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
 	opacity: 1;
-	box-shadow:  0 0 5px #4d4d4d;
+	box-shadow:  -1px 0px 2px rgb(77, 77, 77);
 }
 
 .x-layout-split-north .x-layout-mini {
@@ -1978,4 +2177,12 @@ body.x-body-masked .x-window-plain .x-window-mc {
 
 .x-window-dlg .ext-mb-error {
     background-image:url(images/pwrs/window/icon-error.gif);
+}
+
+body .x-winXyCls{
+	width:240px;
+}
+
+body .fieldXY{
+	border-width:0px;
 }

@@ -47,7 +47,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
                         control: this.measurePerimeterControl,
                         map: this.map,
                         group: "_measure",
-                        iconCls: "measure-area"
+                        iconCls: "measure-perimeter"
                     })
               )
         ];
@@ -116,8 +116,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
                 tpl: new Ext.Template('<div>{measureP} {unitsPM}<br>{measurePKM} {unitsPKM}</div>'),
                 listeners: {
                     "close": function() {
-                        this.measureAreaControl.deactivate();
-                        this.measureDistanceControl.deactivate();
+                        this.measurePerimeterControl.deactivate();
                         this.popup.destroy();
                         this.popup = null;
                     },
@@ -160,7 +159,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
         	var ring = new OpenLayers.Geometry.LinearRing(verticesGeom);
             distGeom = Math.round(ring.getGeodesicLength(this.map.getProjectionObject()));
             distGeomUnits = "m";
-        	console.log(distGeom + ' ' + distGeomUnits); 			
+        	// console.log(distGeom + ' ' + distGeomUnits); // display the measure between the last point and the before last point  			
         	} 
         	if (event.measure > 0) {
                 this.popup.location = points[points.length-1].getBounds().getCenterLonLat();

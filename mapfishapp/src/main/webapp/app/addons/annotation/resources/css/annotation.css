@@ -42,6 +42,10 @@
   background-image: url("../images/silk/kml_export.png") !important;
 }
 
+.gx-featureediting-xy {
+  background-image: url("../images/silk/mire_icon.gif") !important;
+}
+
 .annotation .x-toolbar {
     border: 0;
     background-image: none;

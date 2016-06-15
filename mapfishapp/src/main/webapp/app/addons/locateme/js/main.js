@@ -10,10 +10,16 @@ GEOR.Addons.LocateMe = Ext.extend(GEOR.Addons.Base, {
      */
     init: function(record) {
         if (this.target) {
+        	
+        	// set position in toolbar
+			var place = this.target.items.items.length;
+			var nbPosition = place +1;
+       	
             // addon placed in toolbar
-            this.components = this.target.insertButton(this.position, {
+            this.components = this.target.insertButton(nbPosition, {
                 xtype: 'button',
                 enableToggle: true,
+                ctCls:'x-btn-smallest',
                 tooltip: this.getTooltip(record),
                 iconCls: 'locateme-icon',
                 listeners: {

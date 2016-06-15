@@ -149,18 +149,12 @@ GEOR.geobuilder_toolbar = (function() {
     	//Ajout du text sur le bouton
     	print.setText(tr('Print'));
     	
-    	items.push(print);
     	
-    	/**
-    	 * Ajout du bouton Zoom global
-    	 */
-    	ctrl = new OpenLayers.Control.ZoomToMaxExtent();
-    	items.push(new GeoExt.Action({
-    	    control: ctrl,
-    	    map: map,
-    	    tooltip: tr("zoom to global extent of the map"),
-    	    iconCls: "zoomfull"
-    	}));
+    	if(!GEOR.config.ANONYMOUS){
+    		items.push(print);	
+    	}
+    	
+
     	
     	/**
     	 * Ajout du bouton Déplacement de la carte

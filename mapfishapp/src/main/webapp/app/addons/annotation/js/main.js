@@ -17,7 +17,7 @@ GEOR.Addons.Annotation = Ext.extend(GEOR.Addons.Base, {
         });
         this.window = new Ext.Window({
             title: OpenLayers.i18n('annotation.drawing_tools'),
-            width: 440,
+            width: 510,
             closable: true,
             closeAction: "hide",
             resizable: false,
@@ -32,6 +32,11 @@ GEOR.Addons.Annotation = Ext.extend(GEOR.Addons.Base, {
                 "hide": function() {
                     this.item && this.item.setChecked(false);
                     this.components && this.components.toggle(false);
+                    // close XY window if open and user close annotation menu
+                    if (Ext.getCmp('winXyId')){
+                		Ext.getCmp('winXyId').destroy();
+                		Ext.getCmp('DrawXyButtonId').toggle(false);
+                	}
                 },
                 scope: this
             }
