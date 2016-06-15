@@ -14,6 +14,20 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 		}
 	}
 	
+	// Boucle de maintien de session active
+	
+	function keepSession(){
+		setTimeout(function(){
+			Ext.Ajax.request({
+				url: Fusion.getFusionUrl() + 'cfm/keepSession.cfm',
+				success: keepSession,
+				failure: keepSession
+			});
+		}, 30 * 1000);
+	}
+	
+
+	
     Ext.Ajax.request
     ({
         url: url,
@@ -33,13 +47,15 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
             // Appel de la fonction d'init du menu geobuilder dans la toolbar
             GEOR.geobuilder_initMenu(mapPanel);
             
-            //Dans le cas d'une reconnexion, on ne rappelle pas la liste des modules et le chargement des iframes
+            // Lors d'une première connexion, on appelle la liste des modules, le chargement des 
+            // iframes et la boucle de maintient de session active
             if (!isReconnect) {
                 // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
                 GEOR.geobuilder_initListeModule(mapPanel);
-
             	// Load all 5 IFRAMEs for geobuilder to use
             	GEOR.geobuilder_loadIFRAMES();
+            	// boucle de maintien de session active
+            	keepSession()
             }
         	return true;
         },
