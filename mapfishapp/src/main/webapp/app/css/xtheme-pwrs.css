@@ -2186,3 +2186,8 @@ body .x-winXyCls{
 body .fieldXY{
 	border-width:0px;
 }
+
+#tbar .x-btn-icon .x-btn-small .x-btn-text{
+	width:20px;
+	height:20px;
+}
