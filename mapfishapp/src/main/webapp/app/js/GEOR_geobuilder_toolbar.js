@@ -126,7 +126,7 @@ GEOR.geobuilder_toolbar = (function() {
     	    }
     	};
     	
-    	if (GEOR.config.SEND_MAP_TO.length == 0) {
+    	if (GEOR.config.SEND_MAP_TO.length == 1) {
     		var item = GEOR.config.SEND_MAP_TO[0];
     		items.push({
     			iconCls: "geor-share",
