@@ -130,7 +130,6 @@ GEOR.geobuilder_toolbar = (function() {
     		var item = GEOR.config.SEND_MAP_TO[0];
     		items.push({
     			iconCls: "geor-share",
-    			width:
     			handler: shareLink.call(this, {
     				url: item.url
     				}),
