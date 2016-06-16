@@ -1626,6 +1626,9 @@ a.x-menu-item {
 .x-menu-list-item {
 	padding: 0px;
 }
+.x-menu-list-item, .x-combo-list-item {
+	font:normal 11px 'latoregular',arial,tahoma,sans-serif;
+}
 .x-menu-item-active {
     background-image: none;
 	background-color: #f2f2f2;
