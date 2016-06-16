@@ -78,10 +78,14 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            			//On cherche le contexte associé au module selectionné 
 		            			//Le nom du fichier est le nom du profil
 		            			Ext.each(GEOR.config.CONTEXTS, function(context) {
-		            				// TODO check WMC
-		            				if(context.title && 
-		            						contains.title.contains(GEOR.config.GEOBUILDER_GROUPE_LDAP) && 
-		            						contains.title.contains(moduleMetier)){
+		            				
+		            				var contextTitle = context.title;
+		            				var defautContext = "default";
+		            				// Le WMC doit doit etre nommé ROLE_SV_PWRS_xxxx_'moduleMetier'_default.wmc
+		            				if(ccontextTitle && 
+		            						(contextTitle.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && 
+		            						(contextTitle.indexOf(moduleMetier) > -1) &&
+		            						(contextTitle.indexOf(defautContext) > -1){
 	        							fileContext = context.wmc;
 	        							return;
 	        						}
@@ -89,7 +93,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 								//Si il n'y a pas de fichier correspondont, on prend le context par defaut
 		            			if (fileContext === undefined) {
 			            			Ext.each(GEOR.config.CONTEXTS, function(context) {
-	            						if (context.title === "default" ) {
+	            						if (context.title === defautContext ) {
 	            							fileContext = context.wmc; 
 	            							return;
 	            						}
