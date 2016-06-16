@@ -55,18 +55,3 @@ Build date: 2013-04-03 15:07:25
 .x-combo-list-small {
     font:normal 11px tahoma, arial, helvetica, sans-serif;
 }
-
-.comboModuleMetier input{
-	border: 1px solid white;
-    background-color: #007EC3;
-    color: white;
-    font-family: 'latoregular';
-    font-size: 13px;
-    padding-bottom: 3px;
-}
-
-.comboModuleMetier img {
-	border: solid white;
-    padding: 1px 0 1px;
-    border-width: 1px 1px 1px 0;
-}

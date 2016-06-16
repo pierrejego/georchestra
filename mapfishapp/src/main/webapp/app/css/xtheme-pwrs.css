@@ -2191,3 +2191,24 @@ body .fieldXY{
 	width:20px;
 	height:20px;
 }
+
+#tbar .x-form-field-wrap {
+	margin-right: 6px;
+}
+
+/*
+ Combox box module metier geobuilder 
+*/
+#tbar input {
+	border: 1px solid white;
+	background-color: #007EC3;
+	color: white;
+	font-family: 'latoregular';
+	font-size: 13px;
+	padding-bottom: 5px;
+}
+#tbar img.x-form-arrow-trigger {
+    border: solid white;
+	padding: 1px 0 1px;
+    border-width: 1px 1px 1px 0;
+}
