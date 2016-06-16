@@ -86,15 +86,16 @@ GEOR.geobuilder_toolbar = (function() {
     	    },
     	    autoScroll: true
     	});	 
-    	GEOR.print.setLegend(legendPanel);
     	
-    	//Récupération du bouton impression
-    	var print = GEOR.print.getAction();
-    	//Ajout du text sur le bouton
-    	print.setText(tr('Print'));
-    	
-    	
-    	if(!GEOR.config.ANONYMOUS){
+    	// Only if user can print
+    	 if (GEOR.print) {
+	    	GEOR.print.setLegend(legendPanel);
+	    	
+	    	//Récupération du bouton impression
+	    	var print = GEOR.print.getAction();
+	    	//Ajout du text sur le bouton
+	    	print.setText(tr('Print'));
+
     		items.push(print);	
     	}
 	 	
