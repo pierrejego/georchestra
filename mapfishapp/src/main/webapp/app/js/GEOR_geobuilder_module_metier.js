@@ -107,6 +107,9 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            	    //Creation de la combobox
 		            		var combo = new Ext.form.ComboBox({
 		            		    store: storeCombo,
+		            		    listWidth:70,
+		            		    width:70,
+		            		    cls: 'comboModuleMetier',
 		            		    displayField: 'name', 
 		            		    valueField: 'id',
 		            		    fieldLabel: 'name',
