@@ -536,7 +536,8 @@ Ext.namespace("GEOR");
                 return GEOR.wmc.read(o.wmcString, !o.noReset, true);
             }
         });
-                
+        
+        // GEOR.config.CUSTOM_MODULE = 3 char corresponding to geobuilder "profil metier"
     	GEOR.geobuilder_connection(mapPanel, GEOR.config.CUSTOM_MODULE, false);
     	
     });

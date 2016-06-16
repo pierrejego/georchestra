@@ -1,5 +1,8 @@
 Ext.namespace("GEOR");
 
+/**
+ * Init module combobox
+ */
 GEOR.geobuilder_initListeModule = function (mapPanel) {
 	//Creation de combobox de la liste des module métier
 	
@@ -15,6 +18,8 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
         	if (response && response.responseText) {
         		
 	            try{
+	            	// exemple de réponse
+	            	//  {"status":"ok","data":{"pros":[{"id":"IFT","name":"Infra Territoire","status":null}],"locs":[{"id":"ADM","name":"admin","sites":[1]}]}}
 		            var data = JSON.parse(response.responseText);
 		            //On constitue la liste des modules si l'utilisateur à au moins 1 profil
 		            if (data && data.data && data.data.pros && data.data.pros.length > 0
@@ -32,26 +37,15 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 	            			name: tr("Module de base")			
 			            }];
 			            
-			            //Pour chaque role de l'utilisateur, on récupère le nom du profil
+			            //La liste des profils est filtrée côté geobuilder
 			            var nbProfil = 1;
-	            		Ext.each(GEOR.config.ROLES, function(role) {
-	            			Ext.each(data.data.pros, function(profil) {
-				            	var idProfil = GEOR.config.GEOBUILDER_GROUPE_LDAP + profil.id;
-	            				if (idProfil === role) {
-					            	var name = profil.name;
-					            	moduleDropDown[nbProfil] = {
-				            			id: idProfil,
-				            			name: profil.name             			
-				            		};
-					            	nbProfil++;
-					            	return;
-	            				}
-	            			});
+	            		Ext.each(data.data.pros, function(profil) {
+				           	moduleDropDown[nbProfil] = {id: profil.id, name: profil.name};
+				           	nbProfil++;
 	            		});
 	            			            		
-	            		//Si l'utilisateur a ccès qu'au module de base 
-	            		//Alors on affiche pas la combo
-	            		if (moduleDropDown.length > 1) {
+	            		//Si l'utilisateur à accès à au moins un module
+	            		if (moduleDropDown.length > 0) {
 	            		
 		            		//Creation du store pour la combo
 		            		var storeCombo = new Ext.data.ArrayStore({
@@ -71,15 +65,9 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            		 */
 		            		var module = 'default';
 		            		if (GEOR.config.CUSTOM_MODULE) {
-		            			//On vérifie si l'utilisateur à bien les droits
-	        					Ext.each(GEOR.config.ROLES, function(role) {
-	        						if (role === GEOR.config.CUSTOM_MODULE) {
-	        							module = GEOR.config.CUSTOM_MODULE;
-	        							return;
-	        						}
-	        				    });
-		            		}
-		            		
+		            			module = GEOR.config.CUSTOM_MODULE;
+       						}
+	        				 		            		
 		            		/*
 		            		 * Methodes pour la combo
 		            		 */
@@ -90,6 +78,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            			//On cherche le contexte associé au module selectionné 
 		            			//Le nom du fichier est le nom du profil
 		            			Ext.each(GEOR.config.CONTEXTS, function(context) {
+		            				// TODO check WMC
 	        						if (context.title === moduleMetier) {
 	        							fileContext = context.wmc;
 	        							return;

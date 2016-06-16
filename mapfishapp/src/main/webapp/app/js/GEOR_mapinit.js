@@ -447,6 +447,7 @@ GEOR.mapinit = (function() {
 			var hasRole = false;
 			//On regarde si il a le droit de charger le contexte passé en paramètre
 			Ext.each(GEOR.config.ROLES, function(role) {
+				//TODO change WMC management
 				if (role === GEOR.config.CUSTOM_MODULE ) {
 					hasRole = true;
 					return

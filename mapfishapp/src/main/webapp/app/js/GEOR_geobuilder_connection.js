@@ -1,17 +1,22 @@
 Ext.namespace("GEOR");
 
+/**
+ * Connect to geobuilder
+ * mapPanel -> geoExt MapPanel contening all laysers
+ * idProfil -> 3 char corresponding to geobuilder profil
+ * isReconnect -> Boolean to now if user was already connected or if this is the first time
+ */
 GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 	// Connect to geobuilder server and create session 
     var url = GEOR.config.GEOBUILDER_URL + GEOR.config.GEOBUILDER_CFM_LOGIN;
 	
 	var params = {site: 1};
 	
-	if (idProfil) {  
-		//On passe unqiuement le trigramme a geobuilder
-		var profils = idProfil.split(GEOR.config.GEOBUILDER_GROUPE_LDAP);
-		if (profils.length === 2) {
-			params.idPro = profils[1];
-		}
+	// Check if idProfil existe and equals to 3 char
+	// if profil not compliante we don't send it in the request
+	// geobuilder will be connected with default profil
+	if (idProfil && idProfil.length==3) {  
+		params.idPro = idProfil;
 	}
 	
     Ext.Ajax.request
