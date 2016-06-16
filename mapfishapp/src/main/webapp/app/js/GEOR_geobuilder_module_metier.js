@@ -85,7 +85,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            				if(ccontextTitle && 
 		            						(contextTitle.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && 
 		            						(contextTitle.indexOf(moduleMetier) > -1) &&
-		            						(contextTitle.indexOf(defautContext) > -1){
+		            						(contextTitle.indexOf(defautContext) > -1)){
 	        							fileContext = context.wmc;
 	        							return;
 	        						}
