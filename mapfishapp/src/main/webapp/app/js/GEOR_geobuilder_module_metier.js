@@ -79,7 +79,9 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            			//Le nom du fichier est le nom du profil
 		            			Ext.each(GEOR.config.CONTEXTS, function(context) {
 		            				// TODO check WMC
-	        						if (context.title === moduleMetier) {
+		            				if(context.title && 
+		            						contains.title.contains(GEOR.config.GEOBUILDER_GROUPE_LDAP) && 
+		            						contains.title.contains(moduleMetier)){
 	        							fileContext = context.wmc;
 	        							return;
 	        						}
