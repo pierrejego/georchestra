@@ -445,10 +445,11 @@ GEOR.mapinit = (function() {
 		if (GEOR.config.CUSTOM_MODULE) {	
 			var module = 'default';
 			var hasRole = false;
+			
 			//On regarde si il a le droit de charger le contexte passé en paramètre
 			Ext.each(GEOR.config.ROLES, function(role) {
-				//TODO change WMC management
-				if (role === GEOR.config.CUSTOM_MODULE ) {
+				// Role ROLE_SV_PWRS_XXXX_YYY Custom module YYY
+				if(role  && (role.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && (role.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
 					hasRole = true;
 					return
 				}
@@ -456,7 +457,8 @@ GEOR.mapinit = (function() {
 		    });
 			if (hasRole) {
 				Ext.each(GEOR.config.CONTEXTS, function(context) {
-					if (context.title === GEOR.config.CUSTOM_MODULE ) {
+					var contextTitle = context.title;
+					if (contextTitle && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1) && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
 						updateStoreFromWMC(context.wmc);
 						return;
 					}

@@ -82,7 +82,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            				var contextTitle = context.title;
 		            				var defautContext = "default";
 		            				// Le WMC doit doit etre nommé ROLE_SV_PWRS_xxxx_'moduleMetier'_default.wmc
-		            				if(contextTitle && 
+		            				if(contextTitle && moduleMetier!==defautContext &&
 		            						(contextTitle.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && 
 		            						(contextTitle.indexOf(moduleMetier) > -1) &&
 		            						(contextTitle.indexOf(defautContext) > -1)){
@@ -113,7 +113,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            	    //Creation de la combobox
 		            		var combo = new Ext.form.ComboBox({
 		            		    store: storeCombo,
-		            		    width:100,
+		            		    width:110,
 		            		    cls: 'comboModuleMetier',
 		            		    displayField: 'name', 
 		            		    valueField: 'id',
