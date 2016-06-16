@@ -502,8 +502,10 @@ geobuilder = (function() {
 			},
 
 			getWidgetById: function(id) {
-				if (id === 'Map') return window
-				throw 'getWidgetById + "'+id+'"'
+				if (id === 'Map'){
+					return window;
+				}
+				throw new Error('getWidgetById + "'+id+'"');
 			},
 
 			getMap() {
@@ -522,43 +524,43 @@ geobuilder = (function() {
 	/**
 	 * Export des fonctions du client dans l'espace global
 	 */
-	window.addDebug = addDebug
-	window.ClearDigitization = ClearDigitization
-	window.DigitizeLineString = DigitizeLineString
-	window.DigitizePoint = DigitizePoint
-	window.DigitizePolygon = DigitizePolygon
-	window.getCurrentSelection = getCurrentSelection
-	window.getMapName = getMapName
-	window.getObjectName = getObjectName
-	window.getWidgetIframe = getWidgetIframe
-	window.hideFeatureInfo = hideFeatureInfo
-	window.hidePopup = hidePopup
-	window.hideWorkPlace = hideWorkPlace
-	window.setCurrentSelection = setCurrentSelection
-	window.setDigitContent = setDigitContent
-	window.setHiddenWidgetContent = setHiddenWidgetContent
-	window.setSimpleSelect = setSimpleSelect
-	window.setWorkPlaceContent = setWorkPlaceContent
-	window.showFeatureInfo = showFeatureInfo
-	window.showPopup = showPopup
-	window.showWaitingWorkPlace = showWaitingWorkPlace
-	window.showWorkPlace = showWorkPlace
-	window.getLayers = getLayers
-	window.isDisplayed = isDisplayed
-	window.getLayersGroups = getLayersGroups
-	window.ZoomEnsemble = ZoomEnsemble
-	window.showMap = showMap
+	window.addDebug = addDebug;
+	window.ClearDigitization = ClearDigitization;
+	window.DigitizeLineString = DigitizeLineString;
+	window.DigitizePoint = DigitizePoint;
+	window.DigitizePolygon = DigitizePolygon;
+	window.getCurrentSelection = getCurrentSelection;
+	window.getMapName = getMapName;
+	window.getObjectName = getObjectName;
+	window.getWidgetIframe = getWidgetIframe;
+	window.hideFeatureInfo = hideFeatureInfo;
+	window.hidePopup = hidePopup;
+	window.hideWorkPlace = hideWorkPlace;
+	window.setCurrentSelection = setCurrentSelection;
+	window.setDigitContent = setDigitContent;
+	window.setHiddenWidgetContent = setHiddenWidgetContent;
+	window.setSimpleSelect = setSimpleSelect;
+	window.setWorkPlaceContent = setWorkPlaceContent;
+	window.showFeatureInfo = showFeatureInfo;
+	window.showPopup = showPopup;
+	window.showWaitingWorkPlace = showWaitingWorkPlace;
+	window.showWorkPlace = showWorkPlace;
+	window.getLayers = getLayers;
+	window.isDisplayed = isDisplayed;
+	window.getLayersGroups = getLayersGroups;
+	window.ZoomEnsemble = ZoomEnsemble;
+	window.showMap = showMap;
 
 	/*
 	 * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
 	 * peut être implémenté à partir du JSON renvoyé par wmenu.cfm
 	 */
-	window.setMenuContent = setMenuContent
+	window.setMenuContent = setMenuContent;
 	/*
 	 * setWidgetContent est utilisée pour le chargement du menu qui implémenté
 	 * avec un iframe dans cette démo.
 	 */
-	window.setWidgetContent = setWidgetContent
+	window.setWidgetContent = setWidgetContent;
 
 	/**
 	 * Fonctions & Helpers privées
