@@ -19,7 +19,8 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 	function keepSession(){
 		setTimeout(function(){
 			Ext.Ajax.request({
-				url: Fusion.getFusionUrl() + 'cfm/keepSession.cfm',
+				method: 'GET',
+				url: Fusion.getFusionURL() + 'cfm/keepSession.cfm',
 				success: keepSession,
 				failure: keepSession
 			});
@@ -37,7 +38,6 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         	Accept: 'application/json'
         },
         success: function (response) {
-        	
         	//Si on se reconnecte, il faut supprimer le menu geobuilder et le tab panel geobuilder
         	if (isReconnect) {
         		GEOR.geobuilder_destroyMenu(mapPanel);
@@ -50,8 +50,8 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
             // Lors d'une première connexion, on appelle la liste des modules, le chargement des 
             // iframes et la boucle de maintient de session active
             if (!isReconnect) {
-                // Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
-                GEOR.geobuilder_initListeModule(mapPanel);
+            	// Appel de la fonction d'init de la liste des modules geobuilder dans la toolbar
+            	GEOR.geobuilder_initListeModule(mapPanel);
             	// Load all 5 IFRAMEs for geobuilder to use
             	GEOR.geobuilder_loadIFRAMES();
             	// boucle de maintien de session active
