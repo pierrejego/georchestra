@@ -168,6 +168,7 @@ if(sec_roles != null) {
         link.type = "text/css";
     	document.getElementsByTagName('head')[0].appendChild(link);
 	}
+	window.name="mapfishapp";
     </script>
     <script type="text/javascript">
         GEOR = {
