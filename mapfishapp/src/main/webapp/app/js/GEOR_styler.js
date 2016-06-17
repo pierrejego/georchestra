@@ -900,6 +900,10 @@ GEOR.styler = (function() {
             /*
              * win is the styler window, create it and display it.
              */
+            
+            if (Ext.getCmp('georchetra-styler-windows')){
+        		Ext.getCmp('georchetra-styler-windows').close();
+        	} 
             win = new Ext.Window({
                 title: tr("Styler"),
                 layout: "fit",
@@ -938,6 +942,7 @@ GEOR.styler = (function() {
                     }
                 }
             });
+            
             win.show();
 
             var recordType = Ext.data.Record.create([
