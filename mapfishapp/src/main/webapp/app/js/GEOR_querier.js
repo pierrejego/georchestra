@@ -349,6 +349,61 @@ GEOR.querier = (function() {
                 scope: this
             });
 
+        },
+        /**
+         * APIMethod: searchFeatures
+         * Launch search on specific layer
+         *
+         * Parameters:
+         * layername 	- {String} The name of the layer.
+         * geometryName	- {String} The name of the geometry field.
+         * filter		- {OpenLayers.Filter} The filter rule.
+         * layerFields	- {Array} The object fields.
+         */
+        searchFeatures: function(layername, geometryName, filter, layerFields) { 
+    		//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/ars/wfs?",
+    		//"typeName" :"ars:MS_Etab_PH_201406"
+        	var record = {
+	    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
+	    		"typeName" : layername
+        	};
+
+            if (!checkFilter(filter)) {
+                return;
+            }
+        
+            observable.fireEvent("search", {
+                html: tr("<div>Searching...</div>")
+            });
+            // we need to pass the geometry name at protocol creation, 
+            // so that the format has the correct geometryName too.
+            var geometryName = "the_geom";
+            GEOR.ows.WFSProtocol(record, map, {geometryName: geometryName}).read({
+                maxFeatures: GEOR.config.MAX_FEATURES,
+                // some mapserver versions require that we list all fields to return 
+                // (as seen with 5.6.1):
+                // see http://applis-bretagne.fr/redmine/issues/1996
+                propertyNames: layerFields || [], 
+                filter: filter,
+                callback: function(response) {
+                    
+                    if (!response.success()) {
+                        return;
+                    }
+                    
+                    var model =  (attStore.getCount() > 0) ? new GEOR.FeatureDataModel({
+                        attributeStore: attStore
+                    }) : null;
+
+                    observable.fireEvent("searchresults", {
+                        features: response.features,
+                        model: model,
+                        tooltip: name + " - " + tr("WFS GetFeature on filter"),
+                        title: GEOR.util.shortenLayerName(name)
+                    });
+                },
+                scope: this
+            });
         }
     };
 })();
