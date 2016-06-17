@@ -343,8 +343,16 @@ geobuilder = (function() {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		}) 	
+		for (i=0; i< map.layers.length; i++){
+			if (map.layers[i].params.LAYERS.startsWith(idObj)){
+				layername = map.layers[i].name
+				layer = map.layers[i].params.LAYERS
+				break
+			}
+		}
 		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
 		map.addLayer(geoApiDigitizingLayer)
+		
 		var selection = JSON.stringify({
 			lstIdObj: idObj, 
 			lstIds: id
@@ -406,6 +414,14 @@ geobuilder = (function() {
 			//TODO retrieve layer name 
 			// retreive geometry field
 			// construct filter dynamically
+
+        	var record = {
+				//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
+	    		//"typeName" :"CAN_CANTONS"
+	    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
+	    		"typeName" : layer
+        	}
+			GEOR.querier.create(layername, record)
 			filter = new OpenLayers.Filter.Comparison({
 				type: "==",
 				// only one matching property is supported in here:
@@ -413,7 +429,7 @@ geobuilder = (function() {
 				value: "10"
 			})
 			//call API (test)
-			GEOR.querier.searchFeatures("CAN_CANTONS", "GEOMETRY", filter)
+			GEOR.querier.searchFeatures(record, "GEOMETRY", filter)
 
 		}, function(status) {
 			alert('Something went wrong.')
