@@ -48,7 +48,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            		var module = 'DEF';
 				            
 				            //La liste des profils est filtrée côté geobuilder
-				            var nbProfil = 1;
+				            var nbProfil = 0;
 		            		Ext.each(data.data.pros, function(profil) {
 					           	moduleDropDown[nbProfil] = {id: profil.id, name: profil.name};
 					           	// Selection le module pour la combobox
