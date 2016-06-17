@@ -7,7 +7,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 	
 	//Creation de combobox de la liste des module métier seulement si l'utilisateur a au moins un role module métier
 	var isUserAuthorized = false;
-	Ext.each(GEOR.config.ROLES function(roles) {
+	Ext.each(GEOR.config.ROLES function(roles)) {
 		if (roles.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1)){
 			isUserAuthorized = true;
 			return;
