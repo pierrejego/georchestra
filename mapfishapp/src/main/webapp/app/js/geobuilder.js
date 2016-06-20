@@ -335,7 +335,7 @@ geobuilder = (function() {
 		return success
 	}
 
-	function localise(idObj, id, width) {
+	function localise(idObj, ids, width) {
 		
 		// init layer to  draw selected features
 		var map = Fusion.getMap()
@@ -343,97 +343,98 @@ geobuilder = (function() {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		}) 	
+		// retrieve layer 
 		for (i=0; i< map.layers.length; i++){
-			if (map.layers[i].params.LAYERS.startsWith(idObj)){
+			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
 				layername = map.layers[i].name
 				layer = map.layers[i].params.LAYERS
 				break
 			}
 		}
-		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
-		map.addLayer(geoApiDigitizingLayer)
-		
-		var selection = JSON.stringify({
-			lstIdObj: idObj, 
-			lstIds: id
-		})
-		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
-			var coorX = []
-			var coorY = []
-			var  features = []
-			for (i=0; i<data.features.length; i++){
-				points = []
-				featureGeom = data.features[i].geometry
-				layerProj = data.features[i].projection
-				if (featureGeom.type == "Point"){
-					var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
-					coorX.push(point.x)
-					coorY.push(point.y)
-					feature = new OpenLayers.Feature.Vector(point, {})
-
-				}
-				else if(featureGeom.type == "Polygon"){
-					featureCoordinates = featureGeom.coordinates
-					for ( var j=0; j< featureCoordinates.length; j++) {
-						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
-						coorX.push(point.x)
-						coorY.push(point.y) 
-						points.push(point)
-					}
-					var ring = new OpenLayers.Geometry.LinearRing(points)
-					var polygon = new OpenLayers.Geometry.Polygon([ring])
-					feature = new OpenLayers.Feature.Vector(polygon, {})
-				}
-				// linestring
-				else  {
-					featureCoordinates = featureGeom.coordinates
-					for ( var j=0; j< featureCoordinates.length; j++) {
-						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
-						coorX.push(point.x)
-						coorY.push(point.y) 
-						points.push(point)
-					}
-					var line = new OpenLayers.Geometry.LineString(points)
-					feature = new OpenLayers.Feature.Vector(line, {})
-				}
-				features.push(feature)
-			}
-			geoApiDigitizingLayer.addFeatures(features)
-			minX = Math.min.apply(Math, coorX)
-			maxX = Math.max.apply(Math, coorX)
-			minY = Math.min.apply(Math, coorY)
-			maxY = Math.max.apply(Math, coorY)
-			var centerX = (minX + maxX)/2
-			var newMinX = centerX - (width/2)
-			var newMaxX = centerX + (width/2)
-			addDebug("geobuilder.js", "setCurrentSelection", "minX=" + newMinX + "minY=" + minY + "maxX=" + newMaxX + "maxY=" + maxY, "debug")
-			//var newBound = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
-			var newBound =  geoApiDigitizingLayer.getDataExtent()
-			Fusion.getMap().zoomToExtent(newBound)
-
-			//TODO retrieve layer name 
-			// retreive geometry field
-			// construct filter dynamically
-
-        	var record = {
-				//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
-	    		//"typeName" :"CAN_CANTONS"
-	    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
-	    		"typeName" : layer
-        	}
-			GEOR.querier.create(layername, record)
-			filter = new OpenLayers.Filter.Comparison({
-				type: "==",
-				// only one matching property is supported in here:
-				property: "OBJECTID",
-				value: "10"
+		if (typeof(layername)!= 'undefined'){
+			var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
+			map.addLayer(geoApiDigitizingLayer)
+			
+			var selection = JSON.stringify({
+				lstIdObj: idObj, 
+				lstIds: ids
 			})
-			//call API (test)
-			GEOR.querier.searchFeatures(record, "GEOMETRY", filter)
-
-		}, function(status) {
+			getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
+				var coorX = []
+				var coorY = []
+				var  features = []
+				for (i=0; i<data.features.length; i++){
+					points = []
+					featureGeom = data.features[i].geometry
+					layerProj = data.features[i].projection
+					geometryField =  data.features[i].geometryField
+					idField = data.features[i].idField
+					if (featureGeom.type == "Point"){
+						var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
+						coorX.push(point.x)
+						coorY.push(point.y)
+						feature = new OpenLayers.Feature.Vector(point, {})
+	
+					}
+					else if(featureGeom.type == "Polygon"){
+						featureCoordinates = featureGeom.coordinates
+						for ( var j=0; j< featureCoordinates.length; j++) {
+							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
+							coorX.push(point.x)
+							coorY.push(point.y) 
+							points.push(point)
+						}
+						var ring = new OpenLayers.Geometry.LinearRing(points)
+						var polygon = new OpenLayers.Geometry.Polygon([ring])
+						feature = new OpenLayers.Feature.Vector(polygon, {})
+					}
+					// linestring
+					else  {
+						featureCoordinates = featureGeom.coordinates
+						for ( var j=0; j< featureCoordinates.length; j++) {
+							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
+							coorX.push(point.x)
+							coorY.push(point.y) 
+							points.push(point)
+						}
+						var line = new OpenLayers.Geometry.LineString(points)
+						feature = new OpenLayers.Feature.Vector(line, {})
+					}
+					features.push(feature)
+				}
+				// uncomment to draw selected features
+	//			geoApiDigitizingLayer.addFeatures(features)
+	//			var newBound =  geoApiDigitizingLayer.getDataExtent()
+	//			Fusion.getMap().zoomToExtent(newBound)
+	
+				var record = {
+					//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
+		    		//"typeName" :"CAN_CANTONS"
+		    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
+		    		"typeName" : layer
+	        	}
+				GEOR.querier.create(layername, record)
+				myfilters = []
+	            for (i=0; i<ids.length; i++){
+		            myfilters.push(new OpenLayers.Filter.Comparison({
+		                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+		                property: idField,
+		                value: ids[i]})
+		            )
+				}
+				filterbyIds = new OpenLayers.Filter.Logical({
+			        type: OpenLayers.Filter.Logical.OR,
+			        filters: myfilters
+			        
+			    })			
+				//call API (test)
+				GEOR.querier.searchFeatures(record, geometryField, filterbyIds)
+			}, function(status) {
+				alert('Something went wrong.')
+			})
+		} else {
 			alert('Something went wrong.')
-		})
+		}
 
 	}
 	
