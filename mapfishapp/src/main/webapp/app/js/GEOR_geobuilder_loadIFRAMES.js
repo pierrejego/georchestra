@@ -84,8 +84,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
         tag : 'iframe',
         id : 'ggis_popup_IFRAME',
         frameBorder : 0,
-        width : 0,
-        height : 0,
+		width : '100%',
+		height : '100%',
         css : 'display:none;visibility:hidden;height:0px;',
         src : ''
     });

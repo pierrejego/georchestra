@@ -11,6 +11,7 @@ geobuilder = (function() {
 	var geoApiInitialized = false
 	var geoApiDigitizingLayer = null
 	var geoApiDrawControls = {}
+	var layerProjectionCode = ""
 
 	var map = null
 
@@ -113,14 +114,14 @@ geobuilder = (function() {
 		title = title || 'Popup'
 		width = width || 600
 		height = height || 400
-		//setWidgetTitle('ggis_popup', title)
-		var winWorkplace = Ext.getCmp('geo-window-popup')
-		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createPopupWindow(title)
+		var popupWindow = Ext.getCmp('geo-window-popup')
+		if (!popupWindow) {
+			popupWindow = GEOR.geobuilder_createPopupWindow(title)
 		}
-		winWorkplace.show()
-		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, width, height)
-		showWidget('ggis_popup')
+		popupWindow.title = title
+		popupWindow.show()
+		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, 600, 400)
+		showWidget('ggis_popup', 600, 400)
 
 	}
 
@@ -285,13 +286,13 @@ geobuilder = (function() {
 	 *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
 	 */
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
-
 		var success = "err"
 		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
 		if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
 			isVisSelCtrl = true
 		}
-		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
+		//if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
+		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined') {
 			if (lstIdObj != '' && lstIds != '') { 
 				if (width == null) {
 					width = ""
@@ -335,42 +336,100 @@ geobuilder = (function() {
 	}
 
 	function localise(idObj, id, width) {
-
+		
+		// init layer to  draw selected features
+		var map = Fusion.getMap()
+		var layerOptions = OpenLayers.Util.applyDefaults({}, {
+			displayInLayerSwitcher : false,
+			sphericalMercator: true
+		}) 	
+		for (i=0; i< map.layers.length; i++){
+			if (map.layers[i].params.LAYERS.startsWith(idObj)){
+				layername = map.layers[i].name
+				layer = map.layers[i].params.LAYERS
+				break
+			}
+		}
+		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
+		map.addLayer(geoApiDigitizingLayer)
+		
 		var selection = JSON.stringify({
 			lstIdObj: idObj, 
 			lstIds: id
 		})
-		
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
+			var coorX = []
+			var coorY = []
+			var  features = []
 			for (i=0; i<data.features.length; i++){
+				points = []
 				featureGeom = data.features[i].geometry
 				layerProj = data.features[i].projection
-				coorX = []
-				coorY = []
 				if (featureGeom.type == "Point"){
-					point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
+					var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
 					coorX.push(point.x)
 					coorY.push(point.y)
+					feature = new OpenLayers.Feature.Vector(point, {})
+
 				}
-				else {
+				else if(featureGeom.type == "Polygon"){
 					featureCoordinates = featureGeom.coordinates
 					for ( var j=0; j< featureCoordinates.length; j++) {
 						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
 						coorX.push(point.x)
 						coorY.push(point.y) 
+						points.push(point)
 					}
+					var ring = new OpenLayers.Geometry.LinearRing(points)
+					var polygon = new OpenLayers.Geometry.Polygon([ring])
+					feature = new OpenLayers.Feature.Vector(polygon, {})
 				}
+				// linestring
+				else  {
+					featureCoordinates = featureGeom.coordinates
+					for ( var j=0; j< featureCoordinates.length; j++) {
+						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
+						coorX.push(point.x)
+						coorY.push(point.y) 
+						points.push(point)
+					}
+					var line = new OpenLayers.Geometry.LineString(points)
+					feature = new OpenLayers.Feature.Vector(line, {})
+				}
+				features.push(feature)
 			}
+			geoApiDigitizingLayer.addFeatures(features)
 			minX = Math.min.apply(Math, coorX)
 			maxX = Math.max.apply(Math, coorX)
 			minY = Math.min.apply(Math, coorY)
 			maxY = Math.max.apply(Math, coorY)
-			var centerX = (minX+ maxX)/2
+			var centerX = (minX + maxX)/2
 			var newMinX = centerX - (width/2)
 			var newMaxX = centerX + (width/2)
 			addDebug("geobuilder.js", "setCurrentSelection", "minX=" + newMinX + "minY=" + minY + "maxX=" + newMaxX + "maxY=" + maxY, "debug")
-			var newBound = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
+			//var newBound = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
+			var newBound =  geoApiDigitizingLayer.getDataExtent()
 			Fusion.getMap().zoomToExtent(newBound)
+
+			//TODO retrieve layer name 
+			// retreive geometry field
+			// construct filter dynamically
+
+        	var record = {
+				//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
+	    		//"typeName" :"CAN_CANTONS"
+	    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
+	    		"typeName" : layer
+        	}
+			GEOR.querier.create(layername, record)
+			filter = new OpenLayers.Filter.Comparison({
+				type: "==",
+				// only one matching property is supported in here:
+				property: "OBJECTID",
+				value: "10"
+			})
+			//call API (test)
+			GEOR.querier.searchFeatures(record, "GEOMETRY", filter)
 
 		}, function(status) {
 			alert('Something went wrong.')
@@ -483,13 +542,35 @@ geobuilder = (function() {
 		Fusion.setSelection(sel)
 
 	}
+	
+	function setLayerProjection(idObj) {
+		
+		var layer = JSON.stringify({
+			lstIdObj: idObj
+		})
+		var layerProj = ""
+		var projectionCode = ""
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', layer, function(data) {
+			for (i=0; i<data.features.length; i++){
+				layerProj = data.features[i].projection
+			}
+			if (layerProj != ""){
+				projectionCode = 'EPSG:' + layerProj
+			}
+			this.layerProjectionCode = projectionCode
+
+		}, function(status) {
+			alert('Something went wrong.')
+		})
+	}
 
 	function showMap() {
 		//hideWorkPlace()
 		//hideFeatureInfo()
 		Fusion.getMap().baseLayer.redraw()
 	}
-
+	
+	
 	window.Fusion = {
 			map : null,
 			selection : "CAN 1",
@@ -502,8 +583,10 @@ geobuilder = (function() {
 			},
 
 			getWidgetById: function(id) {
-				if (id === 'Map') return window
-				throw 'getWidgetById + "'+id+'"'
+				if (id === 'Map'){
+					return window;
+				}
+				throw new Error('getWidgetById + "'+id+'"');
 			},
 
 			getMap() {
@@ -522,6 +605,7 @@ geobuilder = (function() {
 	/**
 	 * Export des fonctions du client dans l'espace global
 	 */
+
 	window.addDebug = addDebug
 	window.ClearDigitization = ClearDigitization
 	window.DigitizeLineString = DigitizeLineString
@@ -548,17 +632,18 @@ geobuilder = (function() {
 	window.getLayersGroups = getLayersGroups
 	window.ZoomEnsemble = ZoomEnsemble
 	window.showMap = showMap
+	window.setLayerProjection = setLayerProjection
 
 	/*
 	 * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
 	 * peut être implémenté à partir du JSON renvoyé par wmenu.cfm
 	 */
-	window.setMenuContent = setMenuContent
+	window.setMenuContent = setMenuContent;
 	/*
 	 * setWidgetContent est utilisée pour le chargement du menu qui implémenté
 	 * avec un iframe dans cette démo.
 	 */
-	window.setWidgetContent = setWidgetContent
+	window.setWidgetContent = setWidgetContent;
 
 	/**
 	 * Fonctions & Helpers privées
@@ -575,7 +660,8 @@ geobuilder = (function() {
 			control.activate()
 		}
 	}    	
-
+	
+	
 	function geoApiInit() {
 		if (geoApiInitialized) {
 			return
@@ -587,7 +673,7 @@ geobuilder = (function() {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		}) 	
-		geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
+		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
 		map.addLayer(geoApiDigitizingLayer)
 		geoApiDrawControls = {
 			point: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
@@ -667,7 +753,6 @@ geobuilder = (function() {
 				map.addControl(geoApiDrawControls[key])
 			}
 		}
-
 	}
 
 	function geoApiCheckLine(point, geom) {
@@ -678,8 +763,16 @@ geobuilder = (function() {
 	}
 
 	function geoApiCallHandler(evt) {
-		wkt = new OpenLayers.Format.WKT()
-		//alert(wkt.write(evt.feature))
+		//gestion des projection
+		if (layerProjectionCode != "") {
+			var in_options = { 'internalProjection': new OpenLayers.Projection(Fusion.getMap().projection), 'externalProjection': new OpenLayers.Projection(layerProjectionCode)}
+			wkt = new OpenLayers.Format.WKT(in_options)
+			//alert(wkt.write(evt.feature))
+		}
+		else {
+			wkt = new OpenLayers.Format.WKT()
+			//alert(wkt.write(evt.feature))
+		}
 		this.userHandler(wkt.write(evt.feature))
 		window.setTimeout(geoApiDeactivate, 100)
 

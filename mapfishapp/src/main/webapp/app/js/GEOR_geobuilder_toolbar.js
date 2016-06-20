@@ -64,7 +64,40 @@ GEOR.geobuilder_toolbar = (function() {
     var createTbar = function(layerStore) {
         var map = layerStore.map, tbar = new Ext.Toolbar({id: "tbar"}), ctrl, items = [];
 
-        //Creation du menu de la toolbar
+        //Creation du menu de la toolbar        
+        /**
+    	 * Ajout du bouton Imprimer
+    	 */
+    	//Création d'un panel lors pour l'action du bouton d'impression
+    	var legendPanel = new GeoExt.LegendPanel({
+    	    layerStore:  map.layerStore,
+    	    border: false,
+    	    defaults: {
+    	        labelCls: 'bold-text',
+    		showTitle: true,
+    		baseParams: {
+    			FORMAT: 'image/png',
+    			// geoserver specific:
+    			LEGEND_OPTIONS: [
+    			                 'forceLabels:on',
+    			                 'fontAntiAliasing:true'
+    			                 ].join(';')
+    	        }
+    	    },
+    	    autoScroll: true
+    	});	 
+    	
+    	// Only if user can print
+    	 if (GEOR.print) {
+	    	GEOR.print.setLegend(legendPanel);
+	    	
+	    	//Récupération du bouton impression
+	    	var print = GEOR.print.getAction();
+	    	//Ajout du text sur le bouton
+	    	print.setText(tr('Print'));
+
+    		items.push(print);	
+    	}
 	 	
     	/**
     	 * Ajout du bouton Partager
@@ -94,68 +127,17 @@ GEOR.geobuilder_toolbar = (function() {
     	    }
     	};
     	
-    	//Creation de la liste du menu Partager
-    	var getShareMenu = function() {
-    	    var menu = [], cfg;
-    	    Ext.each(GEOR.config.SEND_MAP_TO, function(item) {
-    	        cfg = {
-    	            text: tr(item.name),
-    	            handler: shareLink.call(this, {
-    	                url: item.url
-    	            })
-    	        };
-    	        if (item.qtip) {
-    	            cfg.qtip = tr(item.qtip);
-    	        }
-    	        if (item.iconCls) {
-    	            cfg.iconCls = item.iconCls;
-    	        }
-    	        menu.push(cfg);
-    	    });
-    	    return menu;
-    	};
-    	 
-    	items.push({
-    		text: tr("Partager"),
-    		menu: getShareMenu(),
-    		iconCls: "geor-share"
-    	});
+    	if (GEOR.config.SEND_MAP_TO.length == 1) {
+    		var item = GEOR.config.SEND_MAP_TO[0];
+    		items.push({
+    			iconCls: "geor-share",
+    			handler: shareLink.call(this, {
+    				url: item.url
+    				}),
+    			tooltip : tr(item.qtip)
+    		});
     		
-    	/**
-    	 * Ajout du bouton Imprimer
-    	 */
-    	//Création d'un panel lors pour l'action du bouton d'impression
-    	var legendPanel = new GeoExt.LegendPanel({
-    	    layerStore:  map.layerStore,
-    	    border: false,
-    	    defaults: {
-    	        labelCls: 'bold-text',
-    		showTitle: true,
-    		baseParams: {
-    			FORMAT: 'image/png',
-    			// geoserver specific:
-    			LEGEND_OPTIONS: [
-    			                 'forceLabels:on',
-    			                 'fontAntiAliasing:true'
-    			                 ].join(';')
-    	        }
-    	    },
-    	    autoScroll: true
-    	});	 
-    	GEOR.print.setLegend(legendPanel);
-    	
-    	//Récupération du bouton impression
-    	var print = GEOR.print.getAction();
-    	//Ajout du text sur le bouton
-    	print.setText(tr('Print'));
-    	
-    	
-    	if(!GEOR.config.ANONYMOUS){
-    		items.push(print);	
     	}
-    	
-
-    	
     	/**
     	 * Ajout du bouton Déplacement de la carte
     	 */

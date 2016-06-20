@@ -33,6 +33,7 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
         this.addressField = this._createCbSearch();
         this.win = new Ext.Window({
             title: OpenLayers.i18n('openls.window_title'),
+            constrainHeader:true,
             width: 440,
             closable: true,
             closeAction: "hide",

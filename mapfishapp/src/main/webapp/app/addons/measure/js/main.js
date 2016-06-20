@@ -108,6 +108,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
         if (this.measurePerimeterControl.active) {
         	this.popup = new GeoExt.Popup({
                 map: this.map,
+                constrainHeader:true,
                 title: OpenLayers.i18n("measure_popuptitle"),
                 bodyStyle: "padding:5px;",
                 unpinnable: true,
@@ -126,6 +127,7 @@ GEOR.Addons.Measure = Ext.extend(GEOR.Addons.Base, {
         } else {
 	        this.popup = new GeoExt.Popup({
 	            map: this.map,
+                constrainHeader:true,
 	            title: OpenLayers.i18n("measure_popuptitle"),
 	            bodyStyle: "padding:5px;",
 	            unpinnable: true,

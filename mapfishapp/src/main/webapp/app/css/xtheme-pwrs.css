@@ -1626,6 +1626,9 @@ a.x-menu-item {
 .x-menu-list-item {
 	padding: 0px;
 }
+.x-menu-list-item, .x-combo-list-item {
+	font:normal 11px 'latoregular',arial,tahoma,sans-serif;
+}
 .x-menu-item-active {
     background-image: none;
 	background-color: #f2f2f2;
@@ -2185,4 +2188,30 @@ body .x-winXyCls{
 
 body .fieldXY{
 	border-width:0px;
+}
+
+#tbar .x-btn-icon .x-btn-small .x-btn-text{
+	width:20px;
+	height:20px;
+}
+
+#tbar .x-form-field-wrap {
+	margin-right: 6px;
+}
+
+/*
+ Combox box module metier geobuilder 
+*/
+#tbar input {
+	border: 1px solid white;
+	background-color: #007EC3;
+	color: white;
+	font-family: 'latoregular';
+	font-size: 13px;
+	padding-bottom: 5px;
+}
+#tbar img.x-form-arrow-trigger {
+    border: solid white;
+	padding: 1px 0 1px;
+    border-width: 1px 1px 1px 0;
 }
