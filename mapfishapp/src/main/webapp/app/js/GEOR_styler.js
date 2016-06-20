@@ -906,6 +906,7 @@ GEOR.styler = (function() {
         	} 
             win = new Ext.Window({
                 title: tr("Styler"),
+                constrainHeader:true,
                 layout: "fit",
                 width: 900,
                 height: 500,

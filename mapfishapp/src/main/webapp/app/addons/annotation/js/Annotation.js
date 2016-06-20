@@ -532,6 +532,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 			title : OpenLayers.i18n('annotation.drawXyTitle'),
 			id:'winXyId',
 			resizable: false,
+			constrainHeader:true,
 			closeAction:'close',
 			cls:'x-winXyCls',
 			listeners:{
