@@ -335,7 +335,11 @@ geobuilder = (function() {
 		return success
 	}
 
-	function localise(idObj, ids, width) {
+	function localise(idObj, listIds, width) {
+		
+		listIds
+		var ids = listIds ? listIds.split(',') : listIds;
+		width = width || 0;
 		
 		// init layer to  draw selected features
 		var map = Fusion.getMap()
@@ -357,7 +361,7 @@ geobuilder = (function() {
 			
 			var selection = JSON.stringify({
 				lstIdObj: idObj, 
-				lstIds: ids
+				lstIds: listIds
 			})
 			getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
 				var coorX = []
@@ -403,10 +407,19 @@ geobuilder = (function() {
 					features.push(feature)
 				}
 				// uncomment to draw selected features
-	//			geoApiDigitizingLayer.addFeatures(features)
-	//			var newBound =  geoApiDigitizingLayer.getDataExtent()
-	//			Fusion.getMap().zoomToExtent(newBound)
-	
+				// geoApiDigitizingLayer.addFeatures(features)
+				// var newBound =  geoApiDigitizingLayer.getDataExtent()
+
+				var minX = Math.min.apply(Math, coorX)
+				var maxX = Math.max.apply(Math, coorX)
+				var minY = Math.min.apply(Math, coorY)
+				var maxY = Math.max.apply(Math, coorY)
+				var centerX = (minX + maxX)/2
+				var newMinX = centerX - (width/2)
+				var newMaxX = centerX + (width/2)
+				var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
+				Fusion.getMap().zoomToExtent(newBounds)
+				
 				var record = {
 					//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
 		    		//"typeName" :"CAN_CANTONS"
@@ -415,6 +428,7 @@ geobuilder = (function() {
 	        	}
 				GEOR.querier.create(layername, record)
 				myfilters = []
+
 	            for (i=0; i<ids.length; i++){
 		            myfilters.push(new OpenLayers.Filter.Comparison({
 		                type: OpenLayers.Filter.Comparison.EQUAL_TO,
