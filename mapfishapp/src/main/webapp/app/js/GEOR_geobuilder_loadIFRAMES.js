@@ -14,7 +14,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
 	});
 	Ext.DomHelper.append(document.getElementById('ggis_hiddenWidget'), {
         tag : 'iframe',
-        id : 'ggis_hiddenWidget_IFRAME',
+        id: 'ggis_hiddenWidget_IFRAME',
+        name: 'ggis_hiddenWidget_IFRAME',
         frameBorder : 0,
         width : 0,
         height : 0,
@@ -31,7 +32,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
 	});
 	Ext.DomHelper.append(document.getElementById('ggis_menu'), {
         tag : 'iframe',
-        id : 'ggis_menu_IFRAME',
+        id: 'ggis_menu_IFRAME',
+        name: 'ggis_menu_IFRAME',
         frameBorder : 0,
         css : 'display:none;visibility:hidden;height:0px;',
         src : ''
@@ -46,7 +48,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
 	});
 	Ext.DomHelper.append(document.getElementById('ggis_featureInfo'), {
         tag : 'iframe',
-        id : 'ggis_featureInfo_IFRAME',
+        id: 'ggis_featureInfo_IFRAME',
+        name: 'ggis_featureInfo_IFRAME',
         frameBorder : 0,
         width : '100%',
         height : '100%',
@@ -65,7 +68,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
 
 	Ext.DomHelper.append(document.getElementById('ggis_workPlace'), {
 		tag : 'iframe',
-		id : 'ggis_workPlace_IFRAME',
+		id: 'ggis_workPlace_IFRAME',
+		name: 'ggis_workPlace_IFRAME',
 		frameBorder : 0,
 		width : '100%',
 		height : '100%',
@@ -82,7 +86,8 @@ GEOR.geobuilder_loadIFRAMES = function () {
 	});
 	Ext.DomHelper.append(document.getElementById('ggis_popup'), {
         tag : 'iframe',
-        id : 'ggis_popup_IFRAME',
+        id: 'ggis_popup_IFRAME',
+        name: 'ggis_popup_IFRAME',
         frameBorder : 0,
 		width : '100%',
 		height : '100%',

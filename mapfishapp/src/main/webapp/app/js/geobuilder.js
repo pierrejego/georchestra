@@ -32,9 +32,9 @@ geobuilder = (function() {
 	function showWidget(wrapperId, width, height) {
 		var wrapper = byid(wrapperId)
 		wrapper.style.display = 'block'
-			wrapper.style.position = 'absolute'
-				if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
-				if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
+		wrapper.style.position = 'absolute'
+		if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
+		if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
 	}
 
 	function hideWidget(wrapperId) {
@@ -44,8 +44,6 @@ geobuilder = (function() {
 	function setWaitingWidget(wrapperId) {
 		byid(wrapperId + '_IFRAME').contentWindow.document.write('Chargement ...')
 	}
-
-	var HOSTNAME = '172.16.40.100'
 
 	/**
 	 * Affiche la fiche d'un objet GéoBuilder dans l'iframe ggis_featureInfo
