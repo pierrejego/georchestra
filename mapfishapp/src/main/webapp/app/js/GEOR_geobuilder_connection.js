@@ -1,5 +1,9 @@
 Ext.namespace("GEOR");
 
+(function(){
+
+var managedFeatureClasses = [];
+
 /**
  * Connect to geobuilder
  * mapPanel -> geoExt MapPanel contening all laysers
@@ -32,8 +36,6 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
 		}, 30 * 1000);
 	}
 	
-
-	
     Ext.Ajax.request
     ({
         url: url,
@@ -43,15 +45,26 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         	Accept: 'application/json'
         },
         success: function (response) {
-        	//Si on se reconnecte, il faut supprimer le menu geobuilder et le tab panel geobuilder
-        	if (isReconnect) {
-        		GEOR.geobuilder_destroyMenu(mapPanel);
-        		GEOR.geobuilder_destroyGeobuilderTab();
-        	}
-        	
+            
+            var respJson = JSON.parse(response.responseText)
+            if (respJson.status !== 'ok') {
+                throw new Error('Connection failed')
+            }
+            var data = respJson.data
+
+
+            //Si on se reconnecte, il faut supprimer le menu geobuilder et le tab panel geobuilder
+            if (isReconnect) {
+                GEOR.geobuilder_destroyMenu(mapPanel);
+                GEOR.geobuilder_destroyGeobuilderTab();
+            }
+
             // Appel de la fonction d'init du menu geobuilder dans la toolbar
             GEOR.geobuilder_initMenu(mapPanel);
             
+            // On mémorise les id_objet disponibles pour le profil pro courant
+            managedFeatureClasses = data.geobuilderLayers || []
+
             // Lors d'une première connexion, on appelle la liste des modules, le chargement des 
             // iframes et la boucle de maintient de session active
             if (!isReconnect) {
@@ -65,9 +78,29 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
         	return true;
         },
         failure: function (response) {
-        	console.log(response.responseText);
+        	console.error(response.responseText);
         	return false;
         }
     });
 	
 };
+
+/**
+ * It's a geobuilder layer if the layer name starts with three alphanum
+ * characters (underscore allowed), followed by an underscore, AND the first
+ * three characters must exist in managedFeatureClasses.
+ * 
+ *     "ABC_SOMETHING" -> managed if "ABC" in managedFeatureClasses
+ *     "AB__SOMETHING" -> managed if "AB_" in managedFeatureClasses
+ *     "ABCD_SOMETHING" -> not managed
+ * 
+ * Tells if the layer is registered as a feature class in Geobuilder
+ * @param layerName {String} The layer name
+ */
+GEOR.geobuilder_isManagedLayer = function (layerName) {
+    var re = /^([A-Za-z0-9_]{3})_/
+    var match = re.exec(layerName)
+    return (null !== match) && managedFeatureClasses.indexOf(match[1]) !== -1
+}
+
+}())
