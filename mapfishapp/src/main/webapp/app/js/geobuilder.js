@@ -358,95 +358,95 @@ geobuilder = (function() {
 		if (typeof(layername) === 'undefined'){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj)
 		}
-			var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
-			map.addLayer(geoApiDigitizingLayer);
-			
-			var selection = JSON.stringify({
-				lstIdObj: idObj, 
-				lstIds: listIds
-			});
-			getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
-				var coorX = [];
-				var coorY = [];
-				var  features = [];
-				for (var i=0; i<data.features.length; i++){
-					points = [];
-					featureGeom = data.features[i].geometry;
-					layerProj = data.features[i].projection;
-					geometryField =  data.features[i].geometryField;
-					idField = data.features[i].idField;
-					if (featureGeom.type == "Point"){
-						var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
+		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+		map.addLayer(geoApiDigitizingLayer);
+		
+		var selection = JSON.stringify({
+			lstIdObj: idObj, 
+			lstIds: listIds
+		});
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
+			var coorX = [];
+			var coorY = [];
+			var  features = [];
+			for (var i=0; i<data.features.length; i++){
+				points = [];
+				featureGeom = data.features[i].geometry;
+				layerProj = data.features[i].projection;
+				geometryField =  data.features[i].geometryField;
+				idField = data.features[i].idField;
+				if (featureGeom.type == "Point"){
+					var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
+					coorX.push(point.x);
+					coorY.push(point.y);
+					feature = new OpenLayers.Feature.Vector(point, {});
+
+				}
+				else if(featureGeom.type == "Polygon"){
+					featureCoordinates = featureGeom.coordinates;
+					for (var j=0; j< featureCoordinates.length; j++) {
+						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
 						coorX.push(point.x);
 						coorY.push(point.y);
-						feature = new OpenLayers.Feature.Vector(point, {});
-	
+						points.push(point);
 					}
-					else if(featureGeom.type == "Polygon"){
-						featureCoordinates = featureGeom.coordinates;
-						for (var j=0; j< featureCoordinates.length; j++) {
-							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
-							coorX.push(point.x);
-							coorY.push(point.y);
-							points.push(point);
-						}
-						var ring = new OpenLayers.Geometry.LinearRing(points);
-						var polygon = new OpenLayers.Geometry.Polygon([ring]);
-						feature = new OpenLayers.Feature.Vector(polygon, {});
-					}
-					// linestring
-					else  {
-						featureCoordinates = featureGeom.coordinates;
-						for ( var j=0; j< featureCoordinates.length; j++) {
-							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
-							coorX.push(point.x);
-							coorY.push(point.y);
-							points.push(point);
-						}
-						var line = new OpenLayers.Geometry.LineString(points);
-						feature = new OpenLayers.Feature.Vector(line, {});
-					}
-					features.push(feature);
+					var ring = new OpenLayers.Geometry.LinearRing(points);
+					var polygon = new OpenLayers.Geometry.Polygon([ring]);
+					feature = new OpenLayers.Feature.Vector(polygon, {});
 				}
-				// uncomment to draw selected features
-				// geoApiDigitizingLayer.addFeatures(features)
-				// var newBound =  geoApiDigitizingLayer.getDataExtent()
-
-				var minX = Math.min.apply(Math, coorX);
-				var maxX = Math.max.apply(Math, coorX);
-				var minY = Math.min.apply(Math, coorY);
-				var maxY = Math.max.apply(Math, coorY);
-				var centerX = (minX + maxX)/2;
-				var newMinX = centerX - (width/2);
-				var newMaxX = centerX + (width/2);
-				var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY);
-				Fusion.getMap().zoomToExtent(newBounds);
-				
-				var record = {
-					//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
-		    		//"typeName" :"CAN_CANTONS"
-		    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
-		    		"typeName" : layer
-	        	};
-				GEOR.querier.create(layername, record);
-				myfilters = [];
-
-	            for (i=0; i<ids.length; i++){
-		            myfilters.push(new OpenLayers.Filter.Comparison({
-		                type: OpenLayers.Filter.Comparison.EQUAL_TO,
-		                property: idField,
-		                value: ids[i]})
-		            );
+				// linestring
+				else  {
+					featureCoordinates = featureGeom.coordinates;
+					for ( var j=0; j< featureCoordinates.length; j++) {
+						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
+						coorX.push(point.x);
+						coorY.push(point.y);
+						points.push(point);
+					}
+					var line = new OpenLayers.Geometry.LineString(points);
+					feature = new OpenLayers.Feature.Vector(line, {});
 				}
-				filterbyIds = new OpenLayers.Filter.Logical({
-			        type: OpenLayers.Filter.Logical.OR,
-			        filters: myfilters
-			    });
-				//call API (test)
-				GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
-			}, function(status) {
-				alert('Something went wrong.');
-			})
+				features.push(feature);
+			}
+			// uncomment to draw selected features
+			// geoApiDigitizingLayer.addFeatures(features)
+			// var newBound =  geoApiDigitizingLayer.getDataExtent()
+
+			var minX = Math.min.apply(Math, coorX);
+			var maxX = Math.max.apply(Math, coorX);
+			var minY = Math.min.apply(Math, coorY);
+			var maxY = Math.max.apply(Math, coorY);
+			var centerX = (minX + maxX)/2;
+			var newMinX = centerX - (width/2);
+			var newMaxX = centerX + (width/2);
+			var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY);
+			Fusion.getMap().zoomToExtent(newBounds);
+			
+            var record = {
+                //"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
+                //"typeName" :"CAN_CANTONS"
+                "owsURL": GEOR.config.GEOSERVER_WFS_URL,
+                "typeName": layer
+            };
+			GEOR.querier.create(layername, record);
+			myfilters = [];
+
+			for (i=0; i<ids.length; i++){
+				myfilters.push(new OpenLayers.Filter.Comparison({
+					type: OpenLayers.Filter.Comparison.EQUAL_TO,
+					property: idField,
+					value: ids[i]})
+				);
+			}
+			filterbyIds = new OpenLayers.Filter.Logical({
+				type: OpenLayers.Filter.Logical.OR,
+				filters: myfilters
+			});
+			//call API (test)
+			GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
+		}, function(status) {
+			alert('Something went wrong.');
+		})
 
 	}
 	
@@ -459,7 +459,7 @@ geobuilder = (function() {
 		} else {
 			var point = new OpenLayers.Geometry.Point(coorX, coorY);
 		}
-	    return point;
+		return point;
 	}
 	
 	function deleteMapSelection(selection) {
