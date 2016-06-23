@@ -339,6 +339,7 @@ geobuilder = (function() {
 		
 		var ids = listIds ? listIds.split(',') : listIds;
 		width = width || 0;
+		var layername;
 		
 		// init layer to  draw selected features
 		var map = Fusion.getMap();
@@ -346,7 +347,7 @@ geobuilder = (function() {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		}) 	;
-		// retrieve layer 
+		// retrieve layer
 		for (i=0; i< map.layers.length; i++){
 			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
 				layername = map.layers[i].name;
@@ -354,7 +355,9 @@ geobuilder = (function() {
 				break;
 			}
 		}
-		if (typeof(layername)!= 'undefined'){
+		if (typeof(layername) === 'undefined'){
+			alert("Aucune couche n'est disponible pour l'objet " + idObj)
+		}
 			var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
 			map.addLayer(geoApiDigitizingLayer);
 			
@@ -366,7 +369,7 @@ geobuilder = (function() {
 				var coorX = [];
 				var coorY = [];
 				var  features = [];
-				for (i=0; i<data.features.length; i++){
+				for (var i=0; i<data.features.length; i++){
 					points = [];
 					featureGeom = data.features[i].geometry;
 					layerProj = data.features[i].projection;
@@ -444,9 +447,6 @@ geobuilder = (function() {
 			}, function(status) {
 				alert('Something went wrong.');
 			})
-		} else {
-			alert('Something went wrong.');
-		}
 
 	}
 	
