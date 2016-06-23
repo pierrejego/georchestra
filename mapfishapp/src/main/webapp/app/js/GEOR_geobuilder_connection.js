@@ -48,9 +48,9 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
             
             var respJson = JSON.parse(response.responseText)
             if (respJson.status !== 'ok') {
-                throw new Error('Connection failed')
+                throw new Error('Connection failed');
             }
-            var data = respJson.data
+            var data = respJson.data;
 
 
             //Si on se reconnecte, il faut supprimer le menu geobuilder et le tab panel geobuilder
@@ -63,7 +63,7 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
             GEOR.geobuilder_initMenu(mapPanel);
             
             // On mémorise les id_objet disponibles pour le profil pro courant
-            managedFeatureClasses = data.geobuilderLayers || []
+            managedFeatureClasses = data.geobuilderLayers || [];
 
             // Lors d'une première connexion, on appelle la liste des modules, le chargement des 
             // iframes et la boucle de maintient de session active
@@ -73,7 +73,7 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
             	// Load all 5 IFRAMEs for geobuilder to use
             	GEOR.geobuilder_loadIFRAMES();
             	// boucle de maintien de session active
-            	keepSession()
+            	keepSession();
             }
         	return true;
         },
@@ -98,9 +98,9 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
  * @param layerName {String} The layer name
  */
 GEOR.geobuilder_isManagedLayer = function (layerName) {
-    var re = /^([A-Za-z0-9_]{3})_/
-    var match = re.exec(layerName)
-    return (null !== match) && managedFeatureClasses.indexOf(match[1]) !== -1
-}
+    var re = /^([A-Za-z0-9_]{3})_/;
+    var match = re.exec(layerName);
+    return (null !== match) && managedFeatureClasses.indexOf(match[1]) !== -1;
+}; 
 
-}())
+}());

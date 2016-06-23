@@ -1,48 +1,50 @@
 
 geobuilder = (function() {
 
-	var WORKPLACE_DEFAULT_WIDTH = 600
-	var WORKPLACE_DEFAULT_HEIGHT = 480
+	'use strict';
+
+	var WORKPLACE_DEFAULT_WIDTH = 600;
+	var WORKPLACE_DEFAULT_HEIGHT = 480;
 
 
-	var oldSimpleSelection = false
-	var simpleSelection = false
-	var selection = null
-	var geoApiInitialized = false
-	var geoApiDigitizingLayer = null
-	var geoApiDrawControls = {}
-	var layerProjectionCode = ""
+	var oldSimpleSelection = false;
+	var simpleSelection = false;
+	var selection = null;
+	var geoApiInitialized = false;
+	var geoApiDigitizingLayer = null;
+	var geoApiDrawControls = {};
+	var layerProjectionCode = "";
 
-	var map = null
+	var map = null;
 
-	function byid(id) { return document.getElementById(id) }
+	function byid(id) { return document.getElementById(id); }
 
 
 	function setWidgetContent(wrapperId, url, width, height) {
-		byid(wrapperId + '_IFRAME').setAttribute('src', url)
-		var wrapper = byid(wrapperId)
-		if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
-		if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
+		byid(wrapperId + '_IFRAME').setAttribute('src', url);
+		var wrapper = byid(wrapperId);
+		if (typeof width !== 'undefined') { wrapper.style.width = String(width) + 'px'; }
+		if (typeof height !== 'undefined') { wrapper.style.height = String(height) + 'px'; }
 	}
 
 	function setWidgetTitle(wrapperId, title) {
-		byid(wrapperId).getElementsByTagName('h4').item(0).innerHTML = title
+		byid(wrapperId).getElementsByTagName('h4').item(0).innerHTML = title;
 	}
 
 	function showWidget(wrapperId, width, height) {
-		var wrapper = byid(wrapperId)
-		wrapper.style.display = 'block'
-		wrapper.style.position = 'absolute'
-		if (typeof width !== 'undefined') wrapper.style.width = String(width) + 'px'
-		if (typeof height !== 'undefined') wrapper.style.height = String(height) + 'px'
+		var wrapper = byid(wrapperId);
+		wrapper.style.display = 'block';
+		wrapper.style.position = 'absolute';
+		if (typeof width !== 'undefined') { wrapper.style.width = String(width) + 'px'; }
+		if (typeof height !== 'undefined') { wrapper.style.height = String(height) + 'px'; }
 	}
 
 	function hideWidget(wrapperId) {
-		byid(wrapperId).style.display = 'none'
+		byid(wrapperId).style.display = 'none';
 	}
 
 	function setWaitingWidget(wrapperId) {
-		byid(wrapperId + '_IFRAME').contentWindow.document.write('Chargement ...')
+		byid(wrapperId + '_IFRAME').contentWindow.document.write('Chargement ...');
 	}
 
 	/**
@@ -52,22 +54,22 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showFeatureInfo(featureClass, featureId) {
-		var winWorkplace = Ext.getCmp('geo-window-featureInfo')
+		var winWorkplace = Ext.getCmp('geo-window-featureInfo');
 		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createCardWindow("Info")
+			winWorkplace = GEOR.geobuilder_createCardWindow("Info");
 		}
-		winWorkplace.show()
-		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 400, 500)
-		showWidget('ggis_featureInfo', 600, 400)
+		winWorkplace.show();
+		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 400, 500);
+		showWidget('ggis_featureInfo', 600, 400);
 	}
 
 	/**
 	 * Masque la fiche Géobuilder
 	 */
 	function hideFeatureInfo() {
-		var winWorkplace = Ext.getCmp('geo-window-featureInfo')
-		winWorkplace.hide()
-		hideWidget('ggis_featureInfo')
+		var winWorkplace = Ext.getCmp('geo-window-featureInfo');
+		winWorkplace.hide();
+		hideWidget('ggis_featureInfo');
 	}
 
 	/**
@@ -78,8 +80,8 @@ geobuilder = (function() {
 	 * @param {String} errlevel Niveau d'erreur
 	 */
 	function addDebug(file, context, info, errlevel) {
-		var args = Array.prototype.slice.call(arguments, 0, 3)
-		console && console[errlevel] && console[errlevel].apply(console, args)
+		var args = Array.prototype.slice.call(arguments, 0, 3);
+		console && console[errlevel] && console[errlevel].apply(console, args);
 	}
 
 	/**
@@ -92,10 +94,10 @@ geobuilder = (function() {
 	 *
 	 */
 	function setWorkPlaceContent(url, width, height, title) {
-		title = title || tr("Workspace")
-		setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url, width, height)
+		title = title || tr("Workspace");
+		setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url, width, height);
 		//setWidgetTitle('ggis_workPlace', title)
-		showWorkPlace(width, height)
+		showWorkPlace(width, height);
 
 	}
 
@@ -109,17 +111,17 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showPopup(url, width, height, title) {
-		title = title || 'Popup'
-		width = width || 600
-		height = height || 400
-		var popupWindow = Ext.getCmp('geo-window-popup')
+		title = title || 'Popup';
+		width = width || 600;
+		height = height || 400;
+		var popupWindow = Ext.getCmp('geo-window-popup');
 		if (!popupWindow) {
-			popupWindow = GEOR.geobuilder_createPopupWindow(title)
+			popupWindow = GEOR.geobuilder_createPopupWindow(title);
 		}
-		popupWindow.title = title
-		popupWindow.show()
-		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, 600, 400)
-		showWidget('ggis_popup', 600, 400)
+		popupWindow.title = title;
+		popupWindow.show();
+		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, 600, 400);
+		showWidget('ggis_popup', 600, 400);
 
 	}
 
@@ -128,9 +130,9 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hidePopup(){
-		var winWorkplace = Ext.getCmp('geo-window-popup')
-		winWorkplace.hide()
-		hideWidget('ggis_popup')
+		var winWorkplace = Ext.getCmp('geo-window-popup');
+		winWorkplace.hide();
+		hideWidget('ggis_popup');
 	}
 
 	/**
@@ -140,9 +142,9 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function setMenuContent(url, title) {
-		setWidgetTitle('ggis_menu', title)
-		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
-		showWidget('ggis_menu', 400, 500)
+		setWidgetTitle('ggis_menu', title);
+		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url);
+		showWidget('ggis_menu', 400, 500);
 	}
 
 	/**
@@ -151,9 +153,9 @@ geobuilder = (function() {
 	 * @return {String}: nom de l'objet
 	 */
 	function getObjectName(idObj) {
-		type_obj_id = idObj || 'undefined'
-		console.log('getObjectName(' + type_obj_id + ')')
-		return 'objet ' + type_obj_id
+		type_obj_id = idObj || 'undefined';
+		console.log('getObjectName(' + type_obj_id + ')');
+		return 'objet ' + type_obj_id;
 	}
 
 	/**
@@ -162,8 +164,8 @@ geobuilder = (function() {
 	 * @param {Number} width: facteur de zoom
 	 */
 	function ZoomEnsemble(latitude, longitude, width){
-		position = new OpenLayers.LonLat(longitude, latitude)
-		Fusion.getMap().setCenter(position, width)
+		position = new OpenLayers.LonLat(longitude, latitude);
+		Fusion.getMap().setCenter(position, width);
 	}
 
 	/**
@@ -172,7 +174,7 @@ geobuilder = (function() {
 	 */
 	function ClearDigitization() {
 		if (geoApiDigitizingLayer) {
-			geoApiDigitizingLayer.removeFeatures(geoApiDigitizingLayer.features)
+			geoApiDigitizingLayer.removeFeatures(geoApiDigitizingLayer.features);
 		}
 	}
 
@@ -183,7 +185,7 @@ geobuilder = (function() {
 	 * @return {Window}
 	 */
 	function getWidgetIframe(wrapperId) {
-		return byid(wrapperId + '_IFRAME').contentWindow
+		return byid(wrapperId + '_IFRAME').contentWindow;
 	}
 
 	/**
@@ -193,12 +195,12 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showWorkPlace(width, height) {
-		var winWorkplace = Ext.getCmp('geo-window-workplace')
+		var winWorkplace = Ext.getCmp('geo-window-workplace');
 		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createWorkplaceWindow("zone de travail")
+			winWorkplace = GEOR.geobuilder_createWorkplaceWindow("zone de travail");
 		}
-		winWorkplace.show()
-		showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT)
+		winWorkplace.show();
+		showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT);
 	}
 
 	/**
@@ -206,9 +208,9 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hideWorkPlace () {
-		var winWorkplace = Ext.getCmp('geo-window-workplace')
-		winWorkplace.hide()
-		hideWidget('ggis_workPlace')
+		var winWorkplace = Ext.getCmp('geo-window-workplace');
+		winWorkplace.hide();
+		hideWidget('ggis_workPlace');
 	}
 
 	/**
@@ -216,7 +218,7 @@ geobuilder = (function() {
 	 * @param {String} url
 	 */
 	function setHiddenWidgetContent(url) {
-		setWidgetContent('ggis_hiddenWidget', Fusion.getFusionURL() + url)
+		setWidgetContent('ggis_hiddenWidget', Fusion.getFusionURL() + url);
 	}
 
 	/**
@@ -229,8 +231,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showWaitingWorkPlace(width, height) {
-		setWaitingWidget('ggis_workPlace')
-		showWorkPlace(width, height)
+		setWaitingWidget('ggis_workPlace');
+		showWorkPlace(width, height);
 	}
 
 	/**
@@ -239,7 +241,7 @@ geobuilder = (function() {
 	 * @param {String} url
 	 */
 	function setDigitContent(url) {
-		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url)
+		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url);
 	}
 
 	/**
@@ -247,7 +249,7 @@ geobuilder = (function() {
 	 * @return {String} Le nom de la carte
 	 */
 	function getMapName() {
-		return Fusion.getMap().name
+		return Fusion.getMap().name;
 	}
 
 	/**
@@ -255,8 +257,8 @@ geobuilder = (function() {
 	 * dans oldSimpleSelection
 	 */
 	function setSimpleSelect () {
-		oldSimpleSelection = simpleSelection
-		simpleSelection = true
+		oldSimpleSelection = simpleSelection;
+		simpleSelection = true;
 	}
 
 
@@ -266,7 +268,7 @@ geobuilder = (function() {
 	 */
 
 	function clearSelection() {
-		setCurrentSelection(0, '', '', false)
+		setCurrentSelection(0, '', '', false);
 	}
 
 	/**
@@ -284,182 +286,180 @@ geobuilder = (function() {
 	 *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
 	 */
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
-		var success = "err"
+		var success = "err";
 		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
 		if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
-			isVisSelCtrl = true
+			isVisSelCtrl = true;
 		}
 		//if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined') {
 			if (lstIdObj != '' && lstIds != '') { 
 				if (width == null) {
-					width = ""
+					width = "";
 				}
 				else {
-					width = new String(width)
+					width = String(width);
 				}
-				var tbIdObj = new Array()
-				tbIdObj = lstIdObj.split(";")
-				var tbGroupIds = new Array()
-				tbGroupIds = lstIds.split(";")
-				var nbIdObj = tbIdObj.length
-				var nbGroupIds = tbGroupIds.length
+				var tbIdObj = [];
+				tbIdObj = lstIdObj.split(";");
+				var tbGroupIds = [];
+				tbGroupIds = lstIds.split(";");
+				var nbIdObj = tbIdObj.length;
+				var nbGroupIds = tbGroupIds.length;
 				if (nbIdObj == nbGroupIds) {
-					//TODO recuperer la liste des layers
-					var lstLayerName = ""
-					lstLayerName ='geobuilder' // valeur par defaut pour test
-						addDebug("geobuilder.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug")
-						if (lstLayerName != "") {
-							localise(lstIdObj, lstIds, width)
-							setSelection(lstIdObj, lstIds)
+					//@todo recuperer la liste des layers
+					var lstLayerName = "";
+					lstLayerName ='geobuilder'; // valeur par defaut pour test
+					addDebug("geobuilder.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug");
+					if (lstLayerName != "") {
+						localise(lstIdObj, lstIds, width);
+						setSelection(lstIdObj, lstIds);
 
-							success = "ok"
-						}
-						else {
-							success = "err_layer"
-								addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug")
-						}
+						success = "ok";
+					}
+					else {
+						success = "err_layer";
+						addDebug("geobuilder.js", "setCurrentSelection", "Aucun element a selectionner (aucune couche visible et selectionnable correspondant aux identifiants d'objets transmis n'a ete trouvee)", "debug");
+					}
 
 				}else {
-					addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: incoherence du nombre d'elements entre lstIdObj ("+nbIdObj+") et lstIds ("+nbGroupIds+" groupes d'ids)", "error")
+					addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: incoherence du nombre d'elements entre lstIdObj ("+nbIdObj+") et lstIds ("+nbGroupIds+" groupes d'ids)", "error");
 				}
 			} else {
-				addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: au moins une des listes transmises (lstIdObj ou lstIds) est vide; pb possible de GEOMETRY sur les objets", "error")
+				addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: au moins une des listes transmises (lstIdObj ou lstIds) est vide; pb possible de GEOMETRY sur les objets", "error");
 			}
 		}
 		else {
-			addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: certains parametres d'entree n'ont pas ete transmis", "error")
+			addDebug("geobuilder.js", "setCurrentSelection", "Aucun traitement effectue: certains parametres d'entree n'ont pas ete transmis", "error");
 		}
-		return success
+		return success;
 	}
 
 	function localise(idObj, listIds, width) {
 		
-		listIds
 		var ids = listIds ? listIds.split(',') : listIds;
 		width = width || 0;
 		
 		// init layer to  draw selected features
-		var map = Fusion.getMap()
+		var map = Fusion.getMap();
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
-		}) 	
+		}) 	;
 		// retrieve layer 
 		for (i=0; i< map.layers.length; i++){
 			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
-				layername = map.layers[i].name
-				layer = map.layers[i].params.LAYERS
-				break
+				layername = map.layers[i].name;
+				layer = map.layers[i].params.LAYERS;
+				break;
 			}
 		}
 		if (typeof(layername)!= 'undefined'){
-			var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
-			map.addLayer(geoApiDigitizingLayer)
+			var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+			map.addLayer(geoApiDigitizingLayer);
 			
 			var selection = JSON.stringify({
 				lstIdObj: idObj, 
 				lstIds: listIds
-			})
+			});
 			getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
-				var coorX = []
-				var coorY = []
-				var  features = []
+				var coorX = [];
+				var coorY = [];
+				var  features = [];
 				for (i=0; i<data.features.length; i++){
-					points = []
-					featureGeom = data.features[i].geometry
-					layerProj = data.features[i].projection
-					geometryField =  data.features[i].geometryField
-					idField = data.features[i].idField
+					points = [];
+					featureGeom = data.features[i].geometry;
+					layerProj = data.features[i].projection;
+					geometryField =  data.features[i].geometryField;
+					idField = data.features[i].idField;
 					if (featureGeom.type == "Point"){
-						var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj)
-						coorX.push(point.x)
-						coorY.push(point.y)
-						feature = new OpenLayers.Feature.Vector(point, {})
+						var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
+						coorX.push(point.x);
+						coorY.push(point.y);
+						feature = new OpenLayers.Feature.Vector(point, {});
 	
 					}
 					else if(featureGeom.type == "Polygon"){
-						featureCoordinates = featureGeom.coordinates
-						for ( var j=0; j< featureCoordinates.length; j++) {
-							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
-							coorX.push(point.x)
-							coorY.push(point.y) 
-							points.push(point)
+						featureCoordinates = featureGeom.coordinates;
+						for (var j=0; j< featureCoordinates.length; j++) {
+							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
+							coorX.push(point.x);
+							coorY.push(point.y);
+							points.push(point);
 						}
-						var ring = new OpenLayers.Geometry.LinearRing(points)
-						var polygon = new OpenLayers.Geometry.Polygon([ring])
-						feature = new OpenLayers.Feature.Vector(polygon, {})
+						var ring = new OpenLayers.Geometry.LinearRing(points);
+						var polygon = new OpenLayers.Geometry.Polygon([ring]);
+						feature = new OpenLayers.Feature.Vector(polygon, {});
 					}
 					// linestring
 					else  {
-						featureCoordinates = featureGeom.coordinates
+						featureCoordinates = featureGeom.coordinates;
 						for ( var j=0; j< featureCoordinates.length; j++) {
-							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj)
-							coorX.push(point.x)
-							coorY.push(point.y) 
-							points.push(point)
+							point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
+							coorX.push(point.x);
+							coorY.push(point.y);
+							points.push(point);
 						}
-						var line = new OpenLayers.Geometry.LineString(points)
-						feature = new OpenLayers.Feature.Vector(line, {})
+						var line = new OpenLayers.Geometry.LineString(points);
+						feature = new OpenLayers.Feature.Vector(line, {});
 					}
-					features.push(feature)
+					features.push(feature);
 				}
 				// uncomment to draw selected features
 				// geoApiDigitizingLayer.addFeatures(features)
 				// var newBound =  geoApiDigitizingLayer.getDataExtent()
 
-				var minX = Math.min.apply(Math, coorX)
-				var maxX = Math.max.apply(Math, coorX)
-				var minY = Math.min.apply(Math, coorY)
-				var maxY = Math.max.apply(Math, coorY)
-				var centerX = (minX + maxX)/2
-				var newMinX = centerX - (width/2)
-				var newMaxX = centerX + (width/2)
-				var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY)
-				Fusion.getMap().zoomToExtent(newBounds)
+				var minX = Math.min.apply(Math, coorX);
+				var maxX = Math.max.apply(Math, coorX);
+				var minY = Math.min.apply(Math, coorY);
+				var maxY = Math.max.apply(Math, coorY);
+				var centerX = (minX + maxX)/2;
+				var newMinX = centerX - (width/2);
+				var newMaxX = centerX + (width/2);
+				var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY);
+				Fusion.getMap().zoomToExtent(newBounds);
 				
 				var record = {
 					//"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
 		    		//"typeName" :"CAN_CANTONS"
 		    		"owsURL" : GEOR.config.GEOSERVER_WFS_URL,
 		    		"typeName" : layer
-	        	}
-				GEOR.querier.create(layername, record)
-				myfilters = []
+	        	};
+				GEOR.querier.create(layername, record);
+				myfilters = [];
 
 	            for (i=0; i<ids.length; i++){
 		            myfilters.push(new OpenLayers.Filter.Comparison({
 		                type: OpenLayers.Filter.Comparison.EQUAL_TO,
 		                property: idField,
 		                value: ids[i]})
-		            )
+		            );
 				}
 				filterbyIds = new OpenLayers.Filter.Logical({
 			        type: OpenLayers.Filter.Logical.OR,
 			        filters: myfilters
-			        
-			    })			
+			    });
 				//call API (test)
-				GEOR.querier.searchFeatures(record, geometryField, filterbyIds)
+				GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
 			}, function(status) {
-				alert('Something went wrong.')
+				alert('Something went wrong.');
 			})
 		} else {
-			alert('Something went wrong.')
+			alert('Something went wrong.');
 		}
 
 	}
 	
 	function projection(coorX, coorY, layerProj){
-		var epsgMap   = new OpenLayers.Projection(Fusion.getMap().projection)
+		var epsgMap   = new OpenLayers.Projection(Fusion.getMap().projection);
 		if (layerProj != ""){
-			var projectionCode = 'EPSG:' + layerProj
-			var epsgLayer = new OpenLayers.Projection(projectionCode)
-			var point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap)
+			var projectionCode = 'EPSG:' + layerProj;
+			var epsgLayer = new OpenLayers.Projection(projectionCode);
+			var point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap);
 		} else {
-			var point = new OpenLayers.Geometry.Point(coorX, coorY)
+			var point = new OpenLayers.Geometry.Point(coorX, coorY);
 		}
-	    return point
+	    return point;
 	}
 	
 	function deleteMapSelection(selection) {
@@ -478,18 +478,18 @@ geobuilder = (function() {
 	 */
 	function getLayers(visible, selectable) {
 
-		var layers = new Array()
-		var maplayers = Fusion.getMap().layers
+		var layers = [];
+		var maplayers = Fusion.getMap().layers;
 		for(var i = 0; i < maplayers.length; i++)
 		{
-			var myLayer = maplayers[i]
+			var myLayer = maplayers[i];
 			if(myLayer.getVisibility() == visible)
 			{
-				layers[layers.length] = myLayer
+				layers[layers.length] = myLayer;
 			}
 		}
 
-		return layers
+		return layers;
 	}
 
 	/**
@@ -499,14 +499,14 @@ geobuilder = (function() {
 	 * @return {Array}
 	 */
 	function getLayersGroups(visible, selectable) {
-		var layers = getLayers(visible, selectable)
-		return layers
+		var layers = getLayers(visible, selectable);
+		return layers;
 	}
 
 	function isDisplayed(layerName)
 	{
 
-		return true
+		return true;
 	}
 	/**
 	 * Obtenir la sélection courante
@@ -515,7 +515,7 @@ geobuilder = (function() {
 	 * @return {String} selectedObjs liste des objets sélectionnés avec leurs ids (ex: 'CAN 10;CAN 20;CAN 30;INS 2;NDS 1;NDS 3')
 	 */
 	function getCurrentSelection(lstIdObj) {
-		Fusion.getSelection()
+		Fusion.getSelection();
 	}
 
 	/**
@@ -524,7 +524,7 @@ geobuilder = (function() {
 	 * @param {Function} callback
 	 */
 	function DigitizePoint(callback) {
-		geoApiStartDigitizing('point', callback)
+		geoApiStartDigitizing('point', callback);
 	}
 
 
@@ -535,7 +535,7 @@ geobuilder = (function() {
 	 * @param {Function} callback
 	 */
 	function DigitizeLineString(callback) {
-		geoApiStartDigitizing('linestr', callback)
+		geoApiStartDigitizing('linestr', callback);
 	}
 
 	/**
@@ -545,14 +545,14 @@ geobuilder = (function() {
 	 * @param {Function} callback
 	 */
 	function DigitizePolygon(callback) {
-		geoApiStartDigitizing('polygon', callback)
+		geoApiStartDigitizing('polygon', callback);
 	}
 
 	function setSelection(idObj, id){
-		var myObjSel = {}
-		myObjSel[idObj] = id
-		var sel = objetToString(myObjSel)
-		Fusion.setSelection(sel)
+		var myObjSel = {};
+		myObjSel[idObj] = id;
+		var sel = objetToString(myObjSel);
+		Fusion.setSelection(sel);
 
 	}
 	
@@ -560,27 +560,27 @@ geobuilder = (function() {
 		
 		var layer = JSON.stringify({
 			lstIdObj: idObj
-		})
-		var layerProj = ""
-		var projectionCode = ""
+		});
+		var layerProj = "";
+		var projectionCode = "";
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', layer, function(data) {
 			for (i=0; i<data.features.length; i++){
-				layerProj = data.features[i].projection
+				layerProj = data.features[i].projection;
 			}
 			if (layerProj != ""){
-				projectionCode = 'EPSG:' + layerProj
+				projectionCode = 'EPSG:' + layerProj;
 			}
-			this.layerProjectionCode = projectionCode
+			this.layerProjectionCode = projectionCode;
 
 		}, function(status) {
-			alert('Something went wrong.')
+			alert('Something went wrong.');
 		})
 	}
 
 	function showMap() {
-		//hideWorkPlace()
-		//hideFeatureInfo()
-		Fusion.getMap().baseLayer.redraw()
+		//hideWorkPlace();
+		//hideFeatureInfo();
+		Fusion.getMap().baseLayer.redraw();
 	}
 	
 	
@@ -592,9 +592,9 @@ geobuilder = (function() {
 			 * @return {String}
 			 */
 			getFusionURL: function() {
-				return GEOR.config.GEOBUILDER_URL
+				return GEOR.config.GEOBUILDER_URL;
 			},
-
+ 
 			getWidgetById: function(id) {
 				if (id === 'Map'){
 					return window;
@@ -602,16 +602,17 @@ geobuilder = (function() {
 				throw new Error('getWidgetById + "'+id+'"');
 			},
 
-			getMap() {
-				this.map = GeoExt.MapPanel.guess().map
-				return this.map
+			getMap: function () {
+				this.map = GeoExt.MapPanel.guess().map;
+				return this.map;
 			},
-
-			setSelection(select){
-				this.selection = select
+ 
+			setSelection: function (select) {
+				this.selection = select;
 			}, 
-			getSelection(){
-				return this.selection
+			
+			getSelection: function() {
+				return this.selection;
 			}
 	}
 
@@ -619,33 +620,33 @@ geobuilder = (function() {
 	 * Export des fonctions du client dans l'espace global
 	 */
 
-	window.addDebug = addDebug
-	window.ClearDigitization = ClearDigitization
-	window.DigitizeLineString = DigitizeLineString
-	window.DigitizePoint = DigitizePoint
-	window.DigitizePolygon = DigitizePolygon
-	window.getCurrentSelection = getCurrentSelection
-	window.getMapName = getMapName
-	window.getObjectName = getObjectName
-	window.getWidgetIframe = getWidgetIframe
-	window.hideFeatureInfo = hideFeatureInfo
-	window.hidePopup = hidePopup
-	window.hideWorkPlace = hideWorkPlace
-	window.setCurrentSelection = setCurrentSelection
-	window.setDigitContent = setDigitContent
-	window.setHiddenWidgetContent = setHiddenWidgetContent
-	window.setSimpleSelect = setSimpleSelect
-	window.setWorkPlaceContent = setWorkPlaceContent
-	window.showFeatureInfo = showFeatureInfo
-	window.showPopup = showPopup
-	window.showWaitingWorkPlace = showWaitingWorkPlace
-	window.showWorkPlace = showWorkPlace
-	window.getLayers = getLayers
-	window.isDisplayed = isDisplayed
-	window.getLayersGroups = getLayersGroups
-	window.ZoomEnsemble = ZoomEnsemble
-	window.showMap = showMap
-	window.setLayerProjection = setLayerProjection
+	window.addDebug = addDebug;
+	window.ClearDigitization = ClearDigitization;
+	window.DigitizeLineString = DigitizeLineString;
+	window.DigitizePoint = DigitizePoint;
+	window.DigitizePolygon = DigitizePolygon;
+	window.getCurrentSelection = getCurrentSelection;
+	window.getMapName = getMapName;
+	window.getObjectName = getObjectName;
+	window.getWidgetIframe = getWidgetIframe;
+	window.hideFeatureInfo = hideFeatureInfo;
+	window.hidePopup = hidePopup;
+	window.hideWorkPlace = hideWorkPlace;
+	window.setCurrentSelection = setCurrentSelection;
+	window.setDigitContent = setDigitContent;
+	window.setHiddenWidgetContent = setHiddenWidgetContent;
+	window.setSimpleSelect = setSimpleSelect;
+	window.setWorkPlaceContent = setWorkPlaceContent;
+	window.showFeatureInfo = showFeatureInfo;
+	window.showPopup = showPopup;
+	window.showWaitingWorkPlace = showWaitingWorkPlace;
+	window.showWorkPlace = showWorkPlace;
+	window.getLayers = getLayers;
+	window.isDisplayed = isDisplayed;
+	window.getLayersGroups = getLayersGroups;
+	window.ZoomEnsemble = ZoomEnsemble;
+	window.showMap = showMap;
+	window.setLayerProjection = setLayerProjection;
 
 	/*
 	 * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
@@ -662,32 +663,32 @@ geobuilder = (function() {
 	 * Fonctions & Helpers privées
 	 */
 	function geoApiStartDigitizing(type, user_handler) {
-		geoApiInit()
+		geoApiInit();
 		if (user_handler) {
 			var handler = function() {
-				user_handler.apply(this,  arguments)
+				user_handler.apply(this,  arguments);
 			}
-			var control = geoApiDrawControls[type]
-			control.userHandler = handler
-			geoApiActiveControl = control
-			control.activate()
+			var control = geoApiDrawControls[type];
+			control.userHandler = handler;
+			geoApiActiveControl = control;
+			control.activate();
 		}
 	}    	
 	
 	
 	function geoApiInit() {
 		if (geoApiInitialized) {
-			return
+			return;
 		}
-		var map = Fusion.getMap()
-		var geoApiStyleMap = GEOR.util.getStyleMap({"default" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}, "select" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}})
+		var map = Fusion.getMap();
+		var geoApiStyleMap = GEOR.util.getStyleMap({"default" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}, "select" : {strokeColor: '#99bbe8', fillColor: "#99bbe8"}});
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			styleMap : geoApiStyleMap,
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
-		}) 	
-		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions)
-		map.addLayer(geoApiDigitizingLayer)
+		});
+		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+		map.addLayer(geoApiDigitizingLayer);
 		geoApiDrawControls = {
 			point: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
 					OpenLayers.Handler.Point, {
@@ -762,84 +763,84 @@ geobuilder = (function() {
 
 		for(var key in geoApiDrawControls) {
 			if (geoApiDrawControls[key].events) {
-				geoApiDrawControls[key].events.register('featureadded', null, geoApiCallHandler)
-				map.addControl(geoApiDrawControls[key])
+				geoApiDrawControls[key].events.register('featureadded', null, geoApiCallHandler);
+				map.addControl(geoApiDrawControls[key]);
 			}
 		}
 	}
 
 	function geoApiCheckLine(point, geom) {
 		if (geom.components.length == 3) {
-			this.handler.dblclick()
-			this.handler.finalize()
+			this.handler.dblclick();
+			this.handler.finalize();
 		}
 	}
 
 	function geoApiCallHandler(evt) {
 		//gestion des projection
 		if (layerProjectionCode != "") {
-			var in_options = { 'internalProjection': new OpenLayers.Projection(Fusion.getMap().projection), 'externalProjection': new OpenLayers.Projection(layerProjectionCode)}
-			wkt = new OpenLayers.Format.WKT(in_options)
-			//alert(wkt.write(evt.feature))
+			var in_options = { 'internalProjection': new OpenLayers.Projection(Fusion.getMap().projection), 'externalProjection': new OpenLayers.Projection(layerProjectionCode)};
+			wkt = new OpenLayers.Format.WKT(in_options);
+			//alert(wkt.write(evt.feature));
 		}
 		else {
-			wkt = new OpenLayers.Format.WKT()
-			//alert(wkt.write(evt.feature))
+			wkt = new OpenLayers.Format.WKT();
+			//alert(wkt.write(evt.feature));
 		}
-		this.userHandler(wkt.write(evt.feature))
-		window.setTimeout(geoApiDeactivate, 100)
+		this.userHandler(wkt.write(evt.feature));
+		window.setTimeout(geoApiDeactivate, 100);
 
 		return false;
 	}
 
 	function geoApiDeactivate() {
 		if (geoApiActiveControl) {
-			geoApiActiveControl.deactivate()
-			geoApiActiveControl = null
+			geoApiActiveControl.deactivate();
+			geoApiActiveControl = null;
 		}
 	}	
 	/*
 	 * Conversion d'une sélection sous forme d'objet en sélection sous forme de string
 	 */
 	function objetToString(selObject) {
-		var selString = ""
-			for (var cle in selObject) if (selObject.hasOwnProperty(cle)) {
-				if (selObject[cle] != "") {
-					var ids = selObject[cle].split(",")
-					for (var i=0; i<ids.length; i++) {
-						if (selString == "") {
-							selString = cle + " " + ids[i]
-						}
-						else {
-							selString = selString + ";" + cle + " " + ids[i]
-						}
+		var selString = "";
+		for (var cle in selObject) if (selObject.hasOwnProperty(cle)) {
+			if (selObject[cle] != "") {
+				var ids = selObject[cle].split(",");
+				for (var i=0; i<ids.length; i++) {
+					if (selString == "") {
+						selString = cle + " " + ids[i];
+					}
+					else {
+						selString = selString + ";" + cle + " " + ids[i];
 					}
 				}
 			}
-		return selString
+		}
+		return selString;
 	}
 
 	var getJSON = function(url, params, successHandler, errorHandler) {
 		var xhr = typeof XMLHttpRequest != 'undefined'
 			? new XMLHttpRequest()
-		: new ActiveXObject('Microsoft.XMLHTTP')
-			xhr.open('post', url, true)
+		: new ActiveXObject('Microsoft.XMLHTTP');
+			xhr.open('post', url, true);
 			xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 			xhr.setRequestHeader('Content-Length', params.length);
 			xhr.onreadystatechange = function() {
-				var status
-				var data
+				var status;
+				var data;
 				if (xhr.readyState == 4) { 
-					status = xhr.status
+					status = xhr.status;
 					if (status == 200) {
-						data = JSON.parse(xhr.responseText)
-						successHandler && successHandler(data)
+						data = JSON.parse(xhr.responseText);
+						successHandler && successHandler(data);
 					} else {
-						errorHandler && errorHandler(status)
+						errorHandler && errorHandler(status);
 					}
 				}
 			}
-			xhr.send(params)
+			xhr.send(params);
 	}
 
 }())
