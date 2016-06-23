@@ -568,6 +568,10 @@ GEOR.print = (function() {
                 listeners: {
                     "show": function() {
                         // show print extent:
+                    	// to fix black print extent issue - set the map of frame (layer.map) 
+                    	if(printExtent.layer){
+                        	printExtent.layer.map = printExtent.map;
+                    	}
                         printExtent.addPage(printPage);
                         printExtent.show();
                         /*
