@@ -1,7 +1,4 @@
-
 geobuilder = (function() {
-
-	'use strict';
 
 	var WORKPLACE_DEFAULT_WIDTH = 600;
 	var WORKPLACE_DEFAULT_HEIGHT = 480;
@@ -348,7 +345,7 @@ geobuilder = (function() {
 			sphericalMercator: true
 		}) 	;
 		// retrieve layer
-		for (i=0; i< map.layers.length; i++){
+		for (var i=0; i< map.layers.length; i++){
 			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
 				layername = map.layers[i].name;
 				layer = map.layers[i].params.LAYERS;
