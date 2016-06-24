@@ -52,7 +52,7 @@ GEOR.geobuilder_initListeModule = function (mapPanel) {
 		            		Ext.each(data.data.pros, function(profil) {
 					           	moduleDropDown[nbProfil] = {id: profil.id, name: profil.name};
 					           	// Selection le module pour la combobox
-					           	if (profil.name == GEOR.config.CUSTOM_MODULE) {
+					           	if (profil.id == GEOR.config.CUSTOM_MODULE) {
 			            			module = GEOR.config.CUSTOM_MODULE;
 	       						}	        				 		        
 					           	nbProfil++;
