@@ -78,7 +78,7 @@ geobuilder = (function() {
 	 */
 	function addDebug(file, context, info, errlevel) {
 		var args = Array.prototype.slice.call(arguments, 0, 3);
-		console && console[errlevel] && console[errlevel].apply(console, args);
+		if (console && console[errlevel]) console[errlevel].apply(console, args);
 	}
 
 	/**
@@ -285,13 +285,13 @@ geobuilder = (function() {
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
 		var success = "err";
 		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
-		if (typeof(isVisSelCtrl) == 'undefined' || isVisSelCtrl != false) {
+		if (typeof isVisSelCtrl === 'undefined' || isVisSelCtrl !== false) {
 			isVisSelCtrl = true;
 		}
 		//if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined') {
-			if (lstIdObj != '' && lstIds != '') { 
-				if (width == null) {
+			if (lstIdObj !== '' && lstIds !== '') { 
+				if (width === null) {
 					width = "";
 				}
 				else {
@@ -308,7 +308,7 @@ geobuilder = (function() {
 					var lstLayerName = "";
 					lstLayerName ='geobuilder'; // valeur par defaut pour test
 					addDebug("geobuilder.js", "setCurrentSelection", "lstLayerName =  " + lstLayerName, "debug");
-					if (lstLayerName != "") {
+					if (lstLayerName !== "") {
 						localise(lstIdObj, lstIds, width);
 						setSelection(lstIdObj, lstIds);
 
@@ -353,7 +353,7 @@ geobuilder = (function() {
 			}
 		}
 		if (typeof(layername) === 'undefined'){
-			alert("Aucune couche n'est disponible pour l'objet " + idObj)
+			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
 		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
 		map.addLayer(geoApiDigitizingLayer);
@@ -365,7 +365,8 @@ geobuilder = (function() {
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', selection, function(data) {
 			var coorX = [];
 			var coorY = [];
-			var  features = [];
+			var feature, features = [];
+			var point, points, j;
 			for (var i=0; i<data.features.length; i++){
 				points = [];
 				featureGeom = data.features[i].geometry;
@@ -373,15 +374,14 @@ geobuilder = (function() {
 				geometryField =  data.features[i].geometryField;
 				idField = data.features[i].idField;
 				if (featureGeom.type == "Point"){
-					var point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
+					point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
 					coorX.push(point.x);
 					coorY.push(point.y);
 					feature = new OpenLayers.Feature.Vector(point, {});
-
 				}
 				else if(featureGeom.type == "Polygon"){
 					featureCoordinates = featureGeom.coordinates;
-					for (var j=0; j< featureCoordinates.length; j++) {
+					for (j=0; j< featureCoordinates.length; j++) {
 						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
 						coorX.push(point.x);
 						coorY.push(point.y);
@@ -394,7 +394,7 @@ geobuilder = (function() {
 				// linestring
 				else  {
 					featureCoordinates = featureGeom.coordinates;
-					for ( var j=0; j< featureCoordinates.length; j++) {
+					for (j=0; j< featureCoordinates.length; j++) {
 						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
 						coorX.push(point.x);
 						coorY.push(point.y);
@@ -443,18 +443,18 @@ geobuilder = (function() {
 			GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
 		}, function(status) {
 			alert('Something went wrong.');
-		})
+		});
 
 	}
 	
 	function projection(coorX, coorY, layerProj){
-		var epsgMap   = new OpenLayers.Projection(Fusion.getMap().projection);
-		if (layerProj != ""){
+		var point, epsgMap = new OpenLayers.Projection(Fusion.getMap().projection);
+		if (layerProj !== ""){
 			var projectionCode = 'EPSG:' + layerProj;
 			var epsgLayer = new OpenLayers.Projection(projectionCode);
-			var point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap);
+			point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap);
 		} else {
-			var point = new OpenLayers.Geometry.Point(coorX, coorY);
+			point = new OpenLayers.Geometry.Point(coorX, coorY);
 		}
 		return point;
 	}
@@ -564,14 +564,14 @@ geobuilder = (function() {
 			for (i=0; i<data.features.length; i++){
 				layerProj = data.features[i].projection;
 			}
-			if (layerProj != ""){
+			if (layerProj !== ""){
 				projectionCode = 'EPSG:' + layerProj;
 			}
 			this.layerProjectionCode = projectionCode;
 
 		}, function(status) {
 			alert('Something went wrong.');
-		})
+		});
 	}
 
 	function showMap() {
@@ -611,7 +611,7 @@ geobuilder = (function() {
 			getSelection: function() {
 				return this.selection;
 			}
-	}
+	};
 
 	/**
 	 * Export des fonctions du client dans l'espace global
@@ -664,7 +664,7 @@ geobuilder = (function() {
 		if (user_handler) {
 			var handler = function() {
 				user_handler.apply(this,  arguments);
-			}
+			};
 			var control = geoApiDrawControls[type];
 			control.userHandler = handler;
 			geoApiActiveControl = control;
@@ -756,7 +756,7 @@ geobuilder = (function() {
 					}
 				}
 			})
-		}
+		};
 
 		for(var key in geoApiDrawControls) {
 			if (geoApiDrawControls[key].events) {
@@ -768,6 +768,8 @@ geobuilder = (function() {
 
 	function geoApiCheckLine(point, geom) {
 		if (geom.components.length == 3) {
+			console.log('geoApiCheckLine this', this);
+			console.log('geoApiCheckLine this.handler', this.handler);
 			this.handler.dblclick();
 			this.handler.finalize();
 		}
@@ -775,7 +777,7 @@ geobuilder = (function() {
 
 	function geoApiCallHandler(evt) {
 		//gestion des projection
-		if (layerProjectionCode != "") {
+		if (layerProjectionCode !== "") {
 			var in_options = { 'internalProjection': new OpenLayers.Projection(Fusion.getMap().projection), 'externalProjection': new OpenLayers.Projection(layerProjectionCode)};
 			wkt = new OpenLayers.Format.WKT(in_options);
 			//alert(wkt.write(evt.feature));
@@ -802,10 +804,10 @@ geobuilder = (function() {
 	function objetToString(selObject) {
 		var selString = "";
 		for (var cle in selObject) if (selObject.hasOwnProperty(cle)) {
-			if (selObject[cle] != "") {
+			if (selObject[cle] !== "") {
 				var ids = selObject[cle].split(",");
 				for (var i=0; i<ids.length; i++) {
-					if (selString == "") {
+					if (selString === "") {
 						selString = cle + " " + ids[i];
 					}
 					else {
@@ -818,26 +820,25 @@ geobuilder = (function() {
 	}
 
 	var getJSON = function(url, params, successHandler, errorHandler) {
-		var xhr = typeof XMLHttpRequest != 'undefined'
-			? new XMLHttpRequest()
-		: new ActiveXObject('Microsoft.XMLHTTP');
-			xhr.open('post', url, true);
-			xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-			xhr.setRequestHeader('Content-Length', params.length);
-			xhr.onreadystatechange = function() {
-				var status;
-				var data;
-				if (xhr.readyState == 4) { 
-					status = xhr.status;
-					if (status == 200) {
-						data = JSON.parse(xhr.responseText);
-						successHandler && successHandler(data);
-					} else {
-						errorHandler && errorHandler(status);
-					}
+		var xhr = (typeof XMLHttpRequest != 'undefined' ? 
+					new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
+		xhr.open('post', url, true);
+		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+		xhr.setRequestHeader('Content-Length', params.length);
+		xhr.onreadystatechange = function() {
+			var status;
+			var data;
+			if (xhr.readyState == 4) { 
+				status = xhr.status;
+				if (status == 200) {
+					data = JSON.parse(xhr.responseText);
+					successHandler && successHandler(data);
+				} else {
+					errorHandler && errorHandler(status);
 				}
 			}
-			xhr.send(params);
-	}
+		};
+		xhr.send(params);
+	};
 
-}())
+}());
