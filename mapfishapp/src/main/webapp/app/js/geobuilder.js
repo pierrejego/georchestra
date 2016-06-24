@@ -362,7 +362,7 @@ geobuilder = (function() {
 			lstIdObj: idObj, 
 			lstIds: listIds
 		});
-		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', selection, function(data) {
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', selection, function(data) {
 			var coorX = [];
 			var coorY = [];
 			var  features = [];
@@ -560,7 +560,7 @@ geobuilder = (function() {
 		});
 		var layerProj = "";
 		var projectionCode = "";
-		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/geochestra.json', layer, function(data) {
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', layer, function(data) {
 			for (i=0; i<data.features.length; i++){
 				layerProj = data.features[i].projection;
 			}
