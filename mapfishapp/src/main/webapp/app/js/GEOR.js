@@ -230,7 +230,7 @@ Ext.namespace("GEOR");
                     panel.getActiveTab().raise();
                 },
                 'tabchange': function(panel, t) {
-                    if (t.id == 'addPanel' && !tabCreationLocked) {
+                    if (t && t.id == 'addPanel' && !tabCreationLocked) {
                         var tab = new GEOR.ResultsPanel({
                             html: tr("resultspanel.emptytext")
                         });
@@ -240,7 +240,9 @@ Ext.namespace("GEOR");
                         panel.items.each(function(tab) {
                             tab.lower();
                         });
-                        t.raise();
+                        if(t){
+                        	t.raise();
+                        }
                     }
                 }
             }
@@ -419,15 +421,20 @@ Ext.namespace("GEOR");
             GEOR.getfeatureinfo.events.on({
                 "search": function(panelCfg) {
                     var tab = southPanel.getActiveTab();
+                    
                     if (tab) {
                         tab.setTitle(tr("WMS Search"));
-                        tab.clean();
+                        if(tab instanceof GEOR.ResultsPanel){
+                        	tab.clean();
+                        }
+
+	                    var panel = Ext.apply({
+	                        bodyStyle: 'padding:5px'
+	                    }, panelCfg);
+	                    
+	                    tab.removeAll();
+	                    tab.add(panel);
                     }
-                    var panel = Ext.apply({
-                        bodyStyle: 'padding:5px'
-                    }, panelCfg);
-                    tab.removeAll();
-                    tab.add(panel);
                     southPanel.doLayout();
                     southPanel.expand();
                 },
@@ -438,7 +445,7 @@ Ext.namespace("GEOR");
 	                       
 	                    	// featureType contains layername and somme time workspace as well
 	                    	// get information after : if exist
-	                    	var n = featureType.lastIndexOf(':');
+	                    	var n = featureType.indexOf(':');
                             var layerName = featureType.substring(n+1);
 	                        
                             // if managed layer (test if three first char are know by geobuilder)
@@ -447,7 +454,10 @@ Ext.namespace("GEOR");
                                    // take only the first feature if exist
                                     if(result.features[0]){
                                            southPanel.collapse();
-                                           showFeatureInfo(layerName.substring(0,3), result.features[0].fid);
+                                           // fid is made like layerName.id
+                                           // geobuilder wait only for th id part
+                                           var idPlace = result.features[0].fid.indexOf('.');
+                                           showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1));
                                            return true;
                                     }
                             }
