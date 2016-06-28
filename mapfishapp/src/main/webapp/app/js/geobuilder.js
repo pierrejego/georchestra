@@ -291,7 +291,7 @@ geobuilder = (function() {
 		//if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined') {
 			if (lstIdObj !== '' && lstIds !== '') { 
-				if (width === null) {
+				if (!width) {
 					width = "";
 				}
 				else {
@@ -418,7 +418,7 @@ geobuilder = (function() {
 			var newMaxX = centerX + (width/2);
 			var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY);
 			Fusion.getMap().zoomToExtent(newBounds);
-			
+
             var record = {
                 //"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
                 //"typeName" :"CAN_CANTONS"
@@ -443,6 +443,7 @@ geobuilder = (function() {
 			GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
 		}, function(status) {
 			alert('Something went wrong.');
+			console.error('Something went wrong.');
 		});
 
 	}
@@ -571,6 +572,7 @@ geobuilder = (function() {
 
 		}, function(status) {
 			alert('Something went wrong.');
+			console.error('Something went wrong.');
 		});
 	}
 
