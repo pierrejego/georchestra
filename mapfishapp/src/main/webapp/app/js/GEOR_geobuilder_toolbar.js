@@ -127,6 +127,7 @@ GEOR.geobuilder_toolbar = (function() {
     	    }
     	};
     	
+    	// Create share button if only one share element
     	if (GEOR.config.SEND_MAP_TO.length == 1) {
     		var item = GEOR.config.SEND_MAP_TO[0];
     		items.push({
@@ -135,9 +136,30 @@ GEOR.geobuilder_toolbar = (function() {
     				url: item.url
     				}),
     			tooltip : tr(item.qtip)
-    		});
-    		
+    		});    		
+    	} else {
+        	//Create share list menu if more or any share element
+        	var getShareMenu = function() {
+        	    var menu = [], cfg;
+        	    Ext.each(GEOR.config.SEND_MAP_TO, function(item) {
+        	        cfg = {
+        	            text: tr(item.name),
+        	            handler: shareLink.call(this, {
+        	                url: item.url
+        	            })
+        	        };
+        	        if (item.qtip) {
+        	            cfg.qtip = tr(item.qtip);
+        	        }
+        	        if (item.iconCls) {
+        	            cfg.iconCls = item.iconCls;
+        	        }
+        	        menu.push(cfg);
+        	    });
+        	    return menu;
+        	    };    		
     	}
+    	
     	/**
     	 * Ajout du bouton Déplacement de la carte
     	 */
