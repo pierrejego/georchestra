@@ -157,7 +157,13 @@ GEOR.geobuilder_toolbar = (function() {
         	        menu.push(cfg);
         	    });
         	    return menu;
-        	    };    		
+        	    };
+        	            	  
+        	    items.push({
+            		text: tr("Partager"),
+            		menu: getShareMenu(),
+            		iconCls: "geor-share"
+            	});
     	}
     	
     	/**
