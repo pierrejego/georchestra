@@ -150,9 +150,22 @@ geobuilder = (function() {
 	 * @return {String}: nom de l'objet
 	 */
 	function getObjectName(idObj) {
-		type_obj_id = idObj || 'undefined';
-		console.log('getObjectName(' + type_obj_id + ')');
-		return 'objet ' + type_obj_id;
+		var url = Fusion.getFusionURL() + 'cfm/q_getBDObjetInfo.cfm?info=NOM_OBJET&obj=' + idObj;
+		// Par défaut on donnera juste "Objet CAN" par exemple
+		var objectName = 'Objet ' + idObj;
+		// En cas de succès on récupèrera le vrai nom
+		var onSuccessSync = function(data) {
+			if (data && data[0] && data[0]["NOM_OBJET"]) {
+				objectName = data[0]["NOM_OBJET"];
+			}
+		};
+		// en cas d'errreur on gardera le libelle par défaut
+		var onError = function(){};
+		// on fait une requête synchrone car c'est historiquement attendu par
+		// l'application
+		var async = false;
+		getJSON(url, '', onSuccessSync, onError, async);
+		return objectName;
 	}
 
 	/**
@@ -821,10 +834,13 @@ geobuilder = (function() {
 		return selString;
 	}
 
-	var getJSON = function(url, params, successHandler, errorHandler) {
+	var getJSON = function(url, params, successHandler, errorHandler, async) {
+		if (async === void 0) {
+			async = true;
+		}
 		var xhr = (typeof XMLHttpRequest != 'undefined' ? 
 					new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
-		xhr.open('post', url, true);
+		xhr.open('post', url, async);
 		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 		xhr.setRequestHeader('Content-Length', params.length);
 		xhr.onreadystatechange = function() {
