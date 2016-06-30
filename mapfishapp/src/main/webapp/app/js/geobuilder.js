@@ -17,27 +17,32 @@ geobuilder = (function() {
 	function byid(id) { return document.getElementById(id); }
 
 
-	function setWidgetContent(wrapperId, url, width, height) {
+	/**
+	 * Creates a Ext.Window widget if not exists with the givent constructor
+	 * If the window already exists, we set the title if given
+	 */
+	function getWindowWidget(id, constructor, title) {
+		var widget = Ext.getCmp(id);
+		if (!widget) {
+			widget = constructor(title);
+		} else if (title !== void 0) {
+			widget.setTitle(title);
+		}
+		return widget;
+	}
+	
+	function setWidgetContent(wrapperId, url) {
 		byid(wrapperId + '_IFRAME').setAttribute('src', url);
-		var wrapper = byid(wrapperId);
-		if (typeof width !== 'undefined') { wrapper.style.width = String(width) + 'px'; }
-		if (typeof height !== 'undefined') { wrapper.style.height = String(height) + 'px'; }
 	}
 
-	function setWidgetTitle(wrapperId, title) {
-		byid(wrapperId).getElementsByTagName('h4').item(0).innerHTML = title;
+	function showWidget(widget, width, height) {
+		widget.show();
+		if (typeof width !== 'undefined') { widget.setWidth(width) }
+		if (typeof height !== 'undefined') { widget.setHeight(height) }
 	}
 
-	function showWidget(wrapperId, width, height) {
-		var wrapper = byid(wrapperId);
-		wrapper.style.display = 'block';
-		wrapper.style.position = 'absolute';
-		if (typeof width !== 'undefined') { wrapper.style.width = String(width) + 'px'; }
-		if (typeof height !== 'undefined') { wrapper.style.height = String(height) + 'px'; }
-	}
-
-	function hideWidget(wrapperId) {
-		byid(wrapperId).style.display = 'none';
+	function hideWidget(widget) {
+		widget.hide();
 	}
 
 	function setWaitingWidget(wrapperId) {
@@ -51,22 +56,17 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showFeatureInfo(featureClass, featureId) {
-		var winWorkplace = Ext.getCmp('geo-window-featureInfo');
-		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createCardWindow("Info");
-		}
-		winWorkplace.show();
-		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId, 400, 500);
-		showWidget('ggis_featureInfo', 600, 400);
+		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow, "Info");
+		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId);
+		showWidget(ftinfo, 600, 400);
 	}
 
 	/**
 	 * Masque la fiche Géobuilder
 	 */
 	function hideFeatureInfo() {
-		var winWorkplace = Ext.getCmp('geo-window-featureInfo');
-		winWorkplace.hide();
-		hideWidget('ggis_featureInfo');
+		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow);
+		hideWidget(ftinfo);
 	}
 
 	/**
@@ -92,10 +92,11 @@ geobuilder = (function() {
 	 */
 	function setWorkPlaceContent(url, width, height, title) {
 		title = title || tr("Workspace");
-		setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url, width, height);
-		//setWidgetTitle('ggis_workPlace', title)
-		showWorkPlace(width, height);
-
+		// on récup le widget pour changer le titre
+		getWindowWidget('ggis_workPlace', GEOR.geobuilder_createWorkplaceWindow, title);
+		// on charge le contenu dans l'iframe
+		setWidgetContent('ggis_workPlace', Fusion.getFusionURL() + url);
+		showWorkPlace(width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT);
 	}
 
 
@@ -110,15 +111,11 @@ geobuilder = (function() {
 	function showPopup(url, width, height, title) {
 		title = title || 'Popup';
 		width = width || 600;
-		height = height || 400;
-		var popupWindow = Ext.getCmp('geo-window-popup');
-		if (!popupWindow) {
-			popupWindow = GEOR.geobuilder_createPopupWindow(title);
-		}
-		popupWindow.title = title;
-		popupWindow.show();
+		height = height || 400;		
+		
+		var popup = getWindowWidget('ggis_popup', GEOR.geobuilder_createPopupWindow, title);
 		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, 600, 400);
-		showWidget('ggis_popup', 600, 400);
+		showWidget(popup, width, height);		
 
 	}
 
@@ -127,21 +124,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hidePopup(){
-		var winWorkplace = Ext.getCmp('geo-window-popup');
-		winWorkplace.hide();
-		hideWidget('ggis_popup');
-	}
-
-	/**
-	 * Charge une page dans l'iframe menu
-	 * @param {String} url URL de la page a afficher dans le menu
-	 * @param {String} title Titre affiché sur le widget
-	 * @return {void}
-	 */
-	function setMenuContent(url, title) {
-		setWidgetTitle('ggis_menu', title);
-		setWidgetContent('ggis_menu', Fusion.getFusionURL() + url);
-		showWidget('ggis_menu', 400, 500);
+		var popup = getWindowWidget('ggis_popup', GEOR.geobuilder_createPopupWindow, title);
+		hideWidget(popup);
 	}
 
 	/**
@@ -205,12 +189,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function showWorkPlace(width, height) {
-		var winWorkplace = Ext.getCmp('geo-window-workplace');
-		if (!winWorkplace) {
-			winWorkplace = GEOR.geobuilder_createWorkplaceWindow("zone de travail");
-		}
-		winWorkplace.show();
-		showWidget('ggis_workPlace', width || WORKPLACE_DEFAULT_WIDTH, height || WORKPLACE_DEFAULT_HEIGHT);
+		var winWorkplace = getWindowWidget('ggis_workPlace', GEOR.geobuilder_createWorkplaceWindow, "zone de travail");
+		showWidget(winWorkplace, width, height);
 	}
 
 	/**
@@ -218,9 +198,8 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hideWorkPlace () {
-		var winWorkplace = Ext.getCmp('geo-window-workplace');
-		winWorkplace.hide();
-		hideWidget('ggis_workPlace');
+		var winWorkplace = getWindowWidget('ggis_workPlace', GEOR.geobuilder_createWorkplaceWindow, "zone de travail");
+		hideWidget(winWorkplace);
 	}
 
 	/**
@@ -660,11 +639,7 @@ geobuilder = (function() {
 	window.showMap = showMap;
 	window.setLayerProjection = setLayerProjection;
 
-	/*
-	 * setMenuContent est utilisée par menuintra.cfm mais l'affichage des menus
-	 * peut être implémenté à partir du JSON renvoyé par wmenu.cfm
-	 */
-	window.setMenuContent = setMenuContent;
+	
 	/*
 	 * setWidgetContent est utilisée pour le chargement du menu qui implémenté
 	 * avec un iframe dans cette démo.
@@ -834,7 +809,7 @@ geobuilder = (function() {
 		return selString;
 	}
 
-	var getJSON = function(url, params, successHandler, errorHandler, async) {
+	function getJSON (url, params, successHandler, errorHandler, async) {
 		if (async === void 0) {
 			async = true;
 		}
