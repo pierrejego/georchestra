@@ -826,8 +826,9 @@ GEOR.styler = (function() {
         // set url
         if (url == undefined && style) {
 	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
+	        	//TODO optimize url
 	            url = wmsLayerRecord.get("layer").url.split("?")[0].replace(
-	                "/ows", "/rest/styles/"+style+".sld");
+	                "/geoserver/", "/geoserver/rest/styles/"+style+".sld");
 	        }
         }
         
