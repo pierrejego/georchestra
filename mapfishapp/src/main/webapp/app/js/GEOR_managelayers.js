@@ -409,20 +409,11 @@ GEOR.managelayers = (function() {
                     observable.fireEvent("selectstyle", this, item.value);
                 }
             };
-            var default_style = {
-                text: tr("no styling"),
-                value: '',
-                checked: true,
-                group: 'style_' + layer.id,
-                checkHandler: onStyleItemCheck,
-                scope: layerRecord
-            };
-            // build object config for predefined styles
-            stylesMenuItems.push(default_style);
-            stylesMenuItems.push('-');
+                        
             if (styles && styles.length > 0) {
                 styles = styles.concat([]); // to prevent modification of original styles
                 var defaultStyleName = styles[0].name;
+                  
                 styles.sort(function(a, b){
                     return GEOR.util.sortFn(
                         a.name || a.title, 
@@ -432,35 +423,29 @@ GEOR.managelayers = (function() {
                 var checked, style, text, cfg;
                 for (var i=0, len=styles.length; i<len; i++) {
                     style = styles[i];
-                    if (style.href) {
-                        if (style.current) {
-                            // if the style has an href and is the current
-                            // style we don't want any named style to be
-                            // checked in the list of styles
-                            default_style.checked = false;
-                        }
-                    } else {
-                        checked = false;
-                        if (style.current === true) {
-                            default_style.checked = false;
-                            checked = true;
-                        }
-                        text = (style.title || style.name) + // title is a human readable string
-                            (style.name === defaultStyleName ? " - <b>"+tr("default style")+"</b>" : "");
-                        cfg = {
-                            xtype: "menucheckitem",
-                            text: text,
-                            value: style.name, // name is used in the map request STYLE parameter
-                            checked: checked,
-                            group: 'style_' + layer.id,
-                            checkHandler: onStyleItemCheck,
-                            scope: layerRecord
-                        };
-                        if (style['abstract']) { // this is the "sld:abstract" field
-                            cfg.qtip = style['abstract'];
-                        }
-                        stylesMenuItems.push(cfg);
+
+                    checked = false;
+                    if (style.current) {
+                        checked = true;
+                    }else if(!style.href && !style.current && style.name === defaultStyleName){
+                    		checked = true;
+                    		  observable.fireEvent("selectstyle", layerRecord, style.name);
+                   	}
+                    text = (style.title || style.name) + // title is a human readable string
+	                            (style.name === defaultStyleName ? " - <b>"+tr("default style")+"</b>" : "");
+                    cfg = {
+                         xtype: "menucheckitem",
+                         text: text,
+                         value: style.name, // name is used in the map request STYLE parameter
+                         checked: checked,
+                         group: 'style_' + layer.id,
+                         checkHandler: onStyleItemCheck,
+                         scope: layerRecord
+                    };
+                    if (style['abstract']) { // this is the "sld:abstract" field
+                    	cfg.qtip = style['abstract'];
                     }
+                    stylesMenuItems.push(cfg);
                 }
             }
         } else if (isWMTS) {
