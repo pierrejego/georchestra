@@ -474,7 +474,9 @@ Ext.namespace("GEOR");
                     			// fid is made like layerName.id
                     			// geobuilder wait only for th id part
                     			var idPlace = result.features[0].fid.indexOf('.');
-                    			showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1));
+                    			
+                    			// Give Object Classe, featureID and method to destroy tabpanel (which will erase vectorLayer and stored information)
+                    			showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1), function(){tab.close();});
                     		}
                     	}        
                     });
