@@ -330,7 +330,6 @@ GEOR.styler = (function() {
                     sld &&
                     sld.namedLayers &&
                     sld.namedLayers.length > 0 &&
-                    sld.namedLayers[0].name == wfsInfo.get("typeName") &&
                     sld.namedLayers[0].userStyles &&
                     sld.namedLayers[0].userStyles.length > 0 &&
                     sld.namedLayers[0].userStyles[0].rules;
@@ -822,9 +821,20 @@ GEOR.styler = (function() {
          * has an SLD param
          */
         var url = wmsLayerRecord.get("layer").params.SLD;
+        var style = wmsLayerRecord.get("layer").params.STYLES;
+        
+        // set url
+        if (url == undefined && style) {
+	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
+	            url = wmsLayerRecord.get("layer").url.split("?")[0].replace(
+	                "/ows", "/rest/styles/"+style+".sld");
+	        }
+        }
+        
         if (url) {
             getSLD(url);
         }
+        
 
         /*
          * add the legend and styler containers to the styler
