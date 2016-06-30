@@ -37,8 +37,8 @@ geobuilder = (function() {
 
 	function showWidget(widget, width, height) {
 		widget.show();
-		if (typeof width !== 'undefined') { widget.setWidth(width) }
-		if (typeof height !== 'undefined') { widget.setHeight(height) }
+		if (typeof width !== 'undefined') { widget.setWidth(width); }
+		if (typeof height !== 'undefined') { widget.setHeight(height); }
 	}
 
 	function hideWidget(widget) {
@@ -50,15 +50,61 @@ geobuilder = (function() {
 	}
 
 	/**
+	 * Permet d'appeler des fonctions lors de la fermeture de la fiche, ou 
+	 * lors de l'ouverture d'une autre fiche
+	 *
+	 * @type {Array}
+	 */
+	var featureInfoCleanupSystem = {
+		callbacks: [],
+		add: function(fn) {
+			featureInfoCleanupSystem.callbacks.push(fn);
+		},
+		run: function(){
+			featureInfoCleanupSystem.callbacks.forEach(function(fn){
+				try {
+					fn();
+				} catch (e) {
+					console.log('Exception in featureInfoCleanupSystem callback');
+					console.error(e);
+				}
+			});
+			featureInfoCleanupSystem.forgetAll();
+		},
+		forgetAll: function(){
+			featureInfoCleanupSystem.callbacks = [];
+		}
+	};
+
+	/**
 	 * Affiche la fiche d'un objet GéoBuilder dans l'iframe ggis_featureInfo
 	 * @param  {String}
 	 * @param  {Number|String}
 	 * @return {void}
 	 */
-	function showFeatureInfo(featureClass, featureId) {
+	function showFeatureInfo(featureClass, featureId, cleanupCallback) {
+		// À l'ouverture de la fiche, on procède au nettoyage spécifié
+		// précédemment
+		featureInfoCleanupSystem.run();
+
+		// Chargement du widget
 		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow, "Info");
 		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId);
 		showWidget(ftinfo, 600, 400);
+		
+		// Si on passe une fonction de rappel pour la fermeture, on l'enregistre
+		// et on indique au widget d'exécuter le cleanup lors de la fermeture
+		// manuelle (click sur la croix). À chaque fois qu'on ouvre la fiche
+		// d'un nouvel objet sans l'avoir fermé, on stack un listener
+		// supplémentaire. C'est pour cela qu'on utilise un service
+		// featureInfoCleanupSystem qui gère sa propre liste de callbacks. Au
+		// pire on appelle X fois le cleanup qui ne fera rien, n'ayant pas de
+		// callbacks dans sa liste. On indique single:true sur les listeners
+		// afin qu'ils soient quand même nettoyés quand on masque la fiche
+		if (cleanupCallback) { 
+			featureInfoCleanupSystem.add(cleanupCallback);
+			ftinfo.on('hide', featureInfoCleanupSystem.run, {single: true});
+		}
 	}
 
 	/**
@@ -66,7 +112,8 @@ geobuilder = (function() {
 	 */
 	function hideFeatureInfo() {
 		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow);
-		hideWidget(ftinfo);
+		hideWidget(ftinfo);		
+		featureInfoCleanupSystem.run();
 	}
 
 	/**
@@ -139,8 +186,8 @@ geobuilder = (function() {
 		var objectName = 'Objet ' + idObj;
 		// En cas de succès on récupèrera le vrai nom
 		var onSuccessSync = function(data) {
-			if (data && data[0] && data[0]["NOM_OBJET"]) {
-				objectName = data[0]["NOM_OBJET"];
+			if (data && data[0] && data[0].NOM_OBJET) {
+				objectName = data[0].NOM_OBJET;
 			}
 		};
 		// en cas d'errreur on gardera le libelle par défaut
@@ -832,13 +879,13 @@ geobuilder = (function() {
 				status = xhr.status;
 				if (status == 200) {
 					data = JSON.parse(xhr.responseText);
-					successHandler && successHandler(data);
+					if (successHandler) { successHandler(data); }
 				} else {
-					errorHandler && errorHandler(status);
+					if (errorHandler) { errorHandler(status); }
 				}
 			}
 		};
 		xhr.send(params);
-	};
+	}
 
 }());
