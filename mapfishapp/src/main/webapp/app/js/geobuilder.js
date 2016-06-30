@@ -324,18 +324,32 @@ geobuilder = (function() {
 		return success;
 	}
 
+
+	/**
+	 * Zoom on geobuilder object
+	 * 	first create feature
+	 *  then selected and zoom on it
+	 *  
+	 *  @param {String} idObj
+	 *  @param {String[]} listIds
+	 *  @param {Number} width
+	 * 
+	 */
 	function localise(idObj, listIds, width) {
 		
 		var ids = listIds ? listIds.split(',') : listIds;
 		width = width || 0;
 		var layername;
+		var features = [];
 		
 		// init layer to  draw selected features
 		var map = Fusion.getMap();
+		
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		}) 	;
+		
 		// retrieve layer
 		for (var i=0; i< map.layers.length; i++){
 			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
@@ -354,10 +368,11 @@ geobuilder = (function() {
 			lstIdObj: idObj, 
 			lstIds: listIds
 		});
+		
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', selection, function(data) {
 			var coorX = [];
 			var coorY = [];
-			var feature, features = [];
+			var feature;
 			var point, points, j;
 			for (var i=0; i<data.features.length; i++){
 				points = [];
@@ -396,43 +411,35 @@ geobuilder = (function() {
 					feature = new OpenLayers.Feature.Vector(line, {});
 				}
 				features.push(feature);
+			}	
+			
+			// zoom on feature
+			var bounds, layerBounds = null;
+
+			if (features && features[0]) {
+				bounds = new OpenLayers.Bounds();
+				Ext.each(features, function(f) {
+					if (f.bounds) {
+						bounds.extend(f.bounds);
+					} else if (f.geometry) {
+						bounds.extend(f.geometry.getBounds());
+					}
+				});
+			} else if (geoApiDigitizingLayer.features.length) {
+				bounds = geoApiDigitizingLayer.getDataExtent();
+			} else {
+				return;
 			}
-			// uncomment to draw selected features
-			// geoApiDigitizingLayer.addFeatures(features)
-			// var newBound =  geoApiDigitizingLayer.getDataExtent()
-
-			var minX = Math.min.apply(Math, coorX);
-			var maxX = Math.max.apply(Math, coorX);
-			var minY = Math.min.apply(Math, coorY);
-			var maxY = Math.max.apply(Math, coorY);
-			var centerX = (minX + maxX)/2;
-			var newMinX = centerX - (width/2);
-			var newMaxX = centerX + (width/2);
-			var newBounds = new OpenLayers.Bounds(newMinX, minY, newMaxX, maxY);
-			Fusion.getMap().zoomToExtent(newBounds);
-
-            var record = {
-                //"owsURL" :"https://sig-wrs.asogfi.fr/geoserver/wfs",
-                //"typeName" :"CAN_CANTONS"
-                "owsURL": GEOR.config.GEOSERVER_WFS_URL,
-                "typeName": layer
-            };
-			GEOR.querier.create(layername, record);
-			myfilters = [];
-
-			for (i=0; i<ids.length; i++){
-				myfilters.push(new OpenLayers.Filter.Comparison({
-					type: OpenLayers.Filter.Comparison.EQUAL_TO,
-					property: idField,
-					value: ids[i]})
-				);
+			if (!bounds || !bounds.left) {
+				return;
 			}
-			filterbyIds = new OpenLayers.Filter.Logical({
-				type: OpenLayers.Filter.Logical.OR,
-				filters: myfilters
-			});
-			//call API (test)
-			GEOR.querier.searchFeatures(record, geometryField, filterbyIds);
+			if (bounds.getWidth() + bounds.getHeight() !== 0) {
+				layerBounds = bounds.scale(1.05);
+				map.zoomToExtent(layerBounds);
+			} else if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
+				map.setCenter(bounds.getCenterLonLat());
+			}
+			
 		}, function(status) {
 			alert('Something went wrong.');
 			console.error('Something went wrong.');
