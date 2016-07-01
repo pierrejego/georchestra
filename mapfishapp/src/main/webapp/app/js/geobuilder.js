@@ -177,7 +177,7 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hidePopup(){
-		var popup = getWindowWidget('ggis_popup', GEOR.geobuilder_createPopupWindow, title);
+		var popup = getWindowWidget('ggis_popup', GEOR.geobuilder_createPopupWindow);
 		hideWidget(popup);
 	}
 
@@ -251,7 +251,7 @@ geobuilder = (function() {
 	 * @return {void}
 	 */
 	function hideWorkPlace () {
-		var winWorkplace = getWindowWidget('ggis_workPlace', GEOR.geobuilder_createWorkplaceWindow, "zone de travail");
+		var winWorkplace = getWindowWidget('ggis_workPlace', GEOR.geobuilder_createWorkplaceWindow);
 		hideWidget(winWorkplace);
 	}
 
