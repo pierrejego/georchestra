@@ -10,7 +10,6 @@ geobuilder = (function() {
 	var geoApiInitialized = false;
 	var geoApiDigitizingLayer = null;
 	var geoApiDrawControls = {};
-	var layerProjectionCode = "";
 
 	var map = null;
 
@@ -599,28 +598,6 @@ geobuilder = (function() {
 		Fusion.setSelection(sel);
 
 	}
-	
-	function setLayerProjection(idObj) {
-		
-		var layer = JSON.stringify({
-			lstIdObj: idObj
-		});
-		var layerProj = "";
-		var projectionCode = "";
-		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', layer, function(data) {
-			for (i=0; i<data.features.length; i++){
-				layerProj = data.features[i].projection;
-			}
-			if (layerProj !== ""){
-				projectionCode = 'EPSG:' + layerProj;
-			}
-			this.layerProjectionCode = projectionCode;
-
-		}, function(status) {
-			alert('Something went wrong.');
-			console.error('Something went wrong.');
-		});
-	}
 
 	function showMap() {
 		//hideWorkPlace();
@@ -661,44 +638,6 @@ geobuilder = (function() {
 			}
 	};
 
-	/**
-	 * Export des fonctions du client dans l'espace global
-	 */
-
-	window.addDebug = addDebug;
-	window.ClearDigitization = ClearDigitization;
-	window.DigitizeLineString = DigitizeLineString;
-	window.DigitizePoint = DigitizePoint;
-	window.DigitizePolygon = DigitizePolygon;
-	window.getCurrentSelection = getCurrentSelection;
-	window.getMapName = getMapName;
-	window.getObjectName = getObjectName;
-	window.getWidgetIframe = getWidgetIframe;
-	window.hideFeatureInfo = hideFeatureInfo;
-	window.hidePopup = hidePopup;
-	window.hideWorkPlace = hideWorkPlace;
-	window.setCurrentSelection = setCurrentSelection;
-	window.setDigitContent = setDigitContent;
-	window.setHiddenWidgetContent = setHiddenWidgetContent;
-	window.setSimpleSelect = setSimpleSelect;
-	window.setWorkPlaceContent = setWorkPlaceContent;
-	window.showFeatureInfo = showFeatureInfo;
-	window.showPopup = showPopup;
-	window.showWaitingWorkPlace = showWaitingWorkPlace;
-	window.showWorkPlace = showWorkPlace;
-	window.getLayers = getLayers;
-	window.isDisplayed = isDisplayed;
-	window.getLayersGroups = getLayersGroups;
-	window.ZoomEnsemble = ZoomEnsemble;
-	window.showMap = showMap;
-	window.setLayerProjection = setLayerProjection;
-
-	
-	/*
-	 * setWidgetContent est utilisée pour le chargement du menu qui implémenté
-	 * avec un iframe dans cette démo.
-	 */
-	window.setWidgetContent = setWidgetContent;
 
 	/**
 	 * Fonctions & Helpers privées
@@ -820,17 +759,8 @@ geobuilder = (function() {
 	}
 
 	function geoApiCallHandler(evt) {
-		//gestion des projection
-		if (layerProjectionCode !== "") {
-			var in_options = { 'internalProjection': new OpenLayers.Projection(Fusion.getMap().projection), 'externalProjection': new OpenLayers.Projection(layerProjectionCode)};
-			wkt = new OpenLayers.Format.WKT(in_options);
-			//alert(wkt.write(evt.feature));
-		}
-		else {
-			wkt = new OpenLayers.Format.WKT();
-			//alert(wkt.write(evt.feature));
-		}
-		this.userHandler(wkt.write(evt.feature));
+		var wktWriter = new OpenLayers.Format.WKT();
+		this.userHandler(wktWriter.write(evt.feature));
 		window.setTimeout(geoApiDeactivate, 100);
 
 		return false;
@@ -842,6 +772,11 @@ geobuilder = (function() {
 			geoApiActiveControl = null;
 		}
 	}	
+
+	function getMapSrid() {
+		return Fusion.getMap().projection.match(/EPSG:([0-9]+)/)[1];
+	}
+
 	/*
 	 * Conversion d'une sélection sous forme d'objet en sélection sous forme de string
 	 */
@@ -887,5 +822,39 @@ geobuilder = (function() {
 		};
 		xhr.send(params);
 	}
+
+
+	/**
+	 * Export des fonctions du client dans l'espace global
+	 */
+
+	window.addDebug = addDebug;
+	window.ClearDigitization = ClearDigitization;
+	window.DigitizeLineString = DigitizeLineString;
+	window.DigitizePoint = DigitizePoint;
+	window.DigitizePolygon = DigitizePolygon;
+	window.getCurrentSelection = getCurrentSelection;
+	window.getLayers = getLayers;
+	window.getLayersGroups = getLayersGroups;
+	window.getMapName = getMapName;
+	window.getMapSrid = getMapSrid;
+	window.getObjectName = getObjectName;
+	window.getWidgetIframe = getWidgetIframe;
+	window.hideFeatureInfo = hideFeatureInfo;
+	window.hidePopup = hidePopup;
+	window.hideWorkPlace = hideWorkPlace;
+	window.isDisplayed = isDisplayed;
+	window.setCurrentSelection = setCurrentSelection;
+	window.setDigitContent = setDigitContent;
+	window.setHiddenWidgetContent = setHiddenWidgetContent;
+	window.setSimpleSelect = setSimpleSelect;
+	window.setWorkPlaceContent = setWorkPlaceContent;
+	window.showFeatureInfo = showFeatureInfo;
+	window.showMap = showMap;
+	window.showPopup = showPopup;
+	window.showWaitingWorkPlace = showWaitingWorkPlace;
+	window.showWorkPlace = showWorkPlace;
+	window.ZoomEnsemble = ZoomEnsemble;
+	window.setWidgetContent = setWidgetContent;
 
 }());
