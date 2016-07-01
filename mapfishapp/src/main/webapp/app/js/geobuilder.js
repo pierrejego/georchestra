@@ -8,6 +8,13 @@ geobuilder = (function() {
 	var simpleSelection = false;
 	var selection = null;
 	var geoApiInitialized = false;
+	
+	/**	
+	 * Contient un layer de dessin pour la digitalisation. Initialisé lors
+	 * de la première digit
+	 *
+	 * @type {[type]}
+	 */
 	var geoApiDigitizingLayer = null;
 	var geoApiDrawControls = {};
 
@@ -407,9 +414,9 @@ geobuilder = (function() {
 		if (typeof(layername) === 'undefined'){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
-		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
-		map.addLayer(geoApiDigitizingLayer);
-		
+		var selectionHighlightLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+		map.addLayer(selectionHighlightLayer);
+
 		var selection = JSON.stringify({
 			lstIdObj: idObj, 
 			lstIds: listIds
@@ -471,8 +478,8 @@ geobuilder = (function() {
 						bounds.extend(f.geometry.getBounds());
 					}
 				});
-			} else if (geoApiDigitizingLayer.features.length) {
-				bounds = geoApiDigitizingLayer.getDataExtent();
+			} else if (selectionHighlightLayer.features.length) {
+				bounds = selectionHighlightLayer.getDataExtent();
 			} else {
 				return;
 			}
@@ -667,8 +674,10 @@ geobuilder = (function() {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
 		});
-		var geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
-		map.addLayer(geoApiDigitizingLayer);
+		if (null === geoApiDigitizingLayer) {
+			geoApiDigitizingLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+			map.addLayer(geoApiDigitizingLayer);
+		}
 		geoApiDrawControls = {
 			point: new OpenLayers.Control.DrawFeature(geoApiDigitizingLayer,
 					OpenLayers.Handler.Point, {
@@ -823,6 +832,15 @@ geobuilder = (function() {
 		xhr.send(params);
 	}
 
+	function mapRefresh(idObj) {
+		Fusion.getMap().layers
+			.filter(function(ly){ 
+				return ly.params && ly.params.LAYERS && ly.params.LAYERS.startsWith(idObj);
+			})
+			.forEach(function(ly) {
+				ly.redraw(true);	
+			});
+	}
 
 	/**
 	 * Export des fonctions du client dans l'espace global
@@ -830,6 +848,7 @@ geobuilder = (function() {
 
 	window.addDebug = addDebug;
 	window.ClearDigitization = ClearDigitization;
+	window.clearSelection = clearSelection;
 	window.DigitizeLineString = DigitizeLineString;
 	window.DigitizePoint = DigitizePoint;
 	window.DigitizePolygon = DigitizePolygon;
@@ -844,10 +863,12 @@ geobuilder = (function() {
 	window.hidePopup = hidePopup;
 	window.hideWorkPlace = hideWorkPlace;
 	window.isDisplayed = isDisplayed;
+	window.mapRefresh = mapRefresh;
 	window.setCurrentSelection = setCurrentSelection;
 	window.setDigitContent = setDigitContent;
 	window.setHiddenWidgetContent = setHiddenWidgetContent;
 	window.setSimpleSelect = setSimpleSelect;
+	window.setWidgetContent = setWidgetContent;
 	window.setWorkPlaceContent = setWorkPlaceContent;
 	window.showFeatureInfo = showFeatureInfo;
 	window.showMap = showMap;
@@ -855,6 +876,5 @@ geobuilder = (function() {
 	window.showWaitingWorkPlace = showWaitingWorkPlace;
 	window.showWorkPlace = showWorkPlace;
 	window.ZoomEnsemble = ZoomEnsemble;
-	window.setWidgetContent = setWidgetContent;
 
 }());
