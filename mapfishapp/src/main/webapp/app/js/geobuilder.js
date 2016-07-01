@@ -847,7 +847,6 @@ geobuilder = (function() {
 	window.setCurrentSelection = setCurrentSelection;
 	window.setDigitContent = setDigitContent;
 	window.setHiddenWidgetContent = setHiddenWidgetContent;
-	window.setLayerProjection = setLayerProjection;
 	window.setSimpleSelect = setSimpleSelect;
 	window.setWorkPlaceContent = setWorkPlaceContent;
 	window.showFeatureInfo = showFeatureInfo;
