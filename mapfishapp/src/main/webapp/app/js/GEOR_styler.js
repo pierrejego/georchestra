@@ -836,7 +836,7 @@ GEOR.styler = (function() {
 	        		
 	        		// if name contains workspaces
 	        		if(style.indexOf(":") > -1){	        			
-	        			url = url + "workspaces/" + style.split(":")[0] + "/styles/"+style.split(":")[1]+".sld"";
+	        			url = url + "workspaces/" + style.split(":")[0] + "/styles/"+style.split(":")[1]+".sld";
 	        		}
 	        		else{
 	        			url = url + "styles/"+style+".sld";
