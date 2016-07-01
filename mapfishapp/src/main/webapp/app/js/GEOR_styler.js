@@ -826,9 +826,18 @@ GEOR.styler = (function() {
         // set url
         if (url == undefined && style) {
 	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
-	        	//TODO optimize url
-	            url = wmsLayerRecord.get("layer").url.split("?")[0].replace(
-	                "/geoserver/", "/geoserver/rest/styles/"+style+".sld");
+	        	
+	        	// Test if url comes from a geoserver
+	        	if(wmsLayerRecord.get("layer").url.indexOf("geoserver") > -1){
+	        		
+	        		url = (wmsLayerRecord.get("layer").url.split("/geoserver/")[0])+"/geoserver/rest/";
+	        		
+	        		// if name contains workspaces
+	        		if(style.indexOf(":") > -1){	        			
+	        			url = url + "workspaces/" + style.split(":")[0] + "/";
+	        		}
+	        		url = url + "styles/"+style+".sld";
+	        	}
 	        }
         }
         
