@@ -823,8 +823,10 @@ GEOR.styler = (function() {
         var url = wmsLayerRecord.get("layer").params.SLD;
         var style = wmsLayerRecord.get("layer").params.STYLES;
         
-        // set url
-        if (url == undefined && style) {
+        // If url empy try to get sld from geoserver
+        // show only work on geometry type point, line or polygon
+        // generic style is used in geoserver when using geometrycollection type
+        if (url == undefined && style && style != "generic") {
 	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
 	        	
 	        	// Test if url comes from a geoserver
