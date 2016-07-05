@@ -2209,6 +2209,7 @@ body .fieldXY{
 	font-family: 'latoregular';
 	font-size: 13px;
 	padding-bottom: 5px;
+	max-height: 15px;
 }
 #tbar img.x-form-arrow-trigger {
     border: solid white;
