@@ -486,13 +486,24 @@ geobuilder = (function() {
 			if (!bounds || !bounds.left) {
 				return;
 			}
-			if (bounds.getWidth() + bounds.getHeight() !== 0) {
-				layerBounds = bounds.scale(1.05);
-				map.zoomToExtent(layerBounds);
-			} else if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
-				map.setCenter(bounds.getCenterLonLat());
+			// On gère la width passée en paramètre.
+			if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
+				// Si zoom sur un point (width et height == 0) on force la map à
+				// zoomer à 0m dessus on récupère l'extent minimal prêt à être
+				// mis à l'échelle
+				map.zoomToExtent(bounds);	
+				bounds = map.getExtent();
 			}
-			
+			var currentWidth = bounds.getWidth();
+			var rescaleRatio = width / currentWidth;
+			var newWidth = currentWidth * rescaleRatio;
+			// On ne garde la nouvelle width calculée que si elle est
+			// supérieure à la width courante, qui est nécessaire pour
+			// afficher toutes les features.
+			newWidth = Math.max(newWidth, currentWidth);
+			rescaleRatio = (newWidth > currentWidth) ? rescaleRatio : 1.05;
+			layerBounds = bounds.scale(rescaleRatio);
+			map.zoomToExtent(layerBounds);			
 		}, function(status) {
 			alert('Something went wrong.');
 			console.error('Something went wrong.');
