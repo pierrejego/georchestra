@@ -16,6 +16,14 @@ geobuilder = (function() {
 	 * @type {[type]}
 	 */
 	var geoApiDigitizingLayer = null;
+
+	/**
+	 * Contient un layer pour la surbrillance de sélection
+	 *
+	 * @type {[type]}
+	 */
+	var selectionHighlightLayer = null;
+	
 	var geoApiDrawControls = {};
 
 	var map = null;
@@ -313,6 +321,12 @@ geobuilder = (function() {
 		setCurrentSelection(0, '', '', false);
 	}
 
+	function clearCurrentHighlight() {
+		if (selectionHighlightLayer) {
+			selectionHighlightLayer.removeFeatures(selectionHighlightLayer.features);
+		}
+	}
+
 	/**
 	 * definir la selection courante
 	 * @param {String} width largeur du zoom
@@ -328,6 +342,7 @@ geobuilder = (function() {
 	 *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
 	 */
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
+		clearCurrentHighlight();
 		var success = "err";
 		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
 		if (typeof isVisSelCtrl === 'undefined' || isVisSelCtrl !== false) {
@@ -414,8 +429,10 @@ geobuilder = (function() {
 		if (typeof(layername) === 'undefined'){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
-		var selectionHighlightLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
-		map.addLayer(selectionHighlightLayer);
+		if (null === selectionHighlightLayer) {
+			selectionHighlightLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
+			map.addLayer(selectionHighlightLayer);
+		}
 
 		var selection = JSON.stringify({
 			lstIdObj: idObj, 
@@ -466,19 +483,22 @@ geobuilder = (function() {
 				features.push(feature);
 			}	
 			
-			// zoom on feature
-			var bounds, layerBounds = null;
+			selectionHighlightLayer.addFeatures(features);
 
-			if (features && features[0]) {
-				bounds = new OpenLayers.Bounds();
-				Ext.each(features, function(f) {
-					if (f.bounds) {
-						bounds.extend(f.bounds);
-					} else if (f.geometry) {
-						bounds.extend(f.geometry.getBounds());
-					}
-				});
-			} else if (selectionHighlightLayer.features.length) {
+			// zoom on feature
+			var bounds;
+
+			// if (features && features[0]) {
+			// 	bounds = new OpenLayers.Bounds();
+			// 	Ext.each(features, function(f) {
+			// 		if (f.bounds) {
+			// 			bounds.extend(f.bounds);
+			// 		} else if (f.geometry) {
+			// 			bounds.extend(f.geometry.getBounds());
+			// 		}
+			// 	});
+			// } else 
+			if (selectionHighlightLayer.features.length) {
 				bounds = selectionHighlightLayer.getDataExtent();
 			} else {
 				return;
@@ -502,7 +522,7 @@ geobuilder = (function() {
 			// afficher toutes les features.
 			newWidth = Math.max(newWidth, currentWidth);
 			rescaleRatio = (newWidth > currentWidth) ? rescaleRatio : 1.05;
-			layerBounds = bounds.scale(rescaleRatio);
+			var layerBounds = bounds.scale(rescaleRatio);
 			map.zoomToExtent(layerBounds);			
 		}, function(status) {
 			alert('Something went wrong.');
