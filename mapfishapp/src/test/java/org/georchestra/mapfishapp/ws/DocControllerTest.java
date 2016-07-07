@@ -11,6 +11,7 @@ import org.georchestra.mapfishapp.ws.classif.MockWFSDataStoreFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

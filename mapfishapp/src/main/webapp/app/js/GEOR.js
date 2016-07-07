@@ -41,6 +41,7 @@
  * @include GEOR_styler.js
  * @include GEOR_wmc.js
  * @include GEOR_helper.js
+ * @include Ext.state.LocalStorageProvider.js
  * @include GEOR_eastTabPanel.js
  * @include GEOR_geobuilder_toolbar.js
  * @include GEOR_geobuilder_eastTabPanel.js
@@ -152,6 +153,11 @@ Ext.namespace("GEOR");
         Proj4js.libPath = GEOR.config.PATHNAME + "/lib/proj4js/lib/";
         Ext.apply(Proj4js.defs, GEOR.config.PROJ4JS_STRINGS);
 
+        // State manager for the viewer
+        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({
+            prefix: "geor-viewer-"
+        }));
+
         /*
          * Security stuff
          * Deactivate modules if current user roles do not match
@@ -197,6 +203,7 @@ Ext.namespace("GEOR");
         
         var southPanel = new Ext.TabPanel({
             region: "south",
+            id: "southpanel",
             split: true,
             collapsible: true,
             collapsed: true,
