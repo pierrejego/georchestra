@@ -442,42 +442,64 @@ GEOR.mapinit = (function() {
      */
     var loadDefaultWMC = function() {
     	var defaultWMC = "context/default.wmc";
-		if (GEOR.config.CUSTOM_MODULE) {	
-			var module = 'default';
-			var hasRole = false;
+    	
+    	var isUserConnected = false;
+		Ext.each(GEOR.config.ROLES, function(role) {
+			// Role ROLE_SV_PWRS_XXXX_YYY Custom module YYY
+			if(role  && (role.indexOf("ROLE_SV_USER") > -1)){
+				isUserConnected = true;
+				return
+			}	
+	    });
+		
+		// Si l'utilisateur est connecté
+		if (isUserConnected){
 			
-			//On regarde si il a le droit de charger le contexte passé en paramètre
-			Ext.each(GEOR.config.ROLES, function(role) {
-				// Role ROLE_SV_PWRS_XXXX_YYY Custom module YYY
-				if(role  && (role.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && (role.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
-					hasRole = true;
-					return
-				}
+			// Si on fait appel a un module métier spécifique
+			if (GEOR.config.CUSTOM_MODULE) {	
+				var module = 'default';
+				var hasRole = false;
 				
-		    });
-			if (hasRole) {
-				Ext.each(GEOR.config.CONTEXTS, function(context) {
-					var contextTitle = context.title;
-					if (contextTitle && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1) && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
-						updateStoreFromWMC(context.wmc);
-						return;
-					}
-				});
-			} else {//sinon on charge le contexte par défaut
-				updateStoreFromWMC(defaultWMC);
-			}
-		} else  if (GEOR.ls.get("default_context")) {
-            // restore default context
-            updateStoreFromWMC(GEOR.ls.get("default_context"));
-        } else if (GEOR.ls.get("latest_context")) {
-            // restore latest context
-            GEOR.wmc.read(GEOR.ls.get("latest_context"), true, !customRecenter());
-            zoomToCustomExtent();
-            // and finally we're running our global success callback:
-            cb.call();
-        } else {
-            updateStoreFromWMC(GEOR.config.DEFAULT_WMC);
-        }
+				//On regarde si il a le droit de charger le contexte passé en paramètre
+				Ext.each(GEOR.config.ROLES, function(role) {
+					// Role ROLE_SV_PWRS_XXXX_YYY Custom module YYY
+					if(role  && (role.indexOf(GEOR.config.GEOBUILDER_GROUPE_LDAP) > -1) && (role.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
+						hasRole = true;
+						return
+					}	
+			    });
+				if (hasRole) {
+					Ext.each(GEOR.config.CONTEXTS, function(context) {
+						var contextTitle = context.title;
+						if (contextTitle && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1) && (contextTitle.indexOf(GEOR.config.CUSTOM_MODULE) > -1)){
+							updateStoreFromWMC(context.wmc);
+							return;
+						}
+					});
+				} else {//sinon on charge le contexte par défaut
+					updateStoreFromWMC(defaultWMC);
+				}
+				// Si il a un context par defaut
+			} else  if (GEOR.ls.get("default_context")) {
+	            // restore default context
+	            updateStoreFromWMC(GEOR.ls.get("default_context"));
+	            // sinon le dernier contexte chargé
+	        } else if (GEOR.ls.get("latest_context")) {
+	            // restore latest context
+	            GEOR.wmc.read(GEOR.ls.get("latest_context"), true, !customRecenter());
+	            zoomToCustomExtent();
+	            // and finally we're running our global success callback:
+	            cb.call();
+	            // Sinon la carte par defaut
+	        } else {
+	            updateStoreFromWMC(GEOR.config.DEFAULT_WMC);
+	        }
+		}else{
+			// Les utilisateurs non connectés arrive sur la carte par défaut
+			updateStoreFromWMC(GEOR.config.DEFAULT_WMC);
+		}
+    	
+    	
     };
 
     /**
