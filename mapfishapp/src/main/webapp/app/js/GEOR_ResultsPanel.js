@@ -35,6 +35,12 @@
 Ext.namespace("GEOR");
 
 GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
+	
+	/**
+     * Property: containsManagedObject
+     * {Boolean}
+     */
+    containsManagedObject: false,
 
     /**
      * Property: title
@@ -522,6 +528,14 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
     },
 
     /**
+     * APIMethod setManagedObject
+     * 
+     */
+    setManagedObject: function(value){
+    	this.containsManagedObject=value;
+    }, 
+    
+    /**
      * APIMethod: clean
      * This method destroys the features in the vector layer.
      *
@@ -537,7 +551,10 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
      * Hides the attached vector layer.
      */
     lower: function() {
-        if (this._vectorLayer) {
+    	if(this.containsManagedObject){
+    		this.containsManagedObject=false;
+    	}
+    	else if (this._vectorLayer) {
             this._vectorLayer.setVisibility(false);
         }
     },

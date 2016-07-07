@@ -330,7 +330,6 @@ GEOR.styler = (function() {
                     sld &&
                     sld.namedLayers &&
                     sld.namedLayers.length > 0 &&
-                    sld.namedLayers[0].name == wfsInfo.get("typeName") &&
                     sld.namedLayers[0].userStyles &&
                     sld.namedLayers[0].userStyles.length > 0 &&
                     sld.namedLayers[0].userStyles[0].rules;
@@ -822,9 +821,35 @@ GEOR.styler = (function() {
          * has an SLD param
          */
         var url = wmsLayerRecord.get("layer").params.SLD;
+        var style = wmsLayerRecord.get("layer").params.STYLES;
+        
+        // If url empy try to get sld from geoserver
+        // show only work on geometry type point, line or polygon
+        // generic style is used in geoserver when using geometrycollection type
+        if (url == undefined && style && style != "generic") {
+	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
+	        	
+	        	// Test if url comes from a geoserver
+	        	if(wmsLayerRecord.get("layer").url.indexOf("geoserver") > -1){
+	        		
+	        		url = (wmsLayerRecord.get("layer").url.split("/geoserver/")[0])+"/geoserver/rest/";
+	        		
+	        		// if name contains workspaces
+	        		if(style.indexOf(":") > -1){	        			
+	        			url = url + "workspaces/" + style.split(":")[0] + "/styles/"+style.split(":")[1]+".sld";
+	        		}
+	        		else{
+	        			url = url + "styles/"+style+".sld";
+	        		}
+	        		
+	        	}
+	        }
+        }
+        
         if (url) {
             getSLD(url);
         }
+        
 
         /*
          * add the legend and styler containers to the styler

@@ -441,43 +441,46 @@ Ext.namespace("GEOR");
                 "searchresults": function(options) {
                     removeActiveTab();
                     
-	                    Ext.iterate(options.results, function(featureType, result) {
-	                       
-	                    	// featureType contains layername and somme time workspace as well
-	                    	// get information after : if exist
-	                    	var n = featureType.indexOf(':');
-                            var layerName = featureType.substring(n+1);
-	                        
-                            // if managed layer (test if three first char are know by geobuilder)
-	                        if (layerName && GEOR.geobuilder_isManagedLayer(layerName) ) {
-
-                                   // take only the first feature if exist
-                                    if(result.features[0]){
-                                           southPanel.collapse();
-                                           // fid is made like layerName.id
-                                           // geobuilder wait only for th id part
-                                           var idPlace = result.features[0].fid.indexOf('.');
-                                           showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1));
-                                           return true;
-                                    }
-                            }
-                            else{
-		                        var tab = new GEOR.ResultsPanel({
-		                            html: tr("resultspanel.emptytext"),
-		                            //itemId: featureType, // XXX assume only one tab per featuretype ?
-		                            // better done with layer.id
-		                            tabTip: result.tooltip,
-		                            title: result.title,
-		                            map: map
-		                        });
-		                        tab.populate({
-		                            features: result.features
-		                        });
-		                        southPanel.insert(southPanel.items.length-1, tab);
-		                        southPanel.setActiveTab(tab);
-	                         }
-	                    });
-	                    southPanel.doLayout();
+                    Ext.iterate(options.results, function(featureType, result) {
+		                       
+                    	// featureType contains layername and somme time workspace as well
+                    	// get information after : if exist
+                    	var n = featureType.indexOf(':');
+                    	var layerName = featureType.substring(n+1);
+		                        
+                    	var tab = new GEOR.ResultsPanel({
+                    		html: tr("resultspanel.emptytext"),
+                    		tabTip: result.tooltip,
+                    		title: result.title,
+                    		map: map
+                    	});
+                    	tab.populate({
+                    		features: result.features
+                    	});
+          
+                    	southPanel.insert(southPanel.items.length-1, tab);
+                    	southPanel.setActiveTab(tab);
+			                       
+                    	// if managed layer (test if three first char are know by geobuilder)
+                    	if (layerName && GEOR.geobuilder_isManagedLayer(layerName) ) {
+	
+                    		// take only the first feature if exist
+                    		if(result.features[0]){
+                    			
+                    			tab.setManagedObject(true);
+                    			// Collapse will raise vectorLayer in this specific case
+                    			southPanel.collapse();
+		                                          
+                    			// fid is made like layerName.id
+                    			// geobuilder wait only for th id part
+                    			var idPlace = result.features[0].fid.indexOf('.');
+                    			
+                    			// Give Object Classe, featureID and method to destroy tabpanel (which will erase vectorLayer and stored information)
+                    			showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1), function(){southPanel.remove(tab);});
+                    		}
+                    	}        
+                    });
+                    southPanel.doLayout();
 
                 },
                 "shutdown": function() {

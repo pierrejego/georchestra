@@ -23,30 +23,10 @@ GEOR.geobuilder_loadIFRAMES = function () {
         src : ''
     });
 
-	// ggis_menu IFRAME
-	Ext.DomHelper.append(document.body, {
-		tag: 'div',
-		cls: 'iframe-wrapper',
-		id: 'ggis_menu',
-		css: 'display:none;'
-	});
-	Ext.DomHelper.append(document.getElementById('ggis_menu'), {
-        tag : 'iframe',
-        id: 'ggis_menu_IFRAME',
-        name: 'ggis_menu_IFRAME',
-        frameBorder : 0,
-        css : 'display:none;visibility:hidden;height:0px;',
-        src : ''
-    });
 
-	// ggis_featureInfo IFRAME
+	// Geobuilder floating windows
+
 	Ext.DomHelper.append(document.body, {
-		tag: 'div',
-		cls: 'iframe-wrapper',
-		id: 'ggis_featureInfo',
-		css: 'display:none;'
-	});
-	Ext.DomHelper.append(document.getElementById('ggis_featureInfo'), {
         tag : 'iframe',
         id: 'ggis_featureInfo_IFRAME',
         name: 'ggis_featureInfo_IFRAME',
@@ -57,16 +37,7 @@ GEOR.geobuilder_loadIFRAMES = function () {
         src : ''
     });
 
-	// ggis_workPlace IFRAME
-	
 	Ext.DomHelper.append(document.body, {
-		tag: 'div',
-		cls: 'iframe-wrapper',
-		id: 'ggis_workPlace',
-		css: 'display:none;'
-	});
-
-	Ext.DomHelper.append(document.getElementById('ggis_workPlace'), {
 		tag : 'iframe',
 		id: 'ggis_workPlace_IFRAME',
 		name: 'ggis_workPlace_IFRAME',
@@ -77,14 +48,7 @@ GEOR.geobuilder_loadIFRAMES = function () {
 		src : ''
 	});
 
-	// ggis_popup IFRAME
 	Ext.DomHelper.append(document.body, {
-		tag: 'div',
-		cls: 'iframe-wrapper',
-		id: 'ggis_popup',
-		css: 'display:none;'
-	});
-	Ext.DomHelper.append(document.getElementById('ggis_popup'), {
         tag : 'iframe',
         id: 'ggis_popup_IFRAME',
         name: 'ggis_popup_IFRAME',
