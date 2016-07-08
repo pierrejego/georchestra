@@ -737,17 +737,11 @@ GEOR.managelayers = (function() {
                 text: tr("Edit symbology"),
                 listeners: {
                     "click": function(btn, pressed) {
-	                    	if (isVector){
-		                		if(layerRecord.data.layer.params.SHPGEOM){
+	                    	if (isVector && layerRecord.data.layer.params.SHPGEOM){
 		                    		var olType = layerRecord.data.layer.params.STYLES; // get layer STYLE from GeoJSON
 		                    		layerRecord.store.olType = olType.charAt(0).toUpperCase()+olType.slice(1); // first letter in upperCase
-		                		}
-	                    	} // if window already visible, not create again because of window bug
-	                    	if (Ext.getCmp("georchetra-styler-windows") && Ext.getCmp("georchetra-styler-windows").isVisible()){
-	                    		return;
-	                    	} else {
-	                    		GEOR.styler.create(layerRecord, this.el);
 	                    	}
+		                	GEOR.styler.create(layerRecord, this.el);
                     	}                    	
                     }
                 });
