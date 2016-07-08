@@ -778,6 +778,8 @@ GEOR.styler = (function() {
      * sType - {Object} The symbol type
      */
     var initStyler = function(sType) {
+    	
+    	 var isVector = wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector;
 
         /*
          * create the rule container
@@ -809,6 +811,7 @@ GEOR.styler = (function() {
             }
         });
 
+
         /*
          * create the styler container
          */
@@ -818,8 +821,8 @@ GEOR.styler = (function() {
             activeItem: 0,
             items: [
                 ruleContainer,
-                classifContainer
-            ]
+               	classifContainer
+           ]
         });
 
         /*
@@ -848,7 +851,7 @@ GEOR.styler = (function() {
             }
         }];
         
-        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
+        if(isVector){
         	fullItems.splice(0,1);
         }
         
@@ -1035,25 +1038,45 @@ GEOR.styler = (function() {
             });
             
             win.show();
-
+            	
             var recordType = Ext.data.Record.create([
-                {name: "featureNS", type: "string"},
-                {name: "WFSVersion", type: "string"},
-                {name: "owsURL", type: "string"},
-                {name: "typeName", type: "string"}
+                  {name: "featureNS", type: "string"},
+                  {name: "WFSVersion", type: "string"},
+                  {name: "owsURL", type: "string"},
+                  {name: "typeName", type: "string"}
             ]);
             var data = {
-                "owsURL": layerRecord.get("WFS_URL"),
-                "typeName": layerRecord.get("WFS_typeName")
+                  "owsURL": layerRecord.get("WFS_URL"),
+                  "typeName": layerRecord.get("WFS_typeName")
             };
             wfsInfo = new recordType(data);
 
             // store a reference to the store in a
             // private attribute of the instance
             if (wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
-	            attributes = wmsLayerRecord.store;
+            	
 		        // we have at least one attribute that we can style
-            	if (wmsLayerRecord.store.getCount() > 0 ){
+            	if (wmsLayerRecord.get("layer").features.length > 0 ){
+            		 
+            		var model = new GEOR.FeatureDataModel({
+            	            features: wmsLayerRecord.get("layer").features
+            	        });
+	
+            		// Create attributename 
+            		var featureAttributesName = [];
+            		// push name and type in store config
+                	Ext.each(model.dataModel, function(model) {
+                		for(var propt in model){
+                			var label =  {name:model[propt].name, type:model[propt].type}
+                			featureAttributesName.push(label);
+               		}
+                    });
+            		 
+                	 attributes = new GeoExt.data.AttributeStore({
+                          feature: wmsLayerRecord.get("layer").features[0],
+                          data: featureAttributesName
+                      });
+                	 
             		//initialize styler with OpenLayers geometry
             		initStyler(wmsLayerRecord.store.olType);
 	            } else {
@@ -1065,6 +1088,7 @@ GEOR.styler = (function() {
 	            }
             	mask && mask.hide();
             } else {
+                                                     
 	            attributes = GEOR.ows.WFSDescribeFeatureType(wfsInfo, {
 	                success: function(st, recs, opts) {
 	                    // extract & remove geometry column name
