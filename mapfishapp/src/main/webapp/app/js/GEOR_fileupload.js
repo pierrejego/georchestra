@@ -173,14 +173,67 @@ GEOR.fileupload = (function() {
         var recordType = GeoExt.data.LayerRecord.create(
             GEOR.ows.getRecordFields()
         );
-
+        
         var name = GEOR.util.shortenLayerName(getFileName(fieldValue)),
-            layer = new OpenLayers.Layer.Vector(name, {
-                styleMap: GEOR.util.getStyleMap(),
-                rendererOptions: {
-                    zIndexing: true
-                }
-            });
+        layer = new OpenLayers.Layer.Vector(name, {
+            styleMap: GEOR.util.getStyleMap(),
+            params: {
+            	SLD: null,
+            	STYLES: null,
+            	LASTSLD: null,
+            	SHPGEOM : false
+            },
+            rendererOptions: {
+                zIndexing: true
+            }
+        });
+        
+        var olSymbType =  fc.geojson.features[0].geometry.type;
+
+    	// search name of geometry and transform according to geometry.sld default name 
+        var styleFromSLD;
+        var olGeomList = ["Point","Line","Curve","Polygon","Collection"];
+		var sldGeom;
+		var isReadable = false;
+		// compare if Json geom type match with OpenLayers geometry
+		for (i = 0 ; i < olGeomList.length ; i++){
+			var val = olGeomList[i];
+			var n = olSymbType.indexOf(val);
+			if (n > -1){
+				sldGeom = val;
+				isReadable = true;
+				if (sldGeom == "Curve"){
+					sldGeom = "Point";
+				} else if (sldGeom == "CircularString"){
+					sldGeom = "Line";
+				} else if (sldGeom == "Collection"){
+					sldGeom = "Generic";
+				}
+			}
+		}
+		// if not shape geometry, style not working
+		if (isReadable){
+			// TODO : change URL && find GeometryCollection.sld
+			// apply default SLD to vector style
+			var sldURL = "/geoserver/rest/styles/"+sldGeom.toLowerCase()+".sld";
+			if(sldURL){
+				// replace default styleMap by SLD styleMap and apply on layer
+		    	var format = new OpenLayers.Format.SLD();
+		    	OpenLayers.Request.GET({
+		    		url : sldURL,
+		    		success : function sldparser(req){
+			    		sld = format.read(req.responseXML || req.responseText, {namedLayersAsArray : true});
+		            	styleFromSLD = sld.namedLayers[0].userStyles[0];
+			    		layer.styleMap.styles["default"] = styleFromSLD;
+			    		layer.redraw();
+					}
+				});
+		    	// we need to read this parameters in other GEOR file
+	            layer.params.SLD = sldURL;
+	            layer.params.STYLES = sldGeom;
+	            layer.params.SHPGEOM = true;
+	    	}
+		}
 
         layer.addFeatures(features);
 

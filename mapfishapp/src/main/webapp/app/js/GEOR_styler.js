@@ -50,6 +50,13 @@ GEOR.styler = (function() {
      * {Ext.Window} The styler window.
      */
     var win = null;
+    
+	/**
+     * Property: olType
+     * {Ext.Window} OpenLayers geometry type of vector layer (Point, Line, Polygon) 
+     */
+    
+    var olType = null;
 
 	/**
 	 * Property: wmsLayerRecord
@@ -156,8 +163,8 @@ GEOR.styler = (function() {
      * Method: getDeleteButton
      * Get a reference to the "delete rule" button.
      */
-    var getDeleteButton = function() {
-        return legendContainer.getBottomToolbar().items.get(3);
+    var getDeleteButton = function() {    	
+        return Ext.getCmp('lcDelBtnId');
     };
 
     /**
@@ -723,6 +730,44 @@ GEOR.styler = (function() {
             }
         }
     };
+    
+    /**
+     * Method: sldOnVector
+     * Apply the new style to the vector layer if we have sldURL to load
+     */
+    var sldOnVector = function() {
+    	// get SLD URL or create SLD URL
+    	var callback = function(ok, sldURL) {
+    		if (!sldURL) {
+    			return;
+			} else if(sldURL){
+				wmsLayerRecord.get("layer").params.LASTSLD = sldURL;
+	    		OpenLayers.Request.GET({
+	    			url : sldURL,
+	    			success : complete
+	    		});
+	    		var format = new OpenLayers.Format.SLD();
+	    		function complete(req){
+	    			sld = format.read(req.responseXML || req.responseText, {namedLayersAsArray : true});
+	    			//setLayerStyles();
+	    			var styleFromSLD = sld.namedLayers[0].userStyles[0];
+	    			if(wmsLayerRecord.data.layer){
+	    				layer = wmsLayerRecord.data.layer;
+	    				layer.styleMap.styles["default"] = styleFromSLD;
+	    				layer.redraw();
+	    			}
+	        	}
+	    	}
+    	};
+    	var scope = this;
+	    if (dirty) {
+	    	// refreshing the layer will not be done
+	    	// in this case (cf third arg)
+	    	saveSLD(callback, scope, false);
+	    } else {
+	    	sldURL && callback.apply(scope, [true, sldURL]);
+	    }                  		
+	};
 
     /**
      * Method: initStyler.
@@ -779,9 +824,37 @@ GEOR.styler = (function() {
 
         /*
          * create the legend container
-         */
-        legendContainer = new Ext.Panel({
+         * Display analyze button if layer is wms layer 
+         */    
+        var fullItems = [{
+        	text: tr("Analyze"),
+            handler: function(btn, evt) {
+                stylerContainer.getLayout().setActiveItem(1);
+                stylerContainer.doLayout();
+        	}
+        }, '->', {
+            iconCls: "add",
+            id:"lcAddBtnId",
+            tooltip: tr("Add a class"),
+            handler: function(btn, evt) {
+                addRule(sType);
+            }
+        }, {
+            iconCls: "delete",
+            id:"lcDelBtnId",
+            tooltip: tr("Delete the selected class"),
+            handler: function(btn, evt) {
+                removeRule();
+            }
+        }];
+        
+        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
+        	fullItems.splice(0,1);
+        }
+        
+    	legendContainer = new Ext.Panel({
             region: 'west',
+            id:"westContainerId",
             width: 250,
             split: true,
             autoScroll: true,
@@ -794,41 +867,28 @@ GEOR.styler = (function() {
                     html: tr("styler.guidelines")
                 }
             }],
-            bbar: [{
-                text: tr("Analyze"),
-                handler: function(btn, evt) {
-                    stylerContainer.getLayout().setActiveItem(1);
-                    stylerContainer.doLayout();
-                }
-            }, '->', {
-                iconCls: "add",
-                tooltip: tr("Add a class"),
-                handler: function(btn, evt) {
-                    addRule(sType);
-                }
-            }, {
-                iconCls: "delete",
-                tooltip: tr("Delete the selected class"),
-                disabled: true,
-                handler: function(btn, evt) {
-                    removeRule();
-                }
-            }]
+            bbar: fullItems
         });
+        
 
         /*
          * populate the legend container if the layer
          * has an SLD param
          */
-        var url = wmsLayerRecord.get("layer").params.SLD;
+    	// vector url set in GEOR.fileupload
+        var url = wmsLayerRecord.get("layer").params.SLD;        
         var style = wmsLayerRecord.get("layer").params.STYLES;
-        
+
+        // vector layer : to get and load last rules apply in styler
+        if (wmsLayerRecord.get("layer").params.LASTSLD){
+    		url = wmsLayerRecord.get("layer").params.LASTSLD;
+    	}
+
         // If url empy try to get sld from geoserver
         // show only work on geometry type point, line or polygon
         // generic style is used in geoserver when using geometrycollection type
         if (url == undefined && style && style != "generic") {
-	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {
-	        	
+	        if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS) {	        	
 	        	// Test if url comes from a geoserver
 	        	if(wmsLayerRecord.get("layer").url.indexOf("geoserver") > -1){
 	        		
@@ -925,7 +985,6 @@ GEOR.styler = (function() {
             /*
              * win is the styler window, create it and display it.
              */
-            
             if (Ext.getCmp('georchetra-styler-windows')){
         		Ext.getCmp('georchetra-styler-windows').close();
         	} 
@@ -952,11 +1011,17 @@ GEOR.styler = (function() {
                 },{
                     text: tr("Apply"),
                     handler: function() {
-                        // we're done, apply styling
-                        // to layer
-                        applyStyling(function(ok){
-                            return;
-                        });
+                    	if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
+                    		// we're done, apply styling
+                            // if layer is vector
+                    		sldOnVector();
+                    	} else if (wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS){
+                    		// we're done, apply styling
+                            // if not vector layer
+                            applyStyling(function(ok){
+                                return;
+                            });
+                    	}	
                     }
                 }],
                 listeners: {
@@ -985,32 +1050,48 @@ GEOR.styler = (function() {
 
             // store a reference to the store in a
             // private attribute of the instance
-            attributes = GEOR.ows.WFSDescribeFeatureType(wfsInfo, {
-                success: function(st, recs, opts) {
-                    // extract & remove geometry column name
-                    var idx = st.find('type', GEOR.ows.matchGeomProperty);
-                    if (idx > -1) {
-                        // we have a geometry
-                        var r = st.getAt(idx);
-                        geometryName = r.get('name');
-                        st.remove(r);
-                    }
-                    if (st.getCount() > 0) {
-                        // we have at least one attribute that we can style
-                        getSymbolType(initStyler);
-                    } else {
-                        // give up
-                        giveup([
-                            tr("Impossible to complete the operation:"),
-                            tr("no available attribute")
-                        ].join(" "));
-                    }
-                },
-                failure: function() {
-                    mask && mask.hide();
-                    win.close();
-                }
-            });
+            if (wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
+	            attributes = wmsLayerRecord.store;
+		        // we have at least one attribute that we can style
+            	if (wmsLayerRecord.store.getCount() > 0 ){
+            		//initialize styler with OpenLayers geometry
+            		initStyler(wmsLayerRecord.store.olType);
+	            } else {
+	            	// give up
+		            giveup([
+		            tr("Impossible to complete the operation:"),
+		            tr("no available attribute")
+		            ].join(" "));
+	            }
+            	mask && mask.hide();
+            } else {
+	            attributes = GEOR.ows.WFSDescribeFeatureType(wfsInfo, {
+	                success: function(st, recs, opts) {
+	                    // extract & remove geometry column name
+	                    var idx = st.find('type', GEOR.ows.matchGeomProperty);
+	                    if (idx > -1) {
+	                        // we have a geometry
+	                        var r = st.getAt(idx);
+	                        geometryName = r.get('name');
+	                        st.remove(r);
+	                    }
+	                    if (st.getCount() > 0) {
+	                        // we have at least one attribute that we can style
+	                        getSymbolType(initStyler);
+	                    } else {
+	                        // give up
+	                        giveup([
+	                            tr("Impossible to complete the operation:"),
+	                            tr("no available attribute")
+	                        ].join(" "));
+	                    }
+	                },
+	                failure: function() {
+	                    mask && mask.hide();
+	                    win.close();
+	                }
+	            });
+            }
         }
     };
 })();

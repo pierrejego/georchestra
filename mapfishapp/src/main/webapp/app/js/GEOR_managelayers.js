@@ -729,17 +729,28 @@ GEOR.managelayers = (function() {
             }
         };
 
-        if (GEOR.styler && hasEquivalentWFS) {
+        // Edit style if layer is import from shapefile or wms
+        if (GEOR.styler && (hasEquivalentWFS || (isVector && layer.params.SHPGEOM))) {        	
             insertSep();
             menuItems.push({
                 iconCls: 'geor-btn-style',
                 text: tr("Edit symbology"),
                 listeners: {
                     "click": function(btn, pressed) {
-                        GEOR.styler.create(layerRecord, this.el);
+	                    	if (isVector){
+		                		if(layerRecord.data.layer.params.SHPGEOM){
+		                    		var olType = layerRecord.data.layer.params.STYLES; // get layer STYLE from GeoJSON
+		                    		layerRecord.store.olType = olType.charAt(0).toUpperCase()+olType.slice(1); // first letter in upperCase
+		                		}
+	                    	} // if window already visible, not create again because of window bug
+	                    	if (Ext.getCmp("georchetra-styler-windows") && Ext.getCmp("georchetra-styler-windows").isVisible()){
+	                    		return;
+	                    	} else {
+	                    		GEOR.styler.create(layerRecord, this.el);
+	                    	}
+                    	}                    	
                     }
-                }
-            });
+                });
         }
 
         if (GEOR.querier && (hasEquivalentWFS || isWFS)) {
@@ -1010,6 +1021,7 @@ GEOR.managelayers = (function() {
         var buttons = [createInfoButton(layerRecord), 
         {
             text: tr("Actions"),
+            id:"actionBtn",
             menu: new Ext.menu.Menu({
                 items: [],
                 ignoreParentClicks: true,
