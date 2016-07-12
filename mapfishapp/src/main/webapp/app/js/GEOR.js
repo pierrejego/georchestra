@@ -449,7 +449,9 @@ Ext.namespace("GEOR");
                     removeActiveTab();
                     
                     Ext.iterate(options.results, function(featureType, result) {
-		                       
+		                if (result.features.length<1){
+		                	return
+		                }       
                     	// featureType contains layername and somme time workspace as well
                     	// get information after : if exist
                     	var n = featureType.indexOf(':');
