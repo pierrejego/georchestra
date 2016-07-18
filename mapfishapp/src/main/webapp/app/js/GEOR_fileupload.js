@@ -224,8 +224,65 @@ GEOR.fileupload = (function() {
 		    		success : function sldparser(req){
 			    		sld = format.read(req.responseXML || req.responseText, {namedLayersAsArray : true});
 		            	styleFromSLD = sld.namedLayers[0].userStyles[0];
+		            	//
+		            	if (styleFromSLD.rules){
+			            	var rules = styleFromSLD.rules;
+				    		for (i=0; i<rules.length; i++){
+				    			var ruleSymbolizer = rules[i].symbolizer
+				    			
+				    			// Render symbolizers array
+				    			var ruleToArray = Object.keys(ruleSymbolizer).map(function (key) {
+				    				return ruleSymbolizer[key]
+				    				});				    			
+				    			if (ruleToArray.length > 1){
+				    				
+				    				// Merge elem of array to single rule's properties
+				    				// OpenLayers don't understand SLD native organization of symbolizer
+				    				var mergeElem = Object.assign(ruleToArray[0], ruleToArray[1]);
+				    				
+				    				// render biggest integer equal or less than math.random result
+				    				// and display random position
+				    				var olPosition = ["rt","lt","l","r","b","t","cl","cr","cb","lb","rb"];
+				    				mergeElem.labelAlign = labelPosition = olPosition[Math.floor(Math.random()*olPosition.length)];
+				                    mergeElem.align = "cm";
+
+				                    // modify properties to display label - OpenLayers don't understand SLD native properties 
+				    				if (mergeElem.hasOwnProperty("haloColor")){
+				    					mergeElem.labelOutlineColor = mergeElem.haloColor;
+				    				}
+				    				if (mergeElem.hasOwnProperty("haloRadius")){
+				    					mergeElem.labelOutlineWidth = mergeElem.haloRadius;
+				    				}
+				    				if (mergeElem.hasOwnProperty("haloOpacity")){
+				    					mergeElem.labelOutlineOpacity = mergeElem.haloOpacity;
+				    				}
+				    				// Change symbolizer to new merge symbolizer
+				    				styleFromSLD.rules[i].symbolizer = mergeElem;			    				
+				    			}			    			
+				    		}
+		            	}		            	
+		            	//
 			    		layer.styleMap.styles["default"] = styleFromSLD;
 			    		layer.redraw();
+			    		
+			    		// array of rules in SLD
+			    		rules = styleFromSLD.rules
+			    		
+			    		for (i=0; i<rules.length; i++){
+			    			var ruleSymbolizer = rules[i].symbolizer				    		
+			    			// Render symbolizers array
+			    			var ruleToArray = Object.keys(ruleSymbolizer).map(function (key) {return ruleSymbolizer[key]});
+			    			
+			    			if (ruleToArray.length > 1){
+			    				// Merge elem of array to single rule's properties
+			    				var mergeElem = Object.assign(ruleToArray[0], ruleToArray[1]);
+			    			}
+			    		}
+			    		
+			    		
+			    		
+			    		
+			    		
 					}
 				});
 		    	// we need to read this parameters in other GEOR file
