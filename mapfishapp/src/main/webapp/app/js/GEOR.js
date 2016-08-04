@@ -237,13 +237,16 @@ Ext.namespace("GEOR");
                     panel.getActiveTab().raise();
                 },
                 'tabchange': function(panel, t) {
+                	// if + tab is calle
                     if (t && t.id == 'addPanel' && !tabCreationLocked) {
                         var tab = new GEOR.ResultsPanel({
                             html: tr("resultspanel.emptytext")
                         });
                         panel.insert(panel.items.length-1, tab);
                         panel.setActiveTab(tab);
-                    } else {
+                    }
+                    // else lower each tab and raise the new one
+                    else {
                         panel.items.each(function(tab) {
                             tab.lower();
                         });
@@ -452,7 +455,7 @@ Ext.namespace("GEOR");
 		                if (result.features.length<1){
 		                	return
 		                }       
-                    	// featureType contains layername and somme time workspace as well
+                    	// featureType contains layername and some time workspace as well
                     	// get information after : if exist
                     	var n = featureType.indexOf(':');
                     	var layerName = featureType.substring(n+1);
@@ -473,10 +476,12 @@ Ext.namespace("GEOR");
                     	// if managed layer (test if three first char are know by geobuilder)
                     	if (layerName && GEOR.geobuilder_isManagedLayer(layerName) ) {
 	
+ 
                     		// take only the first feature if exist
                     		if(result.features[0]){
                     			
-                    			tab.setManagedObject(true);
+                    			tab.id="managedLayer";
+                    			
                     			// Collapse will raise vectorLayer in this specific case
                     			southPanel.collapse();
 		                                          
