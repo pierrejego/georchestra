@@ -22,11 +22,10 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
             displayInLayerSwitcher: false,
             styleMap: new OpenLayers.StyleMap({
                 "default": {
-                    graphicName: "cross",
-                    pointRadius: 16,
-                    strokeColor: "fuchsia",
-                    strokeWidth: 2,
-                    fillOpacity: 0
+                	graphicWidth: 20,
+                    graphicHeight: 32,
+                    graphicYOffset: -28, // shift graphic up 28 pixels
+                    externalGraphic : 'app/css/images/pwrs/geoPin.png'
                 }
             })
         });
@@ -208,48 +207,47 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
             from = new OpenLayers.Projection("EPSG:4326"),
             to = this.map.getProjectionObject();
 
-        this.layer.destroyFeatures();
+        //this.layer.destroyFeatures();
         if (!record.get("geometry")) {
             return;
         }
-        geom = record.get("geometry").transform(from, to);
-        feature = new OpenLayers.Feature.Vector(geom);
-        this.layer.addFeatures([feature]);
-        if (!this.popup) {
-            this.popup = new GeoExt.Popup({
-                location: feature,
-                width: 200,
-                html: new Ext.XTemplate(
-                    '<div class="x-combo-list-item">',
-                        this.options.comboTemplate,
-                    '</div>'
-                ).apply(record.data),
-                anchorPosition: "top-left",
-                collapsible: false,
-                closable: false,
-                unpinnable: false
-            });
-        } else {
-            this.popup.body.update(
-                new Ext.XTemplate(
-                    '<div class="x-combo-list-item">',
-                        this.options.comboTemplate,
-                    '</div>'
-                ).apply(record.data)
-            );
-            this.popup.location = geom.getBounds().getCenterLonLat();
+        if (this.popup){
+        	this.popup.destroy();
+        	this.layer.removeAllFeatures();
         }
+        
+		geom = record.get("geometry").transform(from, to);
+		console.log(record);
+		coordX = geom.x;
+		coordY = geom.y;
+		point = new OpenLayers.Geometry.Point(coordX,coordY); 
+        feature = new OpenLayers.Feature.Vector(point);
+        this.layer.addFeatures(feature);              
+ 	        	
+        this.popup = new GeoExt.Popup({
+            location: feature,
+            width: 200,
+            html: new Ext.XTemplate(
+                '<div class="x-combo-list-item">',
+                    this.options.comboTemplate,
+                '</div>'
+            ).apply(record.data),
+			constrainHeader:true,
+			layout:"fit",
+			unpinnable: false,
+			draggable: true,
+            border: false
+        });
+            
         this.popup.show();
-        if (record.get("bbox")) {
-            // we assume lbrt here, like "2.374215;48.829177;2.375391;48.829831"
-            // note: this looks very specific to the French Geoportail OLS service
-            bbox = OpenLayers.Bounds.fromArray(
-                record.get("bbox").split(";")
-            ).transform(from, to);
-        } else {
-            bbox = geom.getBounds();
-        }
-        this.map.zoomToExtent(bbox);
+        this.map.setCenter(new OpenLayers.LonLat(coordX,coordY), 8);
+        this.popup.on({
+            close: function() {
+            	this.layer.removeAllFeatures();
+            },
+            scope: this
+        });        
+       
     },
 
     /**

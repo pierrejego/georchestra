@@ -22,22 +22,26 @@
         "en": {
             "openls.window_title": "Freetext search recentering (OpenLS)",
             "openls.field_emptytext": "eg: 13 Rue de Tolbiac, Paris",
-            "openls.field_label": "Address"
+            "openls.field_label": "Address",
+            "Result": "Result"
         },
         "es": {
             "openls.window_title": "Freetext search recentering (OpenLS)",
             "openls.field_emptytext": "eg: 13 Rue de Tolbiac, Paris",
-            "openls.field_label": "Address"
+            "openls.field_label": "Address",
+            "Result": "Resultado"
         },
         "fr": {
-            "openls.window_title": "Recentrage par adresse libre (OpenLS)",
+            "openls.window_title": "Recherche d'adresse",
             "openls.field_emptytext": "ex: 13 Rue de Tolbiac, Paris",
-            "openls.field_label": "Adresse"
+            "openls.field_label": "Adresse",
+            "Result":"Résultat"
         },
         "de": {
             "openls.window_title": "OpenLS rezentrieren",
             "openls.field_emptytext": "z.B.: Hausnummer, Straße, Ort",
-            "openls.field_label": "Adresse"
+            "openls.field_label": "Adresse",
+            "Result":"Ergebnis"
         }
     }
 }
