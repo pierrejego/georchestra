@@ -36,12 +36,6 @@ Ext.namespace("GEOR");
 
 GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
 	
-	/**
-     * Property: containsManagedObject
-     * {Boolean}
-     */
-    containsManagedObject: false,
-
     /**
      * Property: title
      * {String}
@@ -549,14 +543,6 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
         this._store.loadData(features);
         this._createGridPanel();
     },
-
-    /**
-     * APIMethod setManagedObject
-     * 
-     */
-    setManagedObject: function(value){
-    	this.containsManagedObject=value;
-    }, 
     
     /**
      * APIMethod: clean
@@ -574,10 +560,8 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
      * Hides the attached vector layer.
      */
     lower: function() {
-    	if(this.containsManagedObject){
-    		this.containsManagedObject=false;
-    	}
-    	else if (this._vectorLayer) {
+
+    	if (this._vectorLayer && this.id!='managedLayer') {
             this._vectorLayer.setVisibility(false);
         }
     },

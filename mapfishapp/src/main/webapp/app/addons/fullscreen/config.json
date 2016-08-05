@@ -33,6 +33,8 @@
         "es": "Mostrar el mapa en pantalla completa",
         "fr": "Voir la carte en plein écran",
         "de": "Siehe Vollbildkarte"
-    },    
+    },  
+    "options": {
+    },  
     "preloaded":false
 }]
