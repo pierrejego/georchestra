@@ -1015,7 +1015,6 @@ GEOR.managelayers = (function() {
         var buttons = [createInfoButton(layerRecord), 
         {
             text: tr("Actions"),
-            id:"actionBtn",
             menu: new Ext.menu.Menu({
                 items: [],
                 ignoreParentClicks: true,
