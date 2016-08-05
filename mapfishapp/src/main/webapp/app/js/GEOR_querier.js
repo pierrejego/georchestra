@@ -257,6 +257,10 @@ GEOR.querier = (function() {
             noConditionOnInit: true,
             deactivable: true,
             cookieProvider: cp,
+            bufferService: GEOR.config.PATHNAME + "/ws/buffer/",
+            saveFilterService: GEOR.config.PATHNAME + "/ws/fe/",
+            getFilterService: GEOR.config.PATHNAME + "/",
+            stateProvider: Ext.state.Manager.getProvider(),
             autoScroll: true,
             buttons: [{
                 text: tr("Search"),
