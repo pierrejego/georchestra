@@ -2225,6 +2225,8 @@ body .fieldXY{
 	margin-left: 5px;
 }
 
-#defCombo {
-  height:20px;
+/* TODO : replace "!important" by correct syntax */
+.comboConfig{
+	width:120px;
+	height:20px !important;	
 }
