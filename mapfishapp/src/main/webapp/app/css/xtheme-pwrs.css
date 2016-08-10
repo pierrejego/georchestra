@@ -2212,7 +2212,19 @@ body .fieldXY{
 	max-height: 15px;
 }
 #tbar img.x-form-arrow-trigger {
-    border: solid white;
+  border: solid white;
 	padding: 1px 0 1px;
-    border-width: 1px 1px 1px 0;
+  border-width: 1px 1px 1px 0;
+}
+
+
+/*
+ Styler : Spatialfilter combo & buttons
+*/
+.btnSpatialFilter {
+	margin-left: 5px;
+}
+
+#defCombo {
+  height:20px;
 }
