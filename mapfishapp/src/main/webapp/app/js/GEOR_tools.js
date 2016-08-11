@@ -399,7 +399,7 @@ GEOR.tools = (function() {
                 }
             }, '->',
             // TODO: add a "cancel" button restoring previous tool selection state.
-            // + close button (top right corner) has same effect
+            // + close button (top right corner) has same effect ==> close button is really the same effect !!
             {
                 text: tr("OK"),
                 itemId: 'load',
