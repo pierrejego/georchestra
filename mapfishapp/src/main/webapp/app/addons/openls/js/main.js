@@ -224,7 +224,7 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
         feature = new OpenLayers.Feature.Vector(point);
         this.layer.addFeatures(feature);              
  	        	
-        this.popup = new GeoExt.Popup({
+        this.popup = new Ext.Window({
             location: feature,
             width: 200,
             html: new Ext.XTemplate(
@@ -235,12 +235,13 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
 			constrainHeader:true,
 			layout:"fit",
 			unpinnable: false,
+			resizable: false,
 			draggable: true,
             border: false
         });
             
         this.popup.show();
-        this.map.setCenter(new OpenLayers.LonLat(coordX,coordY), 8);
+        this.map.setCenter(new OpenLayers.LonLat(coordX,coordY), 12);
         this.popup.on({
             close: function() {
             	this.layer.removeAllFeatures();
