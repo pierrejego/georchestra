@@ -384,7 +384,7 @@ GEOR.tools = (function() {
             animateTarget: target,
             width: 4 * 130 + 2 * 10 + 15, // 15 for scrollbar
             height: 450,
-            closable: false, // waiting for the TODO below to be done...
+            closable: true, // before statement is set to false : " waiting for the TODO below to be done... " 
             closeAction: 'hide',
             plain: true,
             buttonAlign: 'left',
