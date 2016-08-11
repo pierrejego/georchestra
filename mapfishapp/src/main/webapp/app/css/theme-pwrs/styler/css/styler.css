@@ -36,7 +36,11 @@
 }
 
 .x-btn .ops {
-    background-image: url(../img/cog_add.png);
+    /* original is cog_add.png 
+    	TODO : change icon because of low quality...
+    */
+    
+    background-image: url(../img/dash_lossy.png);
 }
 
 .x-btn-icon .expand {
