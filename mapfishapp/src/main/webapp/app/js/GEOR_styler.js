@@ -32,6 +32,17 @@
 Ext.namespace("GEOR");
 
 GEOR.styler = (function() {
+	/*
+	 * Property: defaultSLD
+	 * Use to get original SLD URL when layer is load for the first time
+	 */
+	var defaultSLD = null;
+	
+	/*
+	 * Use to set counter to be sur we get the first sld URL load with layer 
+	 */
+	var i = 0;
+	
     /*
      * Private
      */
@@ -53,7 +64,7 @@ GEOR.styler = (function() {
     
 	/**
      * Property: olType
-     * {Ext.Window} OpenLayers geometry type of vector layer (Point, Line, Polygon) 
+     * OpenLayers geometry type of vector layer (Point, Line, Polygon) 
      */
     
     var olType = null;
@@ -946,7 +957,10 @@ GEOR.styler = (function() {
         }
         
         if (url) {
-            getSLD(url);
+        	if (!wmsLayerRecord.get("layer").params.VISIBLE){
+        		getSLD(url);      	        		
+        	}
+        	mask.hide();
         }
         
 
@@ -1053,14 +1067,16 @@ GEOR.styler = (function() {
                     	if(wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.Vector){
                     		// we're done, apply styling
                             // if layer is vector
-                    		sldOnVector();
+                    		sldOnVector();                   		
+                			wmsLayerRecord.get("layer").params.VISIBLE = getHelpCmp().isVisible(); // false, getHelpCmp is hide
                     	} else if (wmsLayerRecord.get("layer") instanceof OpenLayers.Layer.WMS){
                     		// we're done, apply styling
                             // if not vector layer
-                            applyStyling(function(ok){
+                			applyStyling(function(ok){
                                 return;
                             });
-                    	}	
+                			wmsLayerRecord.get("layer").mergeNewParams({visible : getHelpCmp().isVisible()}); // false               					                        
+                    	}
                     }
                 }],
                 listeners: {
