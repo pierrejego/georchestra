@@ -84,3 +84,15 @@
   padding: 0.4em 0.5em 0 0.25em;
   font: 12px arial,tahoma,helvetica,sans-serif;
 }
+
+.x-menu-item .attrCondition {
+  background: transparent url(../img/letters.png);
+}
+
+.x-menu-item .spatialCondition {
+  background: transparent url(../img/zone.png);
+}
+
+.x-menu-item .load {
+  background: transparent url(../img/import.png);
+}
