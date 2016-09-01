@@ -2,6 +2,7 @@ Ext.namespace("GEOR.Addons");
 
 GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
     win: null,
+    resultTpl: null,
     addressField: null,
     layer: null,
     popup: null,
@@ -180,6 +181,8 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
         return new Ext.form.ComboBox({
             name: "address",
             width: 350,
+            id:'adressResultForm',
+            text:"Bonjour",
             emptyText: OpenLayers.i18n('openls.field_emptytext'),
             fieldLabel: OpenLayers.i18n('openls.field_label'),
             store: store,
@@ -222,7 +225,7 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
 		coordY = geom.y;
 		point = new OpenLayers.Geometry.Point(coordX,coordY); 
         feature = new OpenLayers.Feature.Vector(point);
-        this.layer.addFeatures(feature);              
+        this.layer.addFeatures(feature);
  	        	
         this.popup = new Ext.Window({
             location: feature,
@@ -239,15 +242,21 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
 			draggable: true,
             border: false
         });
-            
-        this.popup.show();
-        this.map.setCenter(new OpenLayers.LonLat(coordX,coordY), 12);
+        
+        this.map.setCenter(new OpenLayers.LonLat(coordX,coordY), 12);    
+        
+        // Uncomment this part to display result in window beside the geoPin location
+        /*this.popup.show();
         this.popup.on({
             close: function() {
             	this.layer.removeAllFeatures();
             },
             scope: this
-        });        
+        });*/
+        
+        // Usefull to set the main window textfield value with municipality selected
+        Ext.getCmp("adressResultForm").setValue(record.data.municipality);
+        
        
     },
 
