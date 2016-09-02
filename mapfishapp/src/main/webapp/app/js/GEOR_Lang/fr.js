@@ -61,6 +61,7 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
         "<p>Sélectionnez l'outil d'interrogation " +
         "ou construisez une requête sur une couche.<br />" +
         "Les attributs des objets s'afficheront dans ce cadre.</p>",
+     "Add query": "Ajouter un onglet de recherche",    
     /* GEOR_ClassificationPanel.js strings */
     "Attribute": "Attribut",
     "Number of classes": "Nombre de classes",
@@ -167,6 +168,7 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
          "<div>Recherche d\'objets activée sur la couche ${NAME}. " +
          "Cliquez sur la carte.</div>",
     "WMS GetFeatureInfo at ": "GetFeatureInfo WMS sur ",
+    "Search on all active layers": "Cliquez sur la carte pour rechercher dans toutes les couches actives",
     /* GEOR_layerfinder.js strings */
     "metadata": "métadonnée",
     "Add layers from local files": "Ajouter des couches en uploadant un fichier depuis votre ordinateur",
