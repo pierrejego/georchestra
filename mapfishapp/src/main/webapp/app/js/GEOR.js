@@ -227,34 +227,35 @@ Ext.namespace("GEOR");
                 lower: Ext.emptyFn,
                 raise: Ext.emptyFn
             }],
-            listeners: {
-                'collapse': function(panel) {
-                    panel.items.each(function(tab) {
-                        tab.lower();
-                    });
-                },
-                'expand': function(panel) {
-                    panel.getActiveTab().raise();
-                },
-                'tabchange': function(panel, t) {
-                	// if + tab is calle
-                    if (t && t.id == 'addPanel' && !tabCreationLocked) {
-                        var tab = new GEOR.ResultsPanel({
-                            html: tr("resultspanel.emptytext")
-                        });
-                        panel.insert(panel.items.length-1, tab);
-                        panel.setActiveTab(tab);
-                    }
-                    // else lower each tab and raise the new one
-                    else {
-                        panel.items.each(function(tab) {
-                            tab.lower();
-                        });
-                        if(t){
-                        	t.raise();
-                        }
-                    }
-                }
+            listeners: {  
+            	'collapse': function(panel) {             
+            		if(panel.getActiveTab() instanceof GEOR.ResultsPanel){
+            			panel.getActiveTab().lower();
+            		}
+            	},
+            	'expand': function(panel) {
+            		if(panel.getActiveTab() instanceof GEOR.ResultsPanel){
+            			panel.getActiveTab().raise();
+            		}
+            	},
+            	'beforetabchange': function(panel, newTab, oldTab) {
+            		// If click on + tab, add a new result tab
+            		if (newTab.title && newTab.title == '+' && !tabCreationLocked) {
+            			var tab = new GEOR.ResultsPanel({
+            				html: tr("resultspanel.emptytext")
+            			});
+            			panel.insert(panel.items.length-1, tab);
+            			panel.setActiveTab(tab);
+            			return false;
+            		}
+            		// Display feature selection corresponding to tab
+            		if(oldTab &&  oldTab instanceof GEOR.ResultsPanel){
+            			oldTab.lower();
+            		}
+            		if(newTab &&  newTab instanceof GEOR.ResultsPanel){
+            			newTab.raise();
+            		}
+            	}
             }
         });
 
@@ -451,6 +452,22 @@ Ext.namespace("GEOR");
                 "searchresults": function(options) {
                     removeActiveTab();
                     
+                    var isMultiLayerSearch = false;
+                    var layerNameArray =[];
+                    Ext.iterate(options.results, function(featureType, result) {
+                    
+                    	// featureType contains layername and some time workspace as well
+                    	// get information after : if exist
+                    	var n = featureType.indexOf(':');
+                    	var layerName = featureType.substring(n+1);
+                    	layerNameArray.push(layerName);
+                    });
+                     
+                    function onlyUnique(value, index, self) { 
+                    	return self.indexOf(value) === index;
+                    }
+                    isMultiLayerSearch = layerNameArray.filter(onlyUnique)>1;
+                       
                     Ext.iterate(options.results, function(featureType, result) {
 		                if (result.features.length<1){
 		                	return
@@ -474,13 +491,12 @@ Ext.namespace("GEOR");
                     	southPanel.setActiveTab(tab);
 			                       
                     	// if managed layer (test if three first char are know by geobuilder)
-                    	if (layerName && GEOR.geobuilder_isManagedLayer(layerName) ) {
+                    	if (!isMultiLayerSearch && layerName && GEOR.geobuilder_isManagedLayer(layerName) ) {
 	
- 
-                    		// take only the first feature if exist
+                     		// take only the first feature if exist
                     		if(result.features[0]){
                     			
-                    			tab.id="managedLayer";
+                    			tab.id="managedLayer"+southPanel.items.length;
                     			
                     			// Collapse will raise vectorLayer in this specific case
                     			southPanel.collapse();
