@@ -61,9 +61,6 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
      */
     sfControl: null,
 
-    //TODO doc
-    id: "resultPanel",
-
     /**
      * Property: noDelete
      * {Boolean} do not show the delete button
@@ -561,7 +558,8 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
      */
     lower: function() {
 
-    	if (this._vectorLayer && this.id!='managedLayer') {
+    	// Do not hide selection when information is managed
+    	if (this._vectorLayer && (this.id.indexOf('managedLayer') !== 0)) {
             this._vectorLayer.setVisibility(false);
         }
     },
