@@ -466,7 +466,8 @@ Ext.namespace("GEOR");
                     function onlyUnique(value, index, self) { 
                     	return self.indexOf(value) === index;
                     }
-                    isMultiLayerSearch = layerNameArray.filter(onlyUnique)>1;
+                    
+                    isMultiLayerSearch = layerNameArray.filter(onlyUnique).length>1;
                        
                     Ext.iterate(options.results, function(featureType, result) {
 		                if (result.features.length<1){
