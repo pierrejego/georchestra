@@ -361,7 +361,8 @@ OpenLayers.Control.Measure = OpenLayers.Class(OpenLayers.Control, {
     getLength: function(geometry, units) {
         var length, geomUnits;
         if(this.geodesic) {
-            length = geometry.getGeodesicLength(this.map.getProjectionObject());
+            //length = geometry.getGeodesicLength(this.map.getProjectionObject()); // use to calculate geodesic distance
+        	length = geometry.getLength();
             geomUnits = "m";
         } else {
             length = geometry.getLength();

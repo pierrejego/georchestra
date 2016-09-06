@@ -124,7 +124,7 @@ GEOR.mappanel = (function() {
         });
         items.push(div);
         var scaleOptions = {
-        		geodesic : true,
+        		geodesic : false,
         		div:div
         
         };
