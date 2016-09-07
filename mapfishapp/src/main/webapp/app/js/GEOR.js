@@ -240,7 +240,7 @@ Ext.namespace("GEOR");
             	},
             	'beforetabchange': function(panel, newTab, oldTab) {
             		// If click on + tab, add a new result tab
-            		if (newTab.title && newTab.title == '+' && !tabCreationLocked) {
+            		if ((newTab == undefined && !tabCreationLocked) || (newTab && newTab.title && newTab.title == '+' && !tabCreationLocked))  {
             			var tab = new GEOR.ResultsPanel({
             				html: tr("resultspanel.emptytext")
             			});
@@ -497,7 +497,7 @@ Ext.namespace("GEOR");
                      		// take only the first feature if exist
                     		if(result.features[0]){
                     			
-                    			tab.id="managedLayer"+southPanel.items.length;
+                    			tab.title="geobuilder "+ tab.title;
                     			
                     			// Collapse will raise vectorLayer in this specific case
                     			southPanel.collapse();
@@ -507,7 +507,7 @@ Ext.namespace("GEOR");
                     			var idPlace = result.features[0].fid.indexOf('.');
                     			
                     			// Give Object Classe, featureID and method to destroy tabpanel (which will erase vectorLayer and stored information)
-                    			showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1), function(){removeActiveTab();});
+                    			showFeatureInfo(layerName.substring(0,3), result.features[0].fid.substring(idPlace+1), function(){});
                     		}
                     	}        
                     });

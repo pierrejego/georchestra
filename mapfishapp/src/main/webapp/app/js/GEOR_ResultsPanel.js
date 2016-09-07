@@ -559,7 +559,7 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
     lower: function() {
 
     	// Do not hide selection when information is managed
-    	if (this._vectorLayer && (this.id.indexOf('managedLayer') !== 0)) {
+    	if (this._vectorLayer && (this.title.indexOf('geobuilder') !== 0)) {
             this._vectorLayer.setVisibility(false);
         }
     },
