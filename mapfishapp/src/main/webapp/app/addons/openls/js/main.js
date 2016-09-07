@@ -255,8 +255,7 @@ GEOR.Addons.OpenLS = Ext.extend(GEOR.Addons.Base, {
         });*/
         
         // Usefull to set the main window textfield value with municipality selected
-        Ext.getCmp("adressResultForm").setValue(record.data.municipality);
-        
+        Ext.getCmp("adressResultForm").setValue(record.data.number+" "+record.data.street+", "+record.data.municipality);        
        
     },
 
