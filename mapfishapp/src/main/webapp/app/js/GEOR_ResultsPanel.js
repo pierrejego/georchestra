@@ -202,7 +202,7 @@ GEOR.ResultsPanel = Ext.extend(Ext.Panel, {
             layerBounds = bounds.scale(1.05);
             map.zoomToExtent(layerBounds);
         } else if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
-            map.setCenter(bounds.getCenterLonLat());
+            map.setCenter(bounds.getCenterLonLat(),16);
         }
     },
 
