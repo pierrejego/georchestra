@@ -181,7 +181,8 @@ GEOR.ClassificationPanel = Ext.extend(Ext.Panel, {
             fields: ['text', 'value']
         });
         this.cbClassifType = new Ext.form.ComboBox({
-            store: this.dsClassifType,
+        	id:'cbClassifiType',
+        	store: this.dsClassifType,
             displayField: 'text',
             valueField: 'value',
             editable: false,
@@ -193,7 +194,8 @@ GEOR.ClassificationPanel = Ext.extend(Ext.Panel, {
         });
 
         this.sbClassCountPropSymbol = new Ext.ux.NumberSpinner({
-            allowNegative: false,
+        	id:'sbClassProp',
+        	allowNegative: false,
             allowDecimals: false,
             value: 5,
             minValue: 2,
@@ -204,6 +206,7 @@ GEOR.ClassificationPanel = Ext.extend(Ext.Panel, {
 
         // FIXME copy config from sbClassCountPropSymbol
         this.sbClassCountChoropleth = new Ext.ux.NumberSpinner({
+        	id:'sbClassCountCho',
             allowNegative: false,
             allowDecimals: false,
             value: 5,
@@ -565,7 +568,15 @@ GEOR.ClassificationPanel = Ext.extend(Ext.Panel, {
     */
     on_btClassify_clicked: function(button, event) {
         var params = this.getParams();
-        this.fireEvent("change", this, params);
+        // Control number of class and change it
+        if(this.sbClassCountPropSymbol.getValue() >= this.sbMaxSize.getValue()){
+        	alertMsg = OpenLayers.i18n("Error : Number of class too high !"),
+        	alert(alertMsg);
+        	maxNbClass = this.sbMaxSize.getValue() 
+        	this.sbClassCountPropSymbol.setValue(maxNbClass- 1 );
+        } else {
+        	this.fireEvent("change", this, params);
+        }
     }
 
 });

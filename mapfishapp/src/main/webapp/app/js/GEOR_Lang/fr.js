@@ -64,6 +64,7 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
      "Add query": "Ajouter un onglet de recherche",    
     /* GEOR_ClassificationPanel.js strings */
     "Attribute": "Attribut",
+    "Error : Number of class too high !" : "Erreur : Nombre de classe trop élevée !",
     "Number of classes": "Nombre de classes",
     "Minimum size": "Taille minimum",
     "Maximum size": "Taille maximum",
