@@ -20,6 +20,7 @@
 package org.georchestra.mapfishapp.ws.classif;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -178,7 +179,8 @@ public String getSLD() {
                         (getDataType(wfs) != Float.class) && 
                         (getDataType(wfs) != Integer.class) && 
                         (getDataType(wfs) != Long.class) && 
-                        (getDataType(wfs) != Short.class)) {
+                        (getDataType(wfs) != Short.class) &&
+                        (getDataType(wfs) != BigDecimal.class)) {
                     // for now, only double, float, integer, and short types are supported
                     // FIXME deal with others numerical types, dates...
                     // they all must be comparable type as sorting is required for classification
