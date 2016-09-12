@@ -172,11 +172,20 @@ GEOR.managelayers = (function() {
                     width: 360,
                     yesCallback: function() {
                         layer.map.removeLayer(layer);
+                        console.log('remove');
                     },
                     scope: this
                 });
             } else {
                 layer.map.removeLayer(layer);
+                
+                // Fix : Set again annotation layer zIndex to up this layer
+                if (GeoExt.MapPanel.guess().map){
+                	this.map = GeoExt.MapPanel.guess().map;
+                	if(this.map.getLayersByName('__georchestra_annotations')){
+                		this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
+                	}
+                }
             }
             break;
         }

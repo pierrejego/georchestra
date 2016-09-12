@@ -211,6 +211,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         // find zIndex modification in : 
         // 		GEOR_layerfinder.js file with on button handler
         // 		in this file in onFeatureAdded method
+        //		in GEOR_layerfinder.js on "delete" layer case
         
 
         layer.events.on({
