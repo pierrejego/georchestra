@@ -504,11 +504,26 @@ GEOR.layerfinder = (function() {
             tr = OpenLayers.i18n;
             addButton = new Ext.Button({
                 text: tr("Add"),
+                id:"addLayerBtn",
                 minWidth: 90,
                 iconCls: 'btn-add',
                 disabled: true,
                 handler: function() {
+                	// get count of layer before add layer
+                	if (GeoExt.MapPanel.guess().map){
+                		this.map = GeoExt.MapPanel.guess().map;             
+                    	var beforeAddLayer = this.map.layers.length;
+                	}                	
+                	                	
                     addSelectedLayers();
+                    
+                    // if the user insert new layer, up display order of annotation layer
+                    if (beforeAddLayer){
+                    	if (beforeAddLayer !== this.map.layers.length && this.map.getLayersByName('__georchestra_annotations')[0]){
+                        	this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
+                        }
+                    }                    
+                    
                     switch (currentTab) {
                     case "cswbrowser":
                         GEOR.cswbrowser.clearSelection();

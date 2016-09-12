@@ -206,9 +206,12 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
-        this.map.addLayer(layer);
-        // layer : set display order
-        layer.setZIndex(10001);
+        this.map.addLayer(layer); 
+        
+        // find zIndex modification in : 
+        // 		GEOR_layerfinder.js file with on button handler
+        // 		in this file in onFeatureAdded method
+        
 
         layer.events.on({
             "beforefeatureselected": this.onBeforeFeatureSelect,
@@ -731,6 +734,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
         var control = this.featureControl;
         control.selectFeature.defer(1, control, [feature]);
+        // up annotation layer in front of all layer
+        this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
 
     },
 
