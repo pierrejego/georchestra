@@ -1,3 +1,4 @@
+// @todo check globals vars, semicolons
 geobuilder = (function() {
 
 	var WORKPLACE_DEFAULT_WIDTH = 600;
@@ -342,7 +343,7 @@ geobuilder = (function() {
 	 *                           "err" pour tout autre type d'erreur (erreur dans les paramètres d'entrée)
 	 */
 	function setCurrentSelection(width, lstIdObj, lstIds, isVisSelCtrl) {
-		clearCurrentHighlight();
+		clearCurrentHighlight(); //@todo remove si inutilisé
 		var success = "err";
 		//si le paramètre optionnel isVisSelCtrl n'a pas été transmis ou est différent de false on le définit à true
 		if (typeof isVisSelCtrl === 'undefined' || isVisSelCtrl !== false) {
@@ -404,10 +405,14 @@ geobuilder = (function() {
 	 * 
 	 */
 	function localise(idObj, listIds, width) {
-		
-		var ids = listIds ? listIds.split(',') : listIds;
-		width = width || 0;
-		var layername;
+
+		var apiQuery = JSON.stringify({
+			lstIdObj: idObj,
+			lstIds: listIds,
+			geomFormat: 'wkt'
+		});
+
+		var layerName;
 		var features = [];
 		
 		// init layer to  draw selected features
@@ -416,37 +421,40 @@ geobuilder = (function() {
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
-		}) 	;
-		
+		});
+
 		// retrieve layer
 		for (var i=0; i< map.layers.length; i++){
 			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
-				layername = map.layers[i].name;
+				layerName = map.layers[i].name;
 				layer = map.layers[i].params.LAYERS;
 				break;
 			}
 		}
-		if (typeof(layername) === 'undefined'){
+		if (layerName === void 0){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
-		if (null === selectionHighlightLayer) {
-			selectionHighlightLayer = new OpenLayers.Layer.Vector("geobuilder", layerOptions);
-			map.addLayer(selectionHighlightLayer);
-		}
 
-		var selection = JSON.stringify({
-			lstIdObj: idObj, 
-			lstIds: listIds
-		});
-		
-		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra.json', selection, function(data) {
+		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra/full.json', apiQuery, function(data) {
+			if (0 === data.features.length) {
+				console.error("Aucune feature à localiser"); //@lang
+				return;
+			}
 			var coorX = [];
 			var coorY = [];
 			var feature;
+			var wktParser = new OpenLayers.Format.WKT({});
+			var bounds = new OpenLayers.Bounds();
+			var attributes;
 			var point, points, j;
+			console.log('data', data);
+
+			// Pour chacune des features reçues on les transforme en objet feature
+			// OpenLayers
 			for (var i=0; i<data.features.length; i++){
 				points = [];
 				featureGeom = data.features[i].geometry;
+				attributes = data.features[i].attributes;
 				layerProj = data.features[i].projection;
 				geometryField =  data.features[i].geometryField;
 				idField = data.features[i].idField;
@@ -454,10 +462,10 @@ geobuilder = (function() {
 					point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
 					coorX.push(point.x);
 					coorY.push(point.y);
-					feature = new OpenLayers.Feature.Vector(point, {});
+					feature = new OpenLayers.Feature.Vector(point, attributes);
 				}
 				else if(featureGeom.type == "Polygon"){
-					featureCoordinates = featureGeom.coordinates;
+					var featureCoordinates = featureGeom.coordinates;
 					for (j=0; j< featureCoordinates.length; j++) {
 						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
 						coorX.push(point.x);
@@ -466,11 +474,29 @@ geobuilder = (function() {
 					}
 					var ring = new OpenLayers.Geometry.LinearRing(points);
 					var polygon = new OpenLayers.Geometry.Polygon([ring]);
-					feature = new OpenLayers.Feature.Vector(polygon, {});
+					feature = new OpenLayers.Feature.Vector(polygon, attributes);
+				}
+				else if(featureGeom.type == "MultiPolygon"){
+					var featureCoordinates = featureGeom.coordinates;
+					var ring, rings = []
+					for (p=0; p < featureCoordinates.length; p++) {
+						var multipart = featureCoordinates[p]
+						points = []
+						for (j=0; j< multipart.length; j++) {
+							point = projection(multipart[j][0], multipart[j][1], layerProj);
+							coorX.push(point.x);
+							coorY.push(point.y);
+							points.push(point);
+							ring = new OpenLayers.Geometry.LinearRing(points);
+							rings.push(ring)
+						}
+					}
+					var polygon = new OpenLayers.Geometry.Polygon([ring]);
+					feature = new OpenLayers.Feature.Vector(polygon, attributes);
 				}
 				// linestring
 				else  {
-					featureCoordinates = featureGeom.coordinates;
+					var featureCoordinates = featureGeom.coordinates;
 					for (j=0; j< featureCoordinates.length; j++) {
 						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
 						coorX.push(point.x);
@@ -478,52 +504,48 @@ geobuilder = (function() {
 						points.push(point);
 					}
 					var line = new OpenLayers.Geometry.LineString(points);
-					feature = new OpenLayers.Feature.Vector(line, {});
+					feature = new OpenLayers.Feature.Vector(line, attributes);
 				}
 				features.push(feature);
-			}	
-			
-			selectionHighlightLayer.addFeatures(features);
-
-			// zoom on feature
-			var bounds;
-
-			// if (features && features[0]) {
-			// 	bounds = new OpenLayers.Bounds();
-			// 	Ext.each(features, function(f) {
-			// 		if (f.bounds) {
-			// 			bounds.extend(f.bounds);
-			// 		} else if (f.geometry) {
-			// 			bounds.extend(f.geometry.getBounds());
-			// 		}
-			// 	});
-			// } else 
-			if (selectionHighlightLayer.features.length) {
-				bounds = selectionHighlightLayer.getDataExtent();
-			} else {
-				return;
+				if (feature.bounds) bounds.extend(feature.bounds);
+				else if (feature.geometry) bounds.extend(feature.geometry.getBounds());
 			}
-			if (!bounds || !bounds.left) {
-				return;
-			}
+
+			// On crée un modèle de données permettant à la sélection mapfishapp
+			// d'afficher correctement les colonnes
+			var model = new GEOR.FeatureDataModel({
+				features: features
+			});
+
+			// On déclenche notre résultat de recherche (au sens mapfishapp) afin
+			// que la sélection soit affichée dans le panel et sur la carte
+			GEOR.querier.events.events.searchresults.fire({
+				features: features,
+				model: model,
+				title: 'Sélection Géobuilder : ' + layerName // @lang
+			});
+
+			// On zoome sur nos features
 			// On gère la width passée en paramètre.
 			if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
 				// Si zoom sur un point (width et height == 0) on force la map à
 				// zoomer à 0m dessus on récupère l'extent minimal prêt à être
 				// mis à l'échelle
-				map.zoomToExtent(bounds);	
+				map.zoomToExtent(bounds);
 				bounds = map.getExtent();
 			}
 			var currentWidth = bounds.getWidth();
-			var rescaleRatio = width / currentWidth;
-			var newWidth = currentWidth * rescaleRatio;
-			// On ne garde la nouvelle width calculée que si elle est
-			// supérieure à la width courante, qui est nécessaire pour
-			// afficher toutes les features.
-			newWidth = Math.max(newWidth, currentWidth);
-			rescaleRatio = (newWidth > currentWidth) ? rescaleRatio : 1.05;
-			var layerBounds = bounds.scale(rescaleRatio);
-			map.zoomToExtent(layerBounds);			
+			var rescaleRatio;
+			if (width > currentWidth) {
+				// Si une width supérieure est demandée on on va redimensionner
+				// nos bounds pour l'atteindre
+				rescaleRatio = width / currentWidth;
+			} else {
+				// sinon arbitrairement on dézoome légèrement
+				rescaleRatio = 1.05;
+			}
+			map.zoomToExtent(bounds.scale(rescaleRatio));
+
 		}, function(status) {
 			alert('Something went wrong.');
 			console.error('Something went wrong.');
@@ -846,7 +868,6 @@ geobuilder = (function() {
 					new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
 		xhr.open('post', url, async);
 		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-		xhr.setRequestHeader('Content-Length', params.length);
 		xhr.onreadystatechange = function() {
 			var status;
 			var data;
