@@ -9,8 +9,8 @@ geobuilder = (function() {
 	var simpleSelection = false;
 	var selection = null;
 	var geoApiInitialized = false;
-	
-	/**	
+
+	/**
 	 * Contient un layer de dessin pour la digitalisation. Initialisé lors
 	 * de la première digit
 	 *
@@ -24,7 +24,7 @@ geobuilder = (function() {
 	 * @type {[type]}
 	 */
 	var selectionHighlightLayer = null;
-	
+
 	var geoApiDrawControls = {};
 
 	var map = null;
@@ -45,7 +45,7 @@ geobuilder = (function() {
 		}
 		return widget;
 	}
-	
+
 	function setWidgetContent(wrapperId, url) {
 		byid(wrapperId + '_IFRAME').setAttribute('src', url);
 	}
@@ -65,7 +65,7 @@ geobuilder = (function() {
 	}
 
 	/**
-	 * Permet d'appeler des fonctions lors de la fermeture de la fiche, ou 
+	 * Permet d'appeler des fonctions lors de la fermeture de la fiche, ou
 	 * lors de l'ouverture d'une autre fiche
 	 *
 	 * @type {Array}
@@ -106,7 +106,7 @@ geobuilder = (function() {
 		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow, "Info");
 		setWidgetContent('ggis_featureInfo', Fusion.getFusionURL() + 'cfm/consult.cfm?OBJ='+featureClass+'&ID='+featureId);
 		showWidget(ftinfo, 600, 400);
-		
+
 		// Si on passe une fonction de rappel pour la fermeture, on l'enregistre
 		// et on indique au widget d'exécuter le cleanup lors de la fermeture
 		// manuelle (click sur la croix). À chaque fois qu'on ouvre la fiche
@@ -116,7 +116,7 @@ geobuilder = (function() {
 		// pire on appelle X fois le cleanup qui ne fera rien, n'ayant pas de
 		// callbacks dans sa liste. On indique single:true sur les listeners
 		// afin qu'ils soient quand même nettoyés quand on masque la fiche
-		if (cleanupCallback) { 
+		if (cleanupCallback) {
 			featureInfoCleanupSystem.add(cleanupCallback);
 			ftinfo.on('hide', featureInfoCleanupSystem.run, {single: true});
 		}
@@ -127,7 +127,7 @@ geobuilder = (function() {
 	 */
 	function hideFeatureInfo() {
 		var ftinfo = getWindowWidget('ggis_featureInfo', GEOR.geobuilder_createCardWindow);
-		hideWidget(ftinfo);		
+		hideWidget(ftinfo);
 		featureInfoCleanupSystem.run();
 	}
 
@@ -173,11 +173,11 @@ geobuilder = (function() {
 	function showPopup(url, width, height, title) {
 		title = title || 'Popup';
 		width = width || 600;
-		height = height || 400;		
-		
+		height = height || 400;
+
 		var popup = getWindowWidget('ggis_popup', GEOR.geobuilder_createPopupWindow, title);
 		setWidgetContent('ggis_popup', Fusion.getFusionURL() + url, 600, 400);
-		showWidget(popup, width, height);		
+		showWidget(popup, width, height);
 
 	}
 
@@ -351,7 +351,7 @@ geobuilder = (function() {
 		}
 		//if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined' && typeof(width) != 'undefined') {
 		if (typeof(lstIdObj) != 'undefined' && typeof(lstIds) != 'undefined') {
-			if (lstIdObj !== '' && lstIds !== '') { 
+			if (lstIdObj !== '' && lstIds !== '') {
 				if (!width) {
 					width = "";
 				}
@@ -398,11 +398,11 @@ geobuilder = (function() {
 	 * Zoom on geobuilder object
 	 * 	first create feature
 	 *  then selected and zoom on it
-	 *  
+	 *
 	 *  @param {String} idObj
 	 *  @param {String[]} listIds
 	 *  @param {Number} width
-	 * 
+	 *
 	 */
 	function localise(idObj, listIds, width) {
 
@@ -414,10 +414,10 @@ geobuilder = (function() {
 
 		var layerName;
 		var features = [];
-		
+
 		// init layer to  draw selected features
 		var map = Fusion.getMap();
-		
+
 		var layerOptions = OpenLayers.Util.applyDefaults({}, {
 			displayInLayerSwitcher : false,
 			sphericalMercator: true
@@ -552,7 +552,7 @@ geobuilder = (function() {
 		});
 
 	}
-	
+
 	function projection(coorX, coorY, layerProj){
 		var point, epsgMap = new OpenLayers.Projection(Fusion.getMap().projection);
 		if (layerProj !== ""){
@@ -564,7 +564,7 @@ geobuilder = (function() {
 		}
 		return point;
 	}
-	
+
 	function deleteMapSelection(selection) {
 
 	}
@@ -572,7 +572,7 @@ geobuilder = (function() {
 	function addMapSelection(selection) {
 
 	}
-	
+
 	/**
 	 * renvoie des couches de la carte
 	 * @param {Boolean} visible
@@ -664,8 +664,8 @@ geobuilder = (function() {
 		//hideFeatureInfo();
 		Fusion.getMap().baseLayer.redraw();
 	}
-	
-	
+
+
 	window.Fusion = {
 			map : null,
 			selection : "CAN 1",
@@ -676,7 +676,7 @@ geobuilder = (function() {
 			getFusionURL: function() {
 				return GEOR.config.GEOBUILDER_URL;
 			},
- 
+
 			getWidgetById: function(id) {
 				if (id === 'Map'){
 					return window;
@@ -688,11 +688,11 @@ geobuilder = (function() {
 				this.map = GeoExt.MapPanel.guess().map;
 				return this.map;
 			},
- 
+
 			setSelection: function (select) {
 				this.selection = select;
-			}, 
-			
+			},
+
 			getSelection: function() {
 				return this.selection;
 			}
@@ -713,9 +713,9 @@ geobuilder = (function() {
 			geoApiActiveControl = control;
 			control.activate();
 		}
-	}    	
-	
-	
+	}
+
+
 	function geoApiInit() {
 		if (geoApiInitialized) {
 			return;
@@ -833,7 +833,7 @@ geobuilder = (function() {
 			geoApiActiveControl.deactivate();
 			geoApiActiveControl = null;
 		}
-	}	
+	}
 
 	function getMapSrid() {
 		return Fusion.getMap().projection.match(/EPSG:([0-9]+)/)[1];
@@ -864,14 +864,14 @@ geobuilder = (function() {
 		if (async === void 0) {
 			async = true;
 		}
-		var xhr = (typeof XMLHttpRequest != 'undefined' ? 
+		var xhr = (typeof XMLHttpRequest != 'undefined' ?
 					new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
 		xhr.open('post', url, async);
 		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 		xhr.onreadystatechange = function() {
 			var status;
 			var data;
-			if (xhr.readyState == 4) { 
+			if (xhr.readyState == 4) {
 				status = xhr.status;
 				if (status == 200) {
 					data = JSON.parse(xhr.responseText);
@@ -886,11 +886,11 @@ geobuilder = (function() {
 
 	function mapRefresh(idObj) {
 		Fusion.getMap().layers
-			.filter(function(ly){ 
+			.filter(function(ly){
 				return ly.params && ly.params.LAYERS && ly.params.LAYERS.startsWith(idObj);
 			})
 			.forEach(function(ly) {
-				ly.redraw(true);	
+				ly.redraw(true);
 			});
 	}
 
