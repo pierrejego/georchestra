@@ -413,7 +413,6 @@ geobuilder = (function() {
 		});
 
 		var layerName;
-		var features = [];
 
 		// init layer to  draw selected features
 		var map = Fusion.getMap();
@@ -440,75 +439,28 @@ geobuilder = (function() {
 				console.error("Aucune feature à localiser"); //@lang
 				return;
 			}
-			var coorX = [];
-			var coorY = [];
-			var feature;
-			var wktParser = new OpenLayers.Format.WKT({});
-			var bounds = new OpenLayers.Bounds();
-			var attributes;
-			var point, points, j;
-			console.log('data', data);
 
-			// Pour chacune des features reçues on les transforme en objet feature
-			// OpenLayers
-			for (var i=0; i<data.features.length; i++){
-				points = [];
-				featureGeom = data.features[i].geometry;
-				attributes = data.features[i].attributes;
-				layerProj = data.features[i].projection;
-				geometryField =  data.features[i].geometryField;
-				idField = data.features[i].idField;
-				if (featureGeom.type == "Point"){
-					point = projection(featureGeom.coordinates[0], featureGeom.coordinates[1], layerProj);
-					coorX.push(point.x);
-					coorY.push(point.y);
-					feature = new OpenLayers.Feature.Vector(point, attributes);
-				}
-				else if(featureGeom.type == "Polygon"){
-					var featureCoordinates = featureGeom.coordinates;
-					for (j=0; j< featureCoordinates.length; j++) {
-						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
-						coorX.push(point.x);
-						coorY.push(point.y);
-						points.push(point);
-					}
-					var ring = new OpenLayers.Geometry.LinearRing(points);
-					var polygon = new OpenLayers.Geometry.Polygon([ring]);
-					feature = new OpenLayers.Feature.Vector(polygon, attributes);
-				}
-				else if(featureGeom.type == "MultiPolygon"){
-					var featureCoordinates = featureGeom.coordinates;
-					var ring, rings = []
-					for (p=0; p < featureCoordinates.length; p++) {
-						var multipart = featureCoordinates[p]
-						points = []
-						for (j=0; j< multipart.length; j++) {
-							point = projection(multipart[j][0], multipart[j][1], layerProj);
-							coorX.push(point.x);
-							coorY.push(point.y);
-							points.push(point);
-							ring = new OpenLayers.Geometry.LinearRing(points);
-							rings.push(ring)
-						}
-					}
-					var polygon = new OpenLayers.Geometry.Polygon([ring]);
-					feature = new OpenLayers.Feature.Vector(polygon, attributes);
-				}
-				// linestring
-				else  {
-					var featureCoordinates = featureGeom.coordinates;
-					for (j=0; j< featureCoordinates.length; j++) {
-						point = projection(featureCoordinates[j][0], featureCoordinates[j][1], layerProj);
-						coorX.push(point.x);
-						coorY.push(point.y);
-						points.push(point);
-					}
-					var line = new OpenLayers.Geometry.LineString(points);
-					feature = new OpenLayers.Feature.Vector(line, attributes);
+			// projection récupérée de la première feature
+			var layerProjection = data.features[0].projection;
+			var wktParser = new OpenLayers.Format.WKT({
+				externalProjection: new OpenLayers.Projection('EPSG:' + layerProjection),
+				internalProjection: Fusion.getMap().getProjectionObject()
+			});
+
+			var features = [];
+			var bounds = new OpenLayers.Bounds();
+			// Pour chacune des features reçues on les transforme en objet
+			// feature OpenLayers
+			for (var i=0, fslen = data.features.length; i < fslen; i++){
+				var featureWktGeom = data.features[i].geometry;
+				var feature = wktParser.read(featureWktGeom);
+				feature.attributes = data.features[i].attributes;
+				if (feature.bounds) {
+					bounds.extend(feature.bounds);
+				} else if (feature.geometry) {
+					bounds.extend(feature.geometry.getBounds());
 				}
 				features.push(feature);
-				if (feature.bounds) bounds.extend(feature.bounds);
-				else if (feature.geometry) bounds.extend(feature.geometry.getBounds());
 			}
 
 			// On crée un modèle de données permettant à la sélection mapfishapp
@@ -551,18 +503,6 @@ geobuilder = (function() {
 			console.error('Something went wrong.');
 		});
 
-	}
-
-	function projection(coorX, coorY, layerProj){
-		var point, epsgMap = new OpenLayers.Projection(Fusion.getMap().projection);
-		if (layerProj !== ""){
-			var projectionCode = 'EPSG:' + layerProj;
-			var epsgLayer = new OpenLayers.Projection(projectionCode);
-			point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap);
-		} else {
-			point = new OpenLayers.Geometry.Point(coorX, coorY);
-		}
-		return point;
 	}
 
 	function deleteMapSelection(selection) {
