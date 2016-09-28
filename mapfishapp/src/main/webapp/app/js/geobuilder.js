@@ -434,6 +434,9 @@ geobuilder = (function() {
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
 
+		// Affiche l'onglet de recherche (un peu comme le waitlt)
+		GEOR.querier.events.events.search.fire({})
+
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra/full.json', apiQuery, function(data) {
 			if (0 === data.features.length) {
 				console.error("Aucune feature à localiser"); //@lang
