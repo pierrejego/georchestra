@@ -22,8 +22,7 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
                     graphicHeight: 32,
                     graphicYOffset: -28, // shift graphic up 28 pixels
                     //Change the location of picture if not find
-                    //externalGraphic : 'app/css/images/pwrs/geoPin.png',
-                    externalGraphic:"../img/geoPin.png"
+                    externalGraphic : 'app/css/images/pwrs/geoPin.png',
                 }
             })
         });
