@@ -120,7 +120,7 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
             listeners : {
                 "beforeload": function (q){
                     store.baseParams.q = store.baseParams["query"];  
-                    //store.baseParams.limit = banGeocoderOptions.limitResponse;   // number of result is default set to 5, change it in config.json file, more informations in README
+                    store.baseParams.limit = banGeocoderOptions.limitResponse;   // number of result is default set to 5, change it in config.json file, more informations in README
                     delete store.baseParams["query"];
                 }
             }
