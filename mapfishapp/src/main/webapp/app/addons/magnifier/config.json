@@ -1,7 +1,7 @@
 [{
         "id": "magnifier_0",
         "name": "Magnifier",
-        "enabled": true,
+        "enabled": false,
         "title": {
             "en": "Aerial imagery magnifier",
             "es": "Lupa ortofoto",

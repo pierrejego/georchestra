@@ -1,7 +1,7 @@
 [{
         "id": "extractor_0",
         "name": "Extractor",
-        "enabled": true,
+        "enabled": false,
         "title": {
             "en": "Extractor",
             "es": "Extractor",
