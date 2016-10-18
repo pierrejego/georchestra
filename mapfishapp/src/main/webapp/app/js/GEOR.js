@@ -125,6 +125,7 @@ Ext.namespace("GEOR");
     };
 
     Ext.onReady(function() {
+    	var clickOnManageObject = false;
     	    	
         var tr = OpenLayers.i18n;
 
@@ -232,10 +233,17 @@ Ext.namespace("GEOR");
             		if(panel.getActiveTab() instanceof GEOR.ResultsPanel){
             			panel.getActiveTab().lower();
             		}
+            		clickOnManageObject = false;
             	},
             	'expand': function(panel) {
-            		if(panel.getActiveTab() instanceof GEOR.ResultsPanel){
-            			panel.getActiveTab().raise();
+            		if(clickOnManageObject){
+                        setTimeout(function(){
+                            southPanel.collapse();
+                        },500);                        
+            		} else {
+						if(panel.getActiveTab() instanceof GEOR.ResultsPanel){
+							panel.getActiveTab().raise();
+						}
             		}
             	},
             	'beforetabchange': function(panel, newTab, oldTab) {
@@ -500,6 +508,7 @@ Ext.namespace("GEOR");
                     			tab.title="geobuilder "+ tab.title;
                     			
                     			// Collapse will raise vectorLayer in this specific case
+                    			clickOnManageObject = true;
                     			southPanel.collapse();
 		                                          
                     			// fid is made like layerName.id
