@@ -1,7 +1,7 @@
 [{
         "id": "streetview_0",
         "name": "Streetview",
-        "enabled": true,
+        "enabled": false,
         "title": {
             "en": "StreetView",
             "fr": "StreetView",
