@@ -207,8 +207,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
         layer.events.register("removed",this,function(){
-        	if(Ext.getCmp("annotation_mainWindow").isVisible()){
-        		this.map.addLayer(layer);
+        	if(Ext.getCmp("annotation_mainWindow")){
+        		if (this.map && this.map.getLayersByName('__georchestra_annotations') < 1){
+        			this.map.addLayer(layer);
+        		}        		
         	}
         });
         this.map.addLayer(layer); 
@@ -729,7 +731,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     		if(this.map.getLayersByName('__georchestra_annotations').length < 1){
     			layer.setZIndex(1000);
     		}else{
-    			console.log("error : annotation layer not exist !");
+    			this.map.addLayer(layer);
     		}
     	}
         var feature, drawControl;
