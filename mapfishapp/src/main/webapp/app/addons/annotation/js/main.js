@@ -17,6 +17,7 @@ GEOR.Addons.Annotation = Ext.extend(GEOR.Addons.Base, {
         });
         this.window = new Ext.Window({
             title: OpenLayers.i18n('annotation.drawing_tools'),
+            id: "annotation_mainWindow",
             width: 510,
             constrainHeader:true,
             closable: true,

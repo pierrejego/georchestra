@@ -206,6 +206,11 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
+        layer.events.register("removed",this,function(){
+        	if(Ext.getCmp("annotation_mainWindow").isVisible()){
+        		this.map.addLayer(layer);
+        	}
+        });
         this.map.addLayer(layer); 
         
         // find zIndex modification in : 
@@ -720,6 +725,13 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      *  of the feature to INSERT and select it.
      */
     onFeatureAdded: function(event) {
+    	if(GeoExt.MapPanel.guess().map){
+    		if(this.map.getLayersByName('__georchestra_annotations').length < 1){
+    			layer.setZIndex(1000);
+    		}else{
+    			console.log("error : annotation layer not exist !");
+    		}
+    	}
         var feature, drawControl;
 
         feature = event.feature;
@@ -735,9 +747,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
 
         var control = this.featureControl;
         control.selectFeature.defer(1, control, [feature]);
-        // up annotation layer in front of all layer
-        this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
-
     },
 
     /** private: method[onModificationStart]
