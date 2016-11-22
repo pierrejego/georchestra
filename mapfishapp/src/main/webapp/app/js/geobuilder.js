@@ -871,5 +871,5 @@ geobuilder = (function() {
 	window.showWaitingWorkPlace = showWaitingWorkPlace;
 	window.showWorkPlace = showWorkPlace;
 	window.ZoomEnsemble = ZoomEnsemble;
-
+	// test commit cg
 }());
