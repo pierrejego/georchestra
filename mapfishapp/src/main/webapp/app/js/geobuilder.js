@@ -393,6 +393,69 @@ geobuilder = (function() {
 		return success;
 	}
 
+	/**
+	 * Add picture marker symbol at (x,y) coordinates in the map
+	 * and zoom on it
+	 * CG - 24/11/2016
+	 * 
+	 *  @param {Number} x : coordinate X of the point
+	 *  @param {Number} y : coordinate Y of the point
+	 * 
+	 */
+	function addPictureMarkerSymbol(x, y) {
+		var pointsLayer;
+		var size;
+		var map = Fusion.getMap();
+		//console.log('map : ', map);
+		if (map.getLayersByName('georchestra_pointsLayer').length === 0){
+			pointsLayer = new OpenLayers.Layer.Vector("georchestra_pointsLayer", {
+				displayInLayerSwitcher: false,
+				styleMap: new OpenLayers.StyleMap({
+					"default": {
+						graphicWidth: 20,
+						graphicHeight: 32,
+						graphicYOffset: -28, // shift graphic up 28 pixels
+						externalGraphic : 'app/css/images/pwrs/geoPin.png'
+					}
+				})
+			});
+			map.addLayer(pointsLayer);
+		}
+		else {
+			pointsLayer = map.getLayersByName('georchestra_pointsLayer')[0];
+			pointsLayer.removeAllFeatures();
+		}
+		var point = new OpenLayers.Geometry.Point(x,y);
+		// add new point to map and zoom if geom respect map extend
+		if (point.x <= GEOR.config.MAP_XMAX &&
+			point.x >= GEOR.config.MAP_XMIN && 
+			point.y <= GEOR.config.MAP_YMAX && 
+			point.y >= GEOR.config.MAP_YMIN){
+				map.setCenter(new OpenLayers.LonLat(point.x, point.y), 16);
+				feature = new OpenLayers.Feature.Vector(point);
+				pointsLayer.addFeatures(feature);
+		}
+		else {
+			alert("Coordonnées invalides !");
+		}
+	}
+
+	/**
+	 * Remove picture marker symbol from the map
+	 * CG - 24/11/2016
+	 * 
+	 *  @param {Number} x : coordinate X of the point
+	 *  @param {Number} y : coordinate Y of the point
+	 * 
+	 */
+	function destroyPictureMarkerSymbol() {
+		var map = Fusion.getMap();
+		if (map.getLayersByName('georchestra_pointsLayer').length > 0){
+			var lastResult = map.getLayersByName('georchestra_pointsLayer')[0];
+			lastResult.removeAllFeatures();
+		}
+	}
+
 
 	/**
 	 * Zoom on geobuilder object
@@ -506,6 +569,27 @@ geobuilder = (function() {
 			console.error('Something went wrong.');
 		});
 
+	}
+
+	/**
+	 * Projection of a point from the layer coordinates system
+	 * to the map coordinates system
+	 *
+	 *  @param {Number} coorX
+	 *  @param {Number} coorY
+	 *  @param {Number} layerProj : EPSG code of the layer coordinates system
+	 * 
+	 */
+	function projection(coorX, coorY, layerProj){
+		var point, epsgMap = new OpenLayers.Projection(Fusion.getMap().projection);
+		if (layerProj !== ""){
+			var projectionCode = 'EPSG:' + layerProj;
+			var epsgLayer = new OpenLayers.Projection(projectionCode);
+			point = new OpenLayers.Geometry.Point(coorX, coorY).transform(epsgLayer, epsgMap);
+		} else {
+			point = new OpenLayers.Geometry.Point(coorX, coorY);
+		}
+		return point;
 	}
 
 	function deleteMapSelection(selection) {
@@ -871,5 +955,7 @@ geobuilder = (function() {
 	window.showWaitingWorkPlace = showWaitingWorkPlace;
 	window.showWorkPlace = showWorkPlace;
 	window.ZoomEnsemble = ZoomEnsemble;
-	// test commit cg
+	window.projection = projection;
+	window.addPictureMarkerSymbol = addPictureMarkerSymbol;
+	window.destroyPictureMarkerSymbol = destroyPictureMarkerSymbol;
 }());
