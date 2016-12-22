@@ -1,0 +1,246 @@
+/*
+ * Copyright (C) 2009-2016 by the geOrchestra PSC
+ *
+ * This file is part of geOrchestra.
+ *
+ * geOrchestra is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * geOrchestra is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * geOrchestra.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.georchestra.ldapadmin.ws.custom;
+
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import net.tanesha.recaptcha.ReCaptcha;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.georchestra.ldapadmin.bs.Moderator;
+import org.georchestra.ldapadmin.bs.ReCaptchaParameters;
+import org.georchestra.ldapadmin.ds.AccountDao;
+import org.georchestra.ldapadmin.ds.DataServiceException;
+import org.georchestra.ldapadmin.ds.DuplicatedEmailException;
+import org.georchestra.ldapadmin.ds.DuplicatedUidException;
+import org.georchestra.ldapadmin.dto.Account;
+import org.georchestra.ldapadmin.dto.AccountFactory;
+import org.georchestra.ldapadmin.dto.Group;
+import org.georchestra.ldapadmin.mailservice.MailService;
+import org.georchestra.ldapadmin.ws.newaccount.AccountFormBean;
+import org.georchestra.ldapadmin.ws.utils.EmailUtils;
+import org.georchestra.ldapadmin.ws.utils.PasswordUtils;
+import org.georchestra.ldapadmin.ws.utils.RecaptchaUtils;
+import org.georchestra.ldapadmin.ws.utils.UserUtils;
+import org.georchestra.ldapadmin.ws.utils.Validation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.NameNotFoundException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+
+/**
+ * Manages the UI Account Form.
+ *
+ * <p>
+ *
+ * </p>
+ *
+ * @author Mauricio Pazos
+ *
+ */
+@Controller
+@SessionAttributes(types={AccountFromTokenFormBean.class})
+public final class AccountFromTokenFormController {
+
+	private static final Log LOG = LogFactory.getLog(AccountFromTokenFormController.class.getName());
+
+	private AccountDao accountDao;
+
+	private MailService mailService;
+
+	private Moderator moderator;
+
+	private ReCaptcha reCaptcha;
+
+	private ReCaptchaParameters reCaptchaParameters;
+
+	private static final String[] fields = {"firstName","surname", "email", "phone", "org",
+	    "title", "description", "uid", "password", "confirmPassword", "techId"};
+
+	@Autowired
+	public AccountFromTokenFormController(AccountDao dao, MailService mailSrv, Moderator moderatorRule,
+	        ReCaptcha reCaptcha, ReCaptchaParameters reCaptchaParameters) {
+		this.accountDao = dao;
+		this.mailService = mailSrv;
+		this.moderator = moderatorRule;
+		this.reCaptcha = reCaptcha;
+		this.reCaptchaParameters = reCaptchaParameters;
+	}
+
+	@InitBinder
+	public void initForm(WebDataBinder dataBinder) {
+		dataBinder.setAllowedFields(ArrayUtils.addAll(fields,
+		        new String[]{"recaptcha_challenge_field", "recaptcha_response_field"}));
+	}
+
+	@RequestMapping(value="/account/newfromps", method=RequestMethod.GET)
+	public String setupForm(HttpServletRequest request, Model model) throws IOException{
+
+		AccountFromTokenFormBean formBean = new AccountFromTokenFormBean();
+
+		// Populate information given from security filter
+		HttpSession session = request.getSession();
+		
+		formBean.setFirstName(request.getParameter("firstName"));
+		formBean.setSurname(request.getParameter("surname"));		
+		formBean.setEmail(request.getParameter("email"));
+		formBean.setPhone(request.getParameter("phone"));
+		formBean.setUid(request.getParameter("uid"));
+		formBean.setTechId(request.getParameter("techId"));
+		
+		model.addAttribute(formBean);
+
+		session.setAttribute("reCaptchaPublicKey", this.reCaptchaParameters.getPublicKey());
+		
+		for (String f : fields) {
+			if (Validation.isFieldRequired(f)) {
+				session.setAttribute(f + "Required", "true");
+			}
+		}
+		return "createAccountFormCustom";
+	}
+
+	/**
+	 * Creates a new account in ldap. If the application was configured as "moderator singnup" the new account is added in the PENDING group,
+	 * in other case, it will be inserted in the SV_USER group
+	 *
+	 *
+	 * @param formBean
+	 * @param result
+	 * @param sessionStatus
+	 *
+	 * @return the next view
+	 *
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/account/newfromps", method=RequestMethod.POST)
+	public String create(HttpServletRequest request,
+						 @ModelAttribute("accountFromTokenFormBean") AccountFromTokenFormBean formBean,
+						 BindingResult result,
+						 SessionStatus sessionStatus)
+			throws IOException {
+
+		String remoteAddr = request.getRemoteAddr();
+
+		UserUtils.validate(formBean.getUid(), formBean.getFirstName(), formBean.getSurname(), result );
+		EmailUtils.validate(formBean.getEmail(), result);
+		PasswordUtils.validate(formBean.getPassword(), formBean.getConfirmPassword(), result);
+		new RecaptchaUtils(remoteAddr, this.reCaptcha).validate(formBean.getRecaptcha_challenge_field(), formBean.getRecaptcha_response_field(), result);
+		Validation.validateField("phone", formBean.getPhone(), result);
+		Validation.validateField("title", formBean.getTitle(), result);
+		Validation.validateField("org", formBean.getOrg(), result);
+		Validation.validateField("description", formBean.getDescription(), result);
+
+		if(result.hasErrors()){
+
+			return "createAccountFormCustom";
+		}
+
+		// inserts the new account
+		try {
+
+			Account account =  AccountFactory.createBrief(
+					formBean.getUid().toLowerCase(),
+					formBean.getPassword(),
+					formBean.getFirstName(),
+					formBean.getSurname(),
+					formBean.getEmail(),
+					formBean.getPhone(),
+					formBean.getOrg(),
+					formBean.getTitle(),
+					formBean.getDescription() );
+			
+			//add techId into common name
+			account.setCommonName(formBean.getTechId());
+
+			String groupID = this.moderator.moderatedSignup() ? Group.PENDING : Group.SV_USER;
+
+			String adminUUID = null;
+			try {
+				adminUUID = this.accountDao.findByUID(request.getHeader("sec-username")).getUUID();
+			} catch (NameNotFoundException e) {
+				LOG.error("Unable to find admin/user connected, so no admin log generated when creating uid : " + formBean.getUid());
+			}
+
+			this.accountDao.insert(account, groupID, adminUUID);
+
+			final ServletContext servletContext = request.getSession().getServletContext();
+			if(this.moderator.moderatedSignup() ){
+
+				// email to the moderator
+				this.mailService.sendNewAccountRequiresModeration(servletContext, account.getUid(), account.getCommonName(), account.getEmail(), this.moderator.getModeratorEmail());
+
+				// email to the user
+				this.mailService.sendAccountCreationInProcess(servletContext, account.getUid(), account.getCommonName(), account.getEmail());
+			} else {
+				// email to the user
+				this.mailService.sendAccountWasCreated(servletContext, account.getUid(), account.getCommonName(), account.getEmail());
+			}
+			sessionStatus.setComplete();
+
+			return "welcomeNewUser";
+
+		} catch (DuplicatedEmailException e) {
+
+			result.rejectValue("email", "email.error.exist", "there is a user with this e-mail");
+			return "createAccountFormCustom";
+
+		} catch (DuplicatedUidException e) {
+
+			try {
+				String proposedUid = this.accountDao.generateUid( formBean.getUid() );
+
+				formBean.setUid(proposedUid);
+
+				result.rejectValue("uid", "uid.error.exist", "the uid exist");
+
+				return "createAccountFormCustom";
+
+			} catch (DataServiceException e1) {
+				throw new IOException(e);
+			}
+
+		} catch (DataServiceException e) {
+
+			throw new IOException(e);
+		}
+	}
+	
+	@ModelAttribute("accountFromTokenFormBean")
+	public AccountFromTokenFormBean getAccountFormBean() {
+		return new AccountFromTokenFormBean();
+	}
+}
