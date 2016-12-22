@@ -32,20 +32,20 @@ public class AccountFormBean implements Serializable{
 
 	private static final long serialVersionUID = 6955470190631684934L;
 
-	private String uid;
-	private String firstName;
-	private String surname;
+	protected String uid;
+	protected String firstName;
+	protected String surname;
 
-	private String org;
-	private String title;
-	private String email;
-	private String phone;
-	private String description;
-	private String password;
-	private String confirmPassword;
+	protected String org;
+	protected String title;
+	protected String email;
+	protected String phone;
+	protected String description;
+	protected String password;
+	protected String confirmPassword;
 
-	private String recaptcha_challenge_field;
-	private String recaptcha_response_field;
+	protected String recaptcha_challenge_field;
+	protected String recaptcha_response_field;
 
 	public String getRecaptcha_challenge_field() {
 		return recaptcha_challenge_field;
