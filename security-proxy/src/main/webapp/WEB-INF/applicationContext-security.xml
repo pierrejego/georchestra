@@ -19,6 +19,7 @@
         ignore-resource-not-found="true" ignore-unresolvable="true" order="1" />
 
     <s:http entry-point-ref="casProcessingFilterEntryPoint" request-matcher="regex" realm="${realmName}" disable-url-rewriting="true">
+	     <s:custom-filter ref="authTokenFilter" after="BASIC_AUTH_FILTER" />
 	    <s:custom-filter ref="basicAuthChallengeByUserAgent" before="CAS_FILTER" />
 	    <s:custom-filter ref="casFilter" after="CAS_FILTER" />
         <s:custom-filter ref="filterSecurityInterceptor" after="EXCEPTION_TRANSLATION_FILTER" />
@@ -77,7 +78,7 @@
         <s:authentication-provider ref='casAuthenticationProvider' />
         <s:authentication-provider ref='ldapAuthenticationProvider' />
     </s:authentication-manager>
-
+	
     <bean id="basicAuthChallengeByUserAgent" class="org.georchestra.security.BasicAuthChallengeByUserAgent" init-method="init">
         <property name="challengeUserAgents">
             <list>
@@ -196,5 +197,22 @@
         p:fallbackToSystemLocale="false">
     </bean>
 	<!-- end cas config -->
+	
+	      
+	<!--  specific for portail PS -->
+    <bean id="tokenService" class="org.georchestra.security.custom.TokenService" />
+    
+    <!--  use to search user with ticketId -->
+     <bean id="ldapUserSearchByTicketId" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+        <constructor-arg index="0" value="${userSearchBaseDN}"/>
+        <constructor-arg index="1" value="${userSearchFilterTechId}"/>
+        <constructor-arg index="2" ref="contextSource" />
+    </bean>
+        
+    <!--  specific filter with create custom authentification or redirect to user creation page with information from SAML ticket -->   
+    <bean id="authTokenFilter" class="org.georchestra.security.custom.TokenAuthenticationFilter">
+        <property name="userSearch" ref="ldapUserSearchByTicketId" />
+     	<property name="tokenService" ref="tokenService"/>
+ 	</bean>
 
 </beans>
