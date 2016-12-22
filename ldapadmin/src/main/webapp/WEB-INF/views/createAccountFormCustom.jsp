@@ -38,7 +38,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href='css/bootstrap.min.css' rel="stylesheet" />
 	<link href='css/ldapadmin.css' rel="stylesheet" />
-	<title><s:message code="createAccountForm.title"/></title>
+	<title><s:message code="createAccountFormCustom.title"/></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -47,10 +47,10 @@
 
 	<div class="container">
 		<div class="page-header">
-			<h1><s:message code="createAccountFormCustom.title"/> <small><s:message code="createAccountForm.subtitle" /></small></h1>
+			<h1><s:message code="createAccountFormCustom.title"/> <small><s:message code="createAccountFormCustom.subtitle" /></small></h1>
 		</div>
 		<p class="lead"><s:message code="createAccountForm.description" /></p>
-		<form:form id="form" name="form" method="post" action="new" modelAttribute="accountFromTokenFormBean" cssClass="form-horizontal col-lg-6 col-lg-offset-1" onsubmit="return validate();">
+		<form:form id="form" name="form" method="post" action="newfromps" modelAttribute="accountFromTokenFormBean" cssClass="form-horizontal col-lg-6 col-lg-offset-1" onsubmit="return validate();">
 
 			<c:if test="${not empty message}">
 			<div id="message" class="alert alert-dismissable alert-info">

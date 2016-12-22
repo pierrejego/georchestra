@@ -20,8 +20,6 @@
 package org.georchestra.ldapadmin.ws.custom;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +40,6 @@ import org.georchestra.ldapadmin.dto.Account;
 import org.georchestra.ldapadmin.dto.AccountFactory;
 import org.georchestra.ldapadmin.dto.Group;
 import org.georchestra.ldapadmin.mailservice.MailService;
-import org.georchestra.ldapadmin.ws.newaccount.AccountFormBean;
 import org.georchestra.ldapadmin.ws.utils.EmailUtils;
 import org.georchestra.ldapadmin.ws.utils.PasswordUtils;
 import org.georchestra.ldapadmin.ws.utils.RecaptchaUtils;
@@ -172,7 +169,7 @@ public final class AccountFromTokenFormController {
 		// inserts the new account
 		try {
 
-			Account account =  AccountFactory.createBrief(
+			Account account =  AccountFactory.createBriefTechiD(
 					formBean.getUid().toLowerCase(),
 					formBean.getPassword(),
 					formBean.getFirstName(),
@@ -181,10 +178,8 @@ public final class AccountFromTokenFormController {
 					formBean.getPhone(),
 					formBean.getOrg(),
 					formBean.getTitle(),
-					formBean.getDescription() );
-			
-			//add techId into common name
-			account.setCommonName(formBean.getTechId());
+					formBean.getDescription(),
+					formBean.getTechId());
 
 			String groupID = this.moderator.moderatedSignup() ? Group.PENDING : Group.SV_USER;
 

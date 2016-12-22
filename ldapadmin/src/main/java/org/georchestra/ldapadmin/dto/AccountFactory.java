@@ -250,4 +250,38 @@ public class AccountFactory {
 		return a;
 	}
 
+
+	/**
+	 * Creates an account object with common name.
+	 * 
+	 * @param uid
+	 * @param password
+	 * @param firstName
+	 * @param surname
+	 * @param email
+	 * @param phone
+	 * @param org
+	 * @param title
+	 * @param description
+	 * @param techId
+	 * @return {@link Account}
+	 */
+	public static Account createBriefTechiD(String uid, String password, String firstName, String surname,
+			String email, String phone, String org, String title, String description, String commonName) {
+		Account account = new AccountImpl();
+		
+		account.setUid(uid);
+		account.setPassword(password);
+		account.setGivenName(firstName);
+		account.setSurname(surname);
+		account.setCommonName(commonName);
+		account.setEmail(email);
+		account.setPhone(phone);
+		account.setOrg(org);
+		account.setTitle(title);
+		account.setDescription(description);
+		
+		return account;
+	}
+
 }

@@ -512,8 +512,9 @@ public final class AccountDaoImpl implements AccountDao {
         
         setAccountField(context, UserSchema.HOME_POSTAL_ADDRESS_KEY, account.getHomePostalAddress());
 
-        if(account.getManager() != null)
+        if(account.getManager() != null){
             setAccountField(context, UserSchema.MANAGER, account.getManager());
+        }
         
         setAccountField(context, UserSchema.CONTEXT, account.getContext());
     }
