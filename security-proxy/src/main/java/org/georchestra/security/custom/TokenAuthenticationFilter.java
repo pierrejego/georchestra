@@ -20,7 +20,6 @@
 package org.georchestra.security.custom;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -31,7 +30,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -64,7 +62,7 @@ public class TokenAuthenticationFilter implements Filter {
 
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (context.getAuthentication() != null && context.getAuthentication().isAuthenticated()) {
-			// do nothing
+			logger.debug(" User all ready authenticated");
 		} else {
 			Map<String, String[]> params = req.getParameterMap();
 
@@ -102,6 +100,9 @@ public class TokenAuthenticationFilter implements Filter {
 						DirContextOperations userData;
 						try {
 							 userData = userSearch.searchForUser(user.getToken().getSsoUserTechId());
+							 
+							 // Add authentification information for CAS server
+							 
 
 						} catch (UsernameNotFoundException e) {
 							// User not found in ldap

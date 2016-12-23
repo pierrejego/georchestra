@@ -14,9 +14,11 @@ public class ClientPasswordCallback implements CallbackHandler {
 
 	private Map<String, String> passwords = new HashMap<String, String>();
 
+	String jksPassword = PropertiesUtil.getPropertyAsString("jks.password");
+	
 	public ClientPasswordCallback() {
-		passwords.put("client", "p@ssw0rd");
-		passwords.put("server", "p@ssw0rd");
+		passwords.put("client", jksPassword);
+		passwords.put("server", jksPassword);
 	}
 
 	public void handle(Callback[] callbacks) throws IOException,
