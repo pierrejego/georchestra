@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:p="http://cxf.apache.org/policy" xmlns:wsa="http://cxf.apache.org/ws/addressing"
+	xmlns:sec="http://cxf.apache.org/configuration/security" xmlns:http="http://cxf.apache.org/transports/http/configuration"
+	xsi:schemaLocation="http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
+http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+http://cxf.apache.org/policy http://cxf.apache.org/schemas/policy.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Intercepteurs pour logger les messages en entrée et en sortie du client -->
+	<bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+	<bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+
+	<!-- Activation du bus pour le service appelé -->
+	<http:conduit name="{urn:oasis:names:tc:SAML:2.0:protocol:wsdl}ArtifactResolutionServiceSoapBinding.http-conduit" >
+
+		<!-- Configuration du canal SSL -->
+		<http:tlsClientParameters disableCNCheck="true">
+			<sec:trustManagers>
+				<sec:keyStore resource="cacerts.jks" password="p@ssw0rd" type="JKS" />
+			</sec:trustManagers>
+		</http:tlsClientParameters>
+
+	</http:conduit>
+	
+	<!-- Activation du bus pour le service appelé -->
+	<http:conduit
+		name="{urn:annuairesecurite:webservices:usermanagement}IUserManagementService.http-conduit">
+
+		<!-- Configuration du canal SSL -->
+		<http:tlsClientParameters disableCNCheck="true">
+			<sec:trustManagers>
+				<sec:keyStore resource="cacerts.jks" password="p@ssw0rd" type="JKS" />
+			</sec:trustManagers>
+		</http:tlsClientParameters>
+
+	</http:conduit>
+
+	<!-- Chaine de traitement des messages en entrée et sortie du client -->
+	<cxf:bus>
+		<cxf:properties>
+			<entry key="ws-security.callback-handler" value="org.georchestra.security.custom.utils.ClientPasswordCallback" />
+			<entry key="ws-security.encryption.username" value="server" />
+			<entry key="ws-security.encryption.properties" value="cacerts-encr.properties" />
+			<entry key="ws-security.signature.properties" value="cacerts-sign.properties" />
+		</cxf:properties>
+		
+		<cxf:features>
+            <p:policies />
+        </cxf:features>
+
+		<!-- Interceptor pour afficher des logs (à décommenter pour débugger) -->
+		<cxf:outInterceptors>
+			<ref bean="logOutbound" />
+		</cxf:outInterceptors>
+		<cxf:inInterceptors>
+			<ref bean="logInbound" />
+		</cxf:inInterceptors>
+		<cxf:inFaultInterceptors>
+			<ref bean="logInbound" />
+		</cxf:inFaultInterceptors>		
+
+	</cxf:bus>
+		
+</beans>

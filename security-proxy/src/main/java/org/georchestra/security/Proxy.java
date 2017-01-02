@@ -843,7 +843,31 @@ public class Proxy {
     private HttpRequestBase makeRequest(HttpServletRequest request, RequestType requestType, String sURL) throws IOException {
         HttpRequestBase targetRequest;
         try {
-            URI uri = new URI(sURL);
+            // Split URL
+            URL url = new URL(sURL);
+
+            // Let URI constructor encode Path part
+            URI uri = new URI(url.getProtocol(),
+                    url.getUserInfo(),
+                    url.getHost(),
+                    url.getPort(),
+                    url.getPath(),
+                    null, // Don't use query part because URI constructor will try to double encode it
+                    // (query part is already encoded in sURL)
+                    url.getRef());
+
+            // Reconstruct URL with encoded path from URI class and others parameters from URL class
+            StringBuilder rawUrl = new StringBuilder(url.getProtocol() + "://" + url.getHost());
+
+            if(url.getPort() != -1)
+                rawUrl.append(":" + String.valueOf(url.getPort()));
+
+            rawUrl.append(uri.getRawPath()); // Use encoded version from URI class
+
+            if(url.getQuery() != null)
+                rawUrl.append("?" + url.getQuery()); // Use already encoded query part
+
+            uri = new URI(rawUrl.toString());
             switch (requestType) {
             case GET: {
                 logger.debug("New request is: " + sURL + "\nRequest is GET");
@@ -892,7 +916,7 @@ public class Proxy {
                 break;
             }
             case TRACE: {
-                logger.debug("New request is: " + sURL + "\nRequest is POST");
+                logger.debug("New request is: " + sURL + "\nRequest is TRACE");
 
                 HttpTrace post = new HttpTrace(uri);
 
@@ -900,7 +924,7 @@ public class Proxy {
                 break;
             }
             case OPTIONS: {
-                logger.debug("New request is: " + sURL + "\nRequest is POST");
+                logger.debug("New request is: " + sURL + "\nRequest is OPTIONS");
 
                 HttpOptions post = new HttpOptions(uri);
 
@@ -908,7 +932,7 @@ public class Proxy {
                 break;
             }
             case HEAD: {
-                logger.debug("New request is: " + sURL + "\nRequest is POST");
+                logger.debug("New request is: " + sURL + "\nRequest is HEAD");
 
                 HttpHead post = new HttpHead(uri);
 

@@ -29,6 +29,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.georchestra.ldapadmin.ds.AccountDao;
@@ -613,10 +614,13 @@ public class UsersController {
 			account.setContext(context);
 		}
 		
-		String commonName = AccountFactory.formatCommonName(
-				account.getGivenName(), account.getSurname());
-
+		String commonName = RequestUtil.getFieldValue(json, UserSchema.COMMON_NAME_KEY);
+		
+		if(StringUtils.isBlank(commonName)){
+			commonName = AccountFactory.formatCommonName(account.getGivenName(), account.getSurname());
+		}
 		account.setCommonName(commonName);
+		
 		String uid = RequestUtil.getFieldValue(json, UserSchema.UID_KEY);
 		if (uid != null) {
 			account.setUid(uid);
@@ -682,8 +686,12 @@ public class UsersController {
 			throw new IOException(e);
 		}
 
-		String commonName = AccountFactory.formatCommonName(givenName, surname);
-
+		String commonName = RequestUtil.getFieldValue(json, UserSchema.COMMON_NAME_KEY);
+		
+		if(StringUtils.isBlank(commonName)){
+			commonName = AccountFactory.formatCommonName(givenName, surname);
+		}
+		
 		Account a = AccountFactory.createFull(uid, commonName, surname, givenName, email, org, title, phone, description, postalAddress, postalCode, "", postOfficeBox, "", street, locality, facsimile, "","","","","","","");
 
 		return a;
