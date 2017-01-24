@@ -53,7 +53,7 @@ class QueryByUidCommand extends org.georchestra.lib.sqlcommand.AbstractQueryComm
 		sql.append(" SELECT ")
 				.append(DatabaseSchema.UID_COLUMN).append(",").append(DatabaseSchema.TOKEN_COLUMN ).append(",").append(DatabaseSchema.CREATION_DATE_COLUMN )
 				.append(" FROM ").append(DatabaseSchema.SCHEMA_NAME + "." + DatabaseSchema.TABLE_USER_TOKEN)
-				.append(" WHERE uid = ?");
+				.append(" WHERE ").append(DatabaseSchema.UID_COLUMN).append(" = ?");
 		
 		return sql.toString();
 	}

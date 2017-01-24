@@ -72,7 +72,7 @@ public class ExpiredTokenCleanTask implements Runnable {
 			List<Map<String, Object>>  userTokenToDelete = userTokenDao.findBeforeDate(expired);
 			for (Map<String, Object> userToken : userTokenToDelete) {
 				try {
-					userTokenDao.delete((String) userToken.get("uid"));
+					userTokenDao.delete((String) userToken.get("user_uid"));
 				} catch (Exception e) {
 					LOG.error(e.getMessage());
 				}
