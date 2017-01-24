@@ -174,8 +174,11 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
         feature = new OpenLayers.Feature.Vector(point);
 
         // add point feature to layer and zoom on    
-        this.layer.addFeatures(feature);
-        this.map.setCenter(new OpenLayers.LonLat(geom.x,geom.y), 10);    },
+        var maxScaleLevel = this.options.maxScaleLevel;
+        this.map.setCenter(
+            new OpenLayers.LonLat(geom.x,geom.y),
+            maxScaleLevel);    
+    },
 
     
     /**

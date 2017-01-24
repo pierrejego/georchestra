@@ -5,7 +5,11 @@
     "css": [
         "css/main.css"
     ],
-    "default_options": {},
+    "default_options": {
+    	"limitResponse":5,
+    	"geocodeServiceUrl":"https://api-adresse.data.gouv.fr/search/?",
+    	"maxScaleLevel":14
+    },
     "i18n": {
         "en": {
             "banGeocoder.window_title": "Adresse researcher",

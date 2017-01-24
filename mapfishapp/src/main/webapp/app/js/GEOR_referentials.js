@@ -214,6 +214,7 @@ GEOR.referentials = (function() {
      * record - {Ext.data.Record}
      */
     var onComboSelect = function(record) {
+        var zoomLevel = GEOR.custom.RECENTER_LEVEL ?  GEOR.custom.RECENTER_LEVEL : map.baseLayer.numZoomLevels-1;
         var feature = record.get('feature');
         if (!feature) {
             return;
@@ -221,14 +222,14 @@ GEOR.referentials = (function() {
         if (feature.bounds) {
             var bounds = feature.bounds;
             if (bounds.getWidth() + bounds.getHeight() == 0) {
-                map.setCenter(bounds.getCenterLonLat(), map.baseLayer.numZoomLevels-1);
+                map.setCenter(bounds.getCenterLonLat(), zoomLevel);
             } else {
                 map.zoomToExtent(bounds.scale(1.05));
             }
         } else if (feature.geometry) {
             var geometry = feature.geometry;
             if (geometry.CLASS_NAME == 'OpenLayers.Geometry.Point') {
-                map.setCenter(geometry.getBounds().getCenterLonLat(), map.baseLayer.numZoomLevels-1);
+                map.setCenter(geometry.getBounds().getCenterLonLat(), zoomLevel);
             } else {
                 map.zoomToExtent(geometry.getBounds().scale(1.05));
             }
