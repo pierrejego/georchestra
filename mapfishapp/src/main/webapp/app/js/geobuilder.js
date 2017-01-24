@@ -487,7 +487,9 @@ geobuilder = (function() {
 
 		// retrieve layer
 		for (var i=0; i< map.layers.length; i++){
-			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
+			if (typeof(map.layers[i].params) != 'undefined'
+			&& typeof(map.layers[i].params.LAYERS) != 'undefined'
+			&& isObjLayer(map.layers[i].params.LAYERS, idObj)){
 				layerName = map.layers[i].name;
 				layer = map.layers[i].params.LAYERS;
 				break;
@@ -496,9 +498,6 @@ geobuilder = (function() {
 		if (layerName === void 0){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
-
-		// Affiche l'onglet de recherche (un peu comme le waitlt)
-		GEOR.querier.events.events.search.fire({})
 
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra/full.json', apiQuery, function(data) {
 			if (0 === data.features.length) {
@@ -540,6 +539,7 @@ geobuilder = (function() {
 			GEOR.querier.events.events.searchresults.fire({
 				features: features,
 				model: model,
+				hideResults: true,
 				title: 'Sélection Géobuilder : ' + layerName // @lang
 			});
 
@@ -638,6 +638,12 @@ geobuilder = (function() {
 
 		return true;
 	}
+
+	function isObjLayer(layerName, obj) {
+		var test = /(?:[^:]+:)?([A-Za-z0-9_]{3})_/.exec(layerName);
+		return test !== null && test[1] === obj;
+	}
+
 	/**
 	 * Obtenir la sélection courante
 	 *
@@ -914,7 +920,7 @@ geobuilder = (function() {
 	function mapRefresh(idObj) {
 		Fusion.getMap().layers
 			.filter(function(ly){
-				return ly.params && ly.params.LAYERS && ly.params.LAYERS.startsWith(idObj);
+				return ly.params && ly.params.LAYERS && isObjLayer(ly.params.LAYERS, idObj);
 			})
 			.forEach(function(ly) {
 				ly.redraw(true);

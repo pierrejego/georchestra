@@ -98,7 +98,7 @@ GEOR.geobuilder_connection = function (mapPanel, idProfil, isReconnect) {
  * @param layerName {String} The layer name
  */
 GEOR.geobuilder_isManagedLayer = function (layerName) {
-    var re = /^([A-Za-z0-9_]{3})_/;
+    var re = /(?:[^:]+:)?([A-Za-z0-9_]{3})_/;
     var match = re.exec(layerName);
     return (null !== match) && managedFeatureClasses.indexOf(match[1]) !== -1;
 }; 
