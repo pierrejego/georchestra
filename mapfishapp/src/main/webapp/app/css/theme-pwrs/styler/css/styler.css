@@ -96,3 +96,79 @@
 .x-menu-item .load {
   background: transparent url(../img/import.png);
 }
+
+/* style for styler dataView*/
+/* Set style for cart */
+
+#styler_dataView .x-panel-body{
+	background: white;
+	font: 11px Arial, Helvetica, sans-serif;
+}
+
+#styler_dataView .thumb-wrap{
+	float: left;
+	margin: 4px;
+	margin-right: 0;
+	padding: 5px;
+}
+#styler_dataView .thumb-wrap span{
+	display: block;
+	overflow: hidden;
+	text-align: center;
+}
+
+#styler_dataView .x-view-over{
+    border:1px solid #ebebeb;
+    background: #efefef url(../img/row-over.gif) repeat-x left top;
+	padding: 4px;
+}
+
+#styler_dataView .x-view-selected{
+	background: #eff5fb url(../img/selected.gif) no-repeat right bottom;
+	border:1px solid #99bbe8;
+	padding: 4px;
+}
+
+#styler_dataView .loading-indicator {
+	font-size:11px;
+	background-image:url('../img/loading.gif');
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left:20px;
+	margin:10px;
+}
+
+
+#styler_dataView .thumbStyle{
+	background: transparent;
+	padding: 3px;
+}
+
+#styler_dataView .x-view-selected .thumbStyle, #styler_dataView .x-view-selected .thumbMax, #styler_dataView .x-view-selected .thumbMidlMin, #styler_dataView .x-view-selected .thumbMidlMax{
+	background:transparent;
+}
+
+#styler_dataView .thumbStyle img {
+	height: 30px;
+	width: 35px;
+}
+
+#libSymboleWindow .x-window-mc{
+	border-bottom : 1px solid #99bbe8 ;
+}
+
+#treePanel {
+	border-right : 3px solid #4d4d4d;	
+}
+
+#treePanel .x-tree-node{
+	padding-right: 20px;
+}
+
+.album-node .x-tree-node-icon, .album-btn{
+    background-image:url(../img/folder.gif);
+}
+
+.album-node-open .x-tree-node-icon, .album-btn{
+    background-image:url(../img/folder-open.gif);
+}

@@ -395,7 +395,7 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "star": "étoile",
     "cross": "croix",
     "x": "x",
-    "customized...": "personnalisé...",
+    "customized...": "bibliothèque...",
     "Classification ...<br/>(this operation can take some time)":
         "Classification ...<br/>(cette opération peut prendre du temps)",
     "Class": "Classe",
