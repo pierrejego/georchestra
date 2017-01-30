@@ -3,6 +3,7 @@ geobuilder = (function() {
 
 	var WORKPLACE_DEFAULT_WIDTH = 600;
 	var WORKPLACE_DEFAULT_HEIGHT = 480;
+	var DEFAULT_FEATURE_ZOOM_SCALE = 8531;
 
 
 	var oldSimpleSelection = false;
@@ -487,7 +488,9 @@ geobuilder = (function() {
 
 		// retrieve layer
 		for (var i=0; i< map.layers.length; i++){
-			if (typeof(map.layers[i].params) != 'undefined' && typeof(map.layers[i].params.LAYERS) != 'undefined' && map.layers[i].params.LAYERS.startsWith(idObj)){
+			if (typeof(map.layers[i].params) != 'undefined'
+			&& typeof(map.layers[i].params.LAYERS) != 'undefined'
+			&& isObjLayer(map.layers[i].params.LAYERS, idObj)){
 				layerName = map.layers[i].name;
 				layer = map.layers[i].params.LAYERS;
 				break;
@@ -496,9 +499,6 @@ geobuilder = (function() {
 		if (layerName === void 0){
 			alert("Aucune couche n'est disponible pour l'objet " + idObj);
 		}
-
-		// Affiche l'onglet de recherche (un peu comme le waitlt)
-		GEOR.querier.events.events.search.fire({})
 
 		getJSON(Fusion.getFusionURL() + 'cfm/api.cfm/georchestra/full.json', apiQuery, function(data) {
 			if (0 === data.features.length) {
@@ -540,29 +540,51 @@ geobuilder = (function() {
 			GEOR.querier.events.events.searchresults.fire({
 				features: features,
 				model: model,
+				hideResults: true,
 				title: 'Sélection Géobuilder : ' + layerName // @lang
 			});
 
-			// On zoome sur nos features
-			// On gère la width passée en paramètre.
-			if (bounds.getWidth() === 0 && bounds.getHeight() === 0) {
-				// Si zoom sur un point (width et height == 0) on force la map à
-				// zoomer à 0m dessus on récupère l'extent minimal prêt à être
-				// mis à l'échelle
-				map.zoomToExtent(bounds);
-				bounds = map.getExtent();
-			}
-			var currentWidth = bounds.getWidth();
-			var rescaleRatio;
-			if (width > currentWidth) {
-				// Si une width supérieure est demandée on on va redimensionner
-				// nos bounds pour l'atteindre
-				rescaleRatio = width / currentWidth;
+			if (features.length === 1) {
+				// Si on ne zoome que sur un seul objet, on va le placer au
+				// centre de la vue, et zoomer dessus avec le niveau de zoom par
+				// défaut
+				var newMapCenter = bounds.getCenterLonLat();
+				map.setCenter(newMapCenter);
+				map.zoomToScale(DEFAULT_FEATURE_ZOOM_SCALE, true);
+				// Si la feature est trop grande (ligne/surface) et ne rentre
+				// pas dans la vue à cette échelle, il va falloir dézoomer.
+				var currentMapExtent = map.getExtent()
+				if (bounds.getWidth() > currentMapExtent.getWidth()
+				|| bounds.getHeight() > currentMapExtent.getHeight()) {
+					console.log('DEMAND bounds', bounds)
+					var fzBefore = map.fractionalZoom
+					map.fractionalZoom = true
+					map.zoomToExtent(bounds.scale(1.05))
+					map.fractionalZoom = fzBefore
+					console.log('SET bounds', map.getExtent())
+				}
 			} else {
-				// sinon arbitrairement on dézoome légèrement
-				rescaleRatio = 1.05;
+				// Sinon, on zoom sur plusieurs objets, dans ce cas on doit
+				// obéir au paramètre width. Si la width demandée est plus
+				// grande l'extent de notre sélection, on élargit jusqu'à
+				// atteindre width
+				map.zoomToExtent(bounds);
+				// on re-lit les bounds à partir de la carte, cela permet de
+				// prendre en compte le ratio largeur/hauteur de l'écran.
+				bounds = map.getExtent();
+				var rescaleRatio, currentWidth = bounds.getWidth();
+				if (width > currentWidth) {
+					// La width demandée est plus large, donc on dézoome
+					rescaleRatio = width / currentWidth;
+				} else {
+					// sinon arbitrairement on dézoome légèrement afin d'avoir
+					// des marges permettant une lecture de la carte plus
+					// agréable.
+					rescaleRatio = 1.05;
+				}
+				map.zoomToExtent(bounds.scale(rescaleRatio));
 			}
-			map.zoomToExtent(bounds.scale(rescaleRatio));
+
 
 		}, function(status) {
 			alert('Something went wrong.');
@@ -638,6 +660,12 @@ geobuilder = (function() {
 
 		return true;
 	}
+
+	function isObjLayer(layerName, obj) {
+		var test = /(?:[^:]+:)?([A-Za-z0-9_]{3})_/.exec(layerName);
+		return test !== null && test[1] === obj;
+	}
+
 	/**
 	 * Obtenir la sélection courante
 	 *
@@ -914,7 +942,7 @@ geobuilder = (function() {
 	function mapRefresh(idObj) {
 		Fusion.getMap().layers
 			.filter(function(ly){
-				return ly.params && ly.params.LAYERS && ly.params.LAYERS.startsWith(idObj);
+				return ly.params && ly.params.LAYERS && isObjLayer(ly.params.LAYERS, idObj);
 			})
 			.forEach(function(ly) {
 				ly.redraw(true);

@@ -432,6 +432,9 @@ Ext.namespace("GEOR");
                     });
                     southPanel.insert(southPanel.items.length-1, tab);
                     southPanel.setActiveTab(tab);
+                    if (options.hideResults) {
+                        southPanel.collapse();
+                    }
                 }
             });
         }
