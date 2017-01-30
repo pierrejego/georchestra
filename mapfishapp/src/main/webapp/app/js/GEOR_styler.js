@@ -502,10 +502,12 @@ GEOR.styler = (function() {
         }
 
         var layer = wmsLayerRecord.get("layer");
+        var urlConfig = GEOR.custom.URL_STYLER_DATAVIEW;
 
         ruleContainer.removeAll();
         var rulePanel = ruleContainer.add({
             xtype: 'gx_rulepanel',
+            symbolUrl : urlConfig,           
             border: false,
             attributes: attributes,
             attributesComboConfig: {
@@ -540,6 +542,11 @@ GEOR.styler = (function() {
             symbolType: Styler.Util.getSymbolTypeFromRule(rule),
             listeners: {
                 change: function(c, r) {
+                	var params=r.symbolizer.Point;
+                	
+                	if(!params.externalGraphic){
+                		r.symbolizer.Point.graphicFormat="image/png";                		
+                	}                	
                     getLegendPanel().updateRuleEntry(r);
                     // indicate that some rule has changed
                     dirty = true;
