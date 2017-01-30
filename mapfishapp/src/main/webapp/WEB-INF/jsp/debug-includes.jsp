@@ -1,6 +1,8 @@
     <script type="text/javascript" src="<%= context %>/lib/externals/geoext/lib/overrides/override-ext-ajax.js"></script>
     <script type="text/javascript" src="<%= context %>/lib/externals/ext/ext-all-debug.js"></script>
     <script type="text/javascript" src="<%= context %>/lib/Ext.ux/lib/Ext.ux.js"></script>
+    <script type="text/javascript" src="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/dataview/dataView-more.js"></script>
+    <script type="text/javascript" src="<%= context %>/lib/Ext.ux/lib/Ext.ux/widgets/dataview/dataViewTransition.js"></script>
     <script type="text/javascript" src="<%= context %>/lib/proj4js/lib/proj4js-combined.js"></script>
     <script type="text/javascript" src="<%= context %>/lib/externals/openlayers/lib/OpenLayers.js"></script>
     <script type="text/javascript" src="<%= context %>/lib/externals/openlayers/lib/OpenLayers/Lang/<%= lang %>.js"></script>
