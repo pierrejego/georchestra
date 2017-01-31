@@ -166,9 +166,25 @@
 }
 
 .album-node .x-tree-node-icon, .album-btn{
-    background-image:url(../img/folder.gif);
+    /*background: url(../img/tree.png) 0 -16px;*/
+    background: url(../img/tree.png) 1px -37px;
+    background-repeat: no-repeat;
+    
 }
 
 .album-node-open .x-tree-node-icon, .album-btn{
-    background-image:url(../img/folder-open.gif);
+    /*background: url(../img/tree.png) 0 -16px;*/
+    background: url(../img/tree.png) -5px -141px;
+    background-repeat: no-repeat;
+}
+
+.x-tree-node .x-tree-selected{
+    background-color: #ddd;
+    width:145%;
+}
+
+.x-tree-node .x-tree-node-over{
+    background-color: #eee;
+    width:100%;
+    opacity
 }
