@@ -544,7 +544,7 @@ GEOR.styler = (function() {
                 change: function(c, r) {
                 	var params=r.symbolizer.Point;
                 	
-                	if(!params.externalGraphic){
+                	if(params && !params.externalGraphic){
                 		r.symbolizer.Point.graphicFormat="image/png";                		
                 	}                	
                     getLegendPanel().updateRuleEntry(r);
