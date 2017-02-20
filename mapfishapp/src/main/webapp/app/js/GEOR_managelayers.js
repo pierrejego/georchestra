@@ -183,7 +183,7 @@ GEOR.managelayers = (function() {
                 if (GeoExt.MapPanel.guess().map){
                 	this.map = GeoExt.MapPanel.guess().map;
                 	var drawLayerExist =  this.map.getLayersByName('__georchestra_annotations') ? this.map.getLayersByName('__georchestra_annotations').length : false;
-                	if(drawLayerExist && drawExist.length < 1){
+                	if(drawLayerExist && drawLayerExist.length < 1){
                 		layer.setZIndex(1000);
                 	}
                 }
