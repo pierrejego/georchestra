@@ -182,8 +182,9 @@ GEOR.managelayers = (function() {
                 // Fix : Set again annotation layer zIndex to up this layer
                 if (GeoExt.MapPanel.guess().map){
                 	this.map = GeoExt.MapPanel.guess().map;
-                	if(this.map.getLayersByName('__georchestra_annotations')){
-                		this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
+                	var drawLayerExist =  this.map.getLayersByName('__georchestra_annotations') ? this.map.getLayersByName('__georchestra_annotations').length : false;
+                	if(drawLayerExist && drawExist.length < 1){
+                		layer.setZIndex(1000);
                 	}
                 }
             }
