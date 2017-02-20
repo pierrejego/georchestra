@@ -728,9 +728,10 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     onFeatureAdded: function(event) {
     	if(GeoExt.MapPanel.guess().map){
-    		if(this.map.getLayersByName('__georchestra_annotations').length < 1){
-    			layer.setZIndex(1000);
-    		}else{
+    		var drawLayerExist =  this.map.getLayersByName('__georchestra_annotations') ? this.map.getLayersByName('__georchestra_annotations').length : false;
+    		if(drawLayerExist && drawLayerExist.length < 1){
+        		layer.setZIndex(1000);
+        	}else{
     			this.map.addLayer(layer);
     		}
     	}
