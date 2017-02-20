@@ -172,6 +172,9 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
         // create point from geometry find in GeoJSON and create vector feature from point geometry
         point = new OpenLayers.Geometry.Point(geom.x,geom.y);
         feature = new OpenLayers.Feature.Vector(point);
+        
+        // add point feature to layer and zoom on    
+        this.layer.addFeatures(feature);
 
         // add point feature to layer and zoom on    
         var maxScaleLevel = this.options.maxScaleLevel;
