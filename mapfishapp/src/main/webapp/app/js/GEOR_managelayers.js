@@ -119,7 +119,7 @@ GEOR.managelayers = (function() {
      * Property: tr
      * {Function} an alias to OpenLayers.i18n
      */
-    var tr = null;
+    var tr = OpenLayers.i18n;
 
     /**
      * Property: panelCache
@@ -131,7 +131,22 @@ GEOR.managelayers = (function() {
      * Property: infoItems
      */
     var infoItems = [];
+
+    /**
+     * Property: saveMenuItems
+     */
+    var saveMenuItems = [];
+
+    /**
+     * Property: saveMenuItems
+     */
+    var realTimeStatus;
     
+    /**
+     * Property: i18n real time 
+     */
+    var trRT = tr("Real time");
+
     /**
      * Method: checkEditEnabled
      * A convenient method to check that a layer is editable.
@@ -607,7 +622,11 @@ GEOR.managelayers = (function() {
      * {Array} An array of menu items, empty if the WMS layer 
      * is not yet described.
      */
-    var createMenuItems = function(layerRecord) {
+    var createMenuItems = function(layerRecord, menuElem, status) {
+        var realTimeStr = "_REALTIME"; // set to GEOR_config.js
+        var realTime = layerRecord.get("name");
+        var isRT = realTime.indexOf(realTimeStr) > -1 ? true : false;
+                
         var queryable = !!(layerRecord.get("queryable")),
             layer = layerRecord.get('layer'),
             type = layerRecord.get("type"),
@@ -730,6 +749,95 @@ GEOR.managelayers = (function() {
                     }
                 }
             });
+        }
+        
+        // real time elements
+        if(isRT){        
+    		//var intervalArray = [15,30,60,300,900];    // set to GEOR_custom.js in Secondes
+        	var intervalArray = [2,5,10];    // set to GEOR_custom.js in Secondes
+    		var timeId = [];
+    		var intervalMs;
+    		var defaultMsValue = intervalArray.length > 0 ? intervalArray[0] : 2; // TODO: set 15 by default
+    		
+    		// function to stop all setInterval in progress
+    		function stopRefresh (array){
+    			if(array.length > 0 ){
+    				array.forEach(function(element){
+    					clearInterval(element)
+					})
+    			}   			    			    			
+    		}
+    		
+    		// function to get value from slider and return equivalent millisecond from values in seconds array
+            function getIntervalMs (secArray,sliderField){
+            	var intervalInMs;
+            	var sliderVal = sliderField.getValue();
+            	var timeInSec = secArray[sliderVal] ? secArray[sliderVal] : false;
+            	if(timeInSec){
+            		intervalInMs = timeInSec * 1000;
+            	}            	
+            	return intervalInMs;
+            }
+            
+            
+    		// create check button
+            menuItems.push({
+                border: false,
+                text: trRT,
+                checked: false,
+                listeners:{
+                	"checkchange": function(btn, checked){                		
+                		// clear all refresh in progress if uncheck
+                		if(!checked){
+                			stopRefresh(timeId);
+                		}                		        			                			                		
+                	}
+                }
+            });
+            
+
+            // create slider field enable if user check real time button
+            menuItems.push({
+            	xtype:"sliderfield",
+                minValue:0,
+                disabled : true,
+                anchor:"80%",
+                maxValue : intervalArray.length -1 ,                	            
+                name: "intervalSlider",
+                increment:1,
+                tipText: function(thumb){
+                	var text = tr("sec");
+                	var val = intervalArray[thumb.value];
+                	// from one minute display minute instead of second
+                	if(val >= 60){
+                		text = tr("min");
+                		val = val / 60;
+                	}
+                    return String(val + " " + text );
+                },
+                listeners: {
+                	// fire when slider position change 
+                	"valid": function(slider){
+                		// clear all refresh in progress
+                		stopRefresh(timeId);
+                		// get value in millisecond
+                		intervalMs = getIntervalMs(intervalArray,slider);
+                		if(intervalMs > 0 ){
+                			// create refresh
+                			timeId.push(setInterval( function() {
+                				layerRecord.get('layer').mergeNewParams({
+                					nocache: new Date().valueOf()})
+                					}, intervalMs));
+            			}
+                	},
+                	"enable" : function(slider){
+                		// just display default position without fire refresh
+                		slider.setPosition(0);                		
+                	}
+                }
+            
+    		
+            });        
         }
 
         var insertSep = function() {
@@ -1020,6 +1128,14 @@ GEOR.managelayers = (function() {
     var createLayerNodePanel = function(node, ct) {
         var layer = node.layer;
         var layerRecord = node.layerStore.getById(layer.id);
+        var realTimeStr = "_REALTIME"; // set to GEOR_config.js
+        var realTime = layerRecord.get("name");
+        
+        if(realTime.indexOf(realTimeStr) > -1){
+        	node.getUI().getTextEl().style.color = "#007ec3";
+        } else {
+        	node.getUI().getTextEl().style.color = "#85aa03";
+        }
 
         // buttons in the toolbar
         var buttons = [createInfoButton(layerRecord), 
@@ -1030,29 +1146,102 @@ GEOR.managelayers = (function() {
                 ignoreParentClicks: true,
                 listeners: {
                     "beforeshow": function(menu) {
-                        if (menu.items.length) {
-                            // allow menu appearance
-                            return true;
-                        }
-                        // wait for the layer to be described
-                        var task = Ext.TaskMgr.start({
-                            run: function() {
-                                var menuItems = createMenuItems(layerRecord);
-                                menu.removeAll();
-                                if (!menuItems.length) {
-                                    menu.add(tr("Loading..."));
-                                } else {
-                                    // create + add menu items
-                                    Ext.each(menuItems, function(item) {
-                                        menu.add(item);
-                                    });
-                                    // stop this task
-                                    Ext.TaskMgr.stop(task);
+                            if (menu.items.length) {
+                                // allow menu appearance
+                                var rtActivate;
+                                var rtMenuIndex;
+                                var arr = menu.items.items;
+                                var enableList = [tr("Recenter on the layer"),
+                                    tr("Refresh layer"),
+                                    trRT,
+                                    tr("About this layer")
+                                ];
+                                // get checked real time value
+                                for (let i in arr) {
+                                    var item = arr[i];
+                                    if (item && item.text == trRT) {
+                                    	rtMenuIndex = i;
+                                        var checkStatus = item.checked ? true : false;
+                                        rtActivate = checkStatus;
+                                        break;
+                                    }                                    
                                 }
-                            },
-                            interval: 20
-                        });
-                    }
+                                // show or hide items
+                                for (let i in arr) {
+                                    var item = arr[i];
+                                    if (typeof(item) !== "function") {
+                                    	var xType = item.getXType();
+                                        var isSeparator = xType == "menuseparator" ? true : false;
+                                        var isSlider = (xType == "sliderfield") ? true : false;
+                                        
+                                        function sliderManager (rtActivate,item){
+                                        	if(rtActivate && item.disabled){
+                                        		item.enable();
+                                        	} else if(!rtActivate && !item.disabled){
+                                        		item.disable();
+                                        	}
+                                        }
+                                        
+                                        // show or hide items checkable
+                                        function itemManager(rtActivate,item){                                        	
+                                        	if( rtActivate && (item && item.id && item.text) && enableList.indexOf(item.text) < 0){
+                                        		Ext.getCmp(item.id).hide();
+                                        	}else{
+                                        		Ext.getCmp(item.id).show();
+                                        	}
+                                        }
+                                        
+                                        function separatorManager(rtActivate,item){
+                                        	if(rtActivate){
+                                        		item.hide();
+                                    		} else {
+                                    			item.show();
+                                			}
+                                        }                                                                              
+                                        
+                                        switch (xType){
+                                        	case "menuseparator":
+                                        		separatorManager(rtActivate, item);
+                                        		break;
+                                        	case "sliderfield":
+                                        		sliderManager(rtActivate, item);
+                                        		break;
+                                        	case "menucheckitem":
+                                        		itemManager(rtActivate, item);
+                                        		break;
+                                        	case "menuitem":
+                                        		itemManager(rtActivate, item);
+                                        		break;
+                                        	default:
+                                        		item.enable();
+                                        			
+                                        };
+                                    }
+                                }
+
+                                menu.doLayout();
+                                return true;
+                            }
+                            var menuElem = this;
+                            // wait for the layer to be described
+                            var task = Ext.TaskMgr.start({
+                                run: function() {
+                                    var menuItems = createMenuItems(layerRecord);
+                                    menu.removeAll();
+                                    if (!menuItems.length) {
+                                        menu.add(tr("Loading..."));
+                                    } else {
+                                        // create + add menu items
+                                        Ext.each(menuItems, function(item) {
+                                            menu.add(item);
+                                        });
+                                        // stop this task
+                                        Ext.TaskMgr.stop(task);
+                                    }
+                                },
+                                interval: 20
+                            });
+                        }
                 }
             })
         }];
