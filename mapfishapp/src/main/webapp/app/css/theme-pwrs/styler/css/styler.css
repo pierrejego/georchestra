@@ -150,7 +150,7 @@
 
 #styler_dataView .thumbStyle img {
 	height: 30px;
-	width: 35px;
+	width: 30px;
 }
 
 #libSymboleWindow .x-window-mc{
@@ -178,13 +178,18 @@
     background-repeat: no-repeat;
 }
 
-.x-tree-node .x-tree-selected{
-    background-color: #ddd;
-    width:145%;
+#treePanel .x-tree-node .x-tree-selected{
+	background-color: rgba(221,221,221,0);    
 }
 
-.x-tree-node .x-tree-node-over{
-    background-color: #eee;
-    width:100%;
-    opacity
+
+#treePanel .x-tree-node .x-tree-node-over{
+	background-color: rgba(221,221,221, 0.7);
+    width:100%;    
+}
+
+#treePanel .x-tree-node .x-tree-node-over{
+	background-color: rgba(221,221,221, 0);
+    width:145%;
+    opacity:0.8;
 }
