@@ -148,14 +148,29 @@ GEOR.managelayers = (function() {
     var trRT = tr("Real time");
     
     /**
+     * Property: trRT
+     */
+    var updateTextRT = trRT;
+    
+    
+    /**
      * Property : realTimeStr
      */
-    var realTimeStr = GEOR.custom.REALTIME_IDENTIFIER;
+    //var realTimeStr = GEOR.custom.REALTIME_IDENTIFIER;
+    var realTimeStr = "_REALTIME";
     
     /**
      * Property : realTimeArray
      */
-    var realTimeArray = GEOR.custom.REALTIME_SECONDS;
+//    var realTimeArray = GEOR.custom.REALTIME_SECONDS;
+    var realTimeArray = [2,10];
+    
+    /**
+     * Property : defaultSeconds
+     */
+    var defaultSeconds = 2;
+    
+    
 
     /**
      * Method: checkEditEnabled
@@ -763,8 +778,12 @@ GEOR.managelayers = (function() {
         // real time elements
         if(isRT){        
     		var timeId = [];
+    		var position = false;
     		var intervalMs;
     		var defaultMsValue = realTimeArray.length > 0 ? realTimeArray[0] : 2; // TODO: set 15 by default
+    		
+    		var timeSlider;
+    		var timeCheckItem;
     		
     		// function to stop all setInterval in progress
     		function stopRefresh (array){
@@ -778,73 +797,94 @@ GEOR.managelayers = (function() {
     		// function to get value from slider and return equivalent millisecond from values in seconds array
             function getIntervalMs (secArray,sliderField){
             	var intervalInMs;
-            	var sliderVal = sliderField.getValue();
-            	var timeInSec = secArray[sliderVal] ? secArray[sliderVal] : false;
+            	var timeInSec = defaultSeconds;
+            	
+            	// get seconds according to slider position
+            	if(sliderField.getValue()){
+            		var sliderVal = sliderField.getValue();
+            		timeInSec = secArray[sliderVal] ? secArray[sliderVal] : false;
+            	}                    
+            	
             	if(timeInSec){
             		intervalInMs = timeInSec * 1000;
             	}            	
             	return intervalInMs;
             }
             
+            function getTextValue (sliderValue, bool){
+            	var text = tr("sec");
+            	var val = bool ? realTimeArray[sliderValue.value] : realTimeArray[sliderValue];
+            	// from one minute display minute instead of second
+            	if(val >= 60){
+            		text = tr("min");
+            		val = val / 60;
+            	}
+            	var txt = String(val + " " + text );
+            	return txt;
+            }
             
-    		// create check button
-            menuItems.push({
-                border: false,
-                text: trRT,
-                checked: false,
-                listeners:{
-                	"checkchange": function(btn, checked){                		
-                		// clear all refresh in progress if uncheck
-                		if(!checked){
-                			stopRefresh(timeId);
-                		}                		        			                			                		
-                	}
-                }
-            });
+            function fireRefresh (slider){
+        		stopRefresh(timeId);
+        		// get value in millisecond
+        		intervalMs = getIntervalMs(realTimeArray,slider);
+        		if(intervalMs > 0 ){
+        			// create refresh
+        			timeId.push(setInterval( function() {
+        				layerRecord.get('layer').mergeNewParams({
+        					nocache: new Date().valueOf()})
+        					}, intervalMs));
+    			}        		        		
+            }           
             
-
             // create slider field enable if user check real time button
-            menuItems.push({
-            	xtype:"sliderfield",
+            timeSlider = new Ext.form.SliderField({
                 minValue:0,
                 disabled : true,
                 anchor:"80%",
                 maxValue : realTimeArray.length -1 ,                	            
                 name: "intervalSlider",
                 increment:1,
-                tipText: function(thumb){
-                	var text = tr("sec");
-                	var val = realTimeArray[thumb.value];
-                	// from one minute display minute instead of second
-                	if(val >= 60){
-                		text = tr("min");
-                		val = val / 60;
-                	}
-                    return String(val + " " + text );
+                tipText: function(thumb){                	
+                    return getTextValue(thumb,true);
                 },
                 listeners: {
                 	// fire when slider position change 
                 	"valid": function(slider){
-                		// clear all refresh in progress
-                		stopRefresh(timeId);
-                		// get value in millisecond
-                		intervalMs = getIntervalMs(realTimeArray,slider);
-                		if(intervalMs > 0 ){
-                			// create refresh
-                			timeId.push(setInterval( function() {
-                				layerRecord.get('layer').mergeNewParams({
-                					nocache: new Date().valueOf()})
-                					}, intervalMs));
-            			}
-                	},
-                	"enable" : function(slider){
-                		// just display default position without fire refresh
-                		slider.setPosition(0);                		
+                		fireRefresh(slider);
+                		if(timeCheckItem){
+                			sliderValue = slider.getValue();
+                			timeCheckItem.setText(trRT + " (" + getTextValue(sliderValue,false) + ")");
+                			updateTextRT = timeCheckItem.text;
+                		}                		
                 	}
-                }
+                }               	            
+            });
             
-    		
-            });        
+            // create check button to activate option 
+            timeCheckItem = new Ext.menu.CheckItem({
+                border: false,
+                text: trRT,
+                checked: false,
+                listeners:{
+                	"checkchange": function(btn, checked){           
+                		if(checked){
+                			fireRefresh(timeSlider);
+                			var sliderValue = timeSlider.getValue();
+                			btn.setText(trRT + " (" + getTextValue(sliderValue,false) + ")");
+                			updateTextRT = btn.text;
+                			
+                		} else {
+                		    // clear all refresh in progress if uncheck                		
+                			stopRefresh(timeId);
+                		}                		        			                			                		
+                	}
+                }            	
+            });            
+            
+            // push check button to menu
+            menuItems.push(timeCheckItem);
+            // push slider to menu
+            menuItems.push(timeSlider);                		                 
         }
 
         var insertSep = function() {
@@ -1138,7 +1178,10 @@ GEOR.managelayers = (function() {
         var realTime = layerRecord.get("name");
         
         if(realTime.indexOf(realTimeStr) > -1){
-        	node.getUI().getTextEl().style.color = "#007ec3";
+        	var stringToModify = node.getUI().getTextEl();
+        	GEOR.a = stringToModify;
+        	stringToModify.style.color = "#007ec3";
+        	stringToModify.style.fontWeight = "bold";
         }
 
         // buttons in the toolbar
@@ -1157,13 +1200,14 @@ GEOR.managelayers = (function() {
                                 var arr = menu.items.items;
                                 var enableList = [tr("Recenter on the layer"),
                                     tr("Refresh layer"),
-                                    trRT,
+                                    //trRT,
+                                    updateTextRT,
                                     tr("About this layer")
                                 ];
                                 // get checked real time value
                                 for (let i in arr) {
                                     var item = arr[i];
-                                    if (item && item.text == trRT) {
+                                    if (item && item.text.indexOf(updateTextRT)>-1) {
                                     	rtMenuIndex = i;
                                         var checkStatus = item.checked ? true : false;
                                         rtActivate = checkStatus;
@@ -1193,7 +1237,7 @@ GEOR.managelayers = (function() {
                                         	}else{
                                         		Ext.getCmp(item.id).show();
                                         	}
-                                        }
+                                    	}
                                         
                                         function separatorManager(rtActivate,item){
                                         	if(rtActivate){
