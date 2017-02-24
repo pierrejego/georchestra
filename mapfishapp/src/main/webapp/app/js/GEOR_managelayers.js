@@ -146,6 +146,16 @@ GEOR.managelayers = (function() {
      * Property: i18n real time 
      */
     var trRT = tr("Real time");
+    
+    /**
+     * Property : realTimeStr
+     */
+    var realTimeStr = GEOR.custom.REALTIME_IDENTIFIER;
+    
+    /**
+     * Property : realTimeArray
+     */
+    var realTimeArray = GEOR.custom.REALTIME_SECONDS;
 
     /**
      * Method: checkEditEnabled
@@ -623,7 +633,6 @@ GEOR.managelayers = (function() {
      * is not yet described.
      */
     var createMenuItems = function(layerRecord, menuElem, status) {
-        var realTimeStr = "_REALTIME"; // set to GEOR_config.js
         var realTime = layerRecord.get("name");
         var isRT = realTime.indexOf(realTimeStr) > -1 ? true : false;
                 
@@ -753,11 +762,9 @@ GEOR.managelayers = (function() {
         
         // real time elements
         if(isRT){        
-    		//var intervalArray = [15,30,60,300,900];    // set to GEOR_custom.js in Secondes
-        	var intervalArray = [2,5,10];    // set to GEOR_custom.js in Secondes
     		var timeId = [];
     		var intervalMs;
-    		var defaultMsValue = intervalArray.length > 0 ? intervalArray[0] : 2; // TODO: set 15 by default
+    		var defaultMsValue = realTimeArray.length > 0 ? realTimeArray[0] : 2; // TODO: set 15 by default
     		
     		// function to stop all setInterval in progress
     		function stopRefresh (array){
@@ -802,12 +809,12 @@ GEOR.managelayers = (function() {
                 minValue:0,
                 disabled : true,
                 anchor:"80%",
-                maxValue : intervalArray.length -1 ,                	            
+                maxValue : realTimeArray.length -1 ,                	            
                 name: "intervalSlider",
                 increment:1,
                 tipText: function(thumb){
                 	var text = tr("sec");
-                	var val = intervalArray[thumb.value];
+                	var val = realTimeArray[thumb.value];
                 	// from one minute display minute instead of second
                 	if(val >= 60){
                 		text = tr("min");
@@ -821,7 +828,7 @@ GEOR.managelayers = (function() {
                 		// clear all refresh in progress
                 		stopRefresh(timeId);
                 		// get value in millisecond
-                		intervalMs = getIntervalMs(intervalArray,slider);
+                		intervalMs = getIntervalMs(realTimeArray,slider);
                 		if(intervalMs > 0 ){
                 			// create refresh
                 			timeId.push(setInterval( function() {
@@ -1128,7 +1135,6 @@ GEOR.managelayers = (function() {
     var createLayerNodePanel = function(node, ct) {
         var layer = node.layer;
         var layerRecord = node.layerStore.getById(layer.id);
-        var realTimeStr = "_REALTIME"; // set to GEOR_config.js
         var realTime = layerRecord.get("name");
         
         if(realTime.indexOf(realTimeStr) > -1){
