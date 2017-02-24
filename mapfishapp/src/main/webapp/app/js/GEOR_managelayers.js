@@ -1133,8 +1133,6 @@ GEOR.managelayers = (function() {
         
         if(realTime.indexOf(realTimeStr) > -1){
         	node.getUI().getTextEl().style.color = "#007ec3";
-        } else {
-        	node.getUI().getTextEl().style.color = "#85aa03";
         }
 
         // buttons in the toolbar
