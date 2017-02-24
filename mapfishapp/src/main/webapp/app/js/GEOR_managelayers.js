@@ -156,14 +156,12 @@ GEOR.managelayers = (function() {
     /**
      * Property : realTimeStr
      */
-    //var realTimeStr = GEOR.custom.REALTIME_IDENTIFIER;
-    var realTimeStr = "_REALTIME";
+    var realTimeStr = GEOR.custom.REALTIME_IDENTIFIER;    
     
     /**
      * Property : realTimeArray
      */
-//    var realTimeArray = GEOR.custom.REALTIME_SECONDS;
-    var realTimeArray = [2,10];
+    var realTimeArray = GEOR.custom.REALTIME_SECONDS;
     
     /**
      * Property : defaultSeconds
