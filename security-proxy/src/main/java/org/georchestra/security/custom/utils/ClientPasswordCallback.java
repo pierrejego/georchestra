@@ -14,11 +14,11 @@ public class ClientPasswordCallback implements CallbackHandler {
 
 	private Map<String, String> passwords = new HashMap<String, String>();
 
-	String jksPassword = PropertiesUtil.getPropertyAsString("jks.password");
+	String crtPassword = PropertiesUtil.getPropertyAsString("crt.password");
 	
 	public ClientPasswordCallback() {
-		passwords.put("client", jksPassword);
-		passwords.put("server", jksPassword);
+		passwords.put("client", crtPassword);
+		passwords.put("server", crtPassword);
 	}
 
 	public void handle(Callback[] callbacks) throws IOException,
