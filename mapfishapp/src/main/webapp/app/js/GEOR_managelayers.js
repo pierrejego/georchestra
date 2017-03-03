@@ -798,7 +798,7 @@ GEOR.managelayers = (function() {
             	var timeInSec = defaultSeconds;
             	
             	// get seconds according to slider position
-            	if(sliderField.getValue()){
+            	if(secArray[sliderField.getValue()]){
             		var sliderVal = sliderField.getValue();
             		timeInSec = secArray[sliderVal] ? secArray[sliderVal] : false;
             	}                    
@@ -809,6 +809,7 @@ GEOR.managelayers = (function() {
             	return intervalInMs;
             }
             
+            // function to get text from real time checkbox  
             function getTextValue (sliderValue, bool){
             	var text = tr("sec");
             	var val = bool ? realTimeArray[sliderValue.value] : realTimeArray[sliderValue];
@@ -1174,12 +1175,27 @@ GEOR.managelayers = (function() {
         var layer = node.layer;
         var layerRecord = node.layerStore.getById(layer.id);
         var realTime = layerRecord.get("name");
-        
-        if(realTime.indexOf(realTimeStr) > -1){
-        	var stringToModify = node.getUI().getTextEl();
-        	GEOR.a = stringToModify;
+    	var stringToModify = node.getUI().getTextEl(); 	
+    	var isRT;
+    	if(realTime.indexOf(realTimeStr) > -1){
+    		isRT = true;
         	stringToModify.style.color = "#007ec3";
-        	stringToModify.style.fontWeight = "bold";
+        }
+        
+    	// get real time status from menu check item
+        function getStatusRT (textRt, menuItems, isRT){
+        	var rtActivate;
+            // get checked value
+            for (let i in menuItems) {
+                var item = menuItems[i];
+                if(item && item.text){
+                	if (item.text.indexOf(textRt) > -1) {
+                        rtActivate = item.checked ? true : false;
+                        break;
+                    }       
+                }                                          
+            }            
+            return rtActivate;
         }
 
         // buttons in the toolbar
@@ -1190,11 +1206,26 @@ GEOR.managelayers = (function() {
                 items: [],
                 ignoreParentClicks: true,
                 listeners: {
+                	"beforehide": function(menu){
+                		var arr = menu.items.items;
+
+                        var checkStatus = getStatusRT(updateTextRT, arr, isRT);                        
+                        
+                        if(checkStatus && node){
+                        	// if option is activate change color
+                        	stringToModify.style.color = "#b30000";                            
+                        } else {
+                        	// set color to blue if real time is not activate
+                        	if(isRT){
+                        		stringToModify.style.color = "#007ec3";
+                        	}                        	
+                        }                                               
+                	},
                     "beforeshow": function(menu) {
-                            if (menu.items.length) {
+                            if (isRT && menu.items.length) {                          	                            		
+                            	
                                 // allow menu appearance
                                 var rtActivate;
-                                var rtMenuIndex;
                                 var arr = menu.items.items;
                                 var enableList = [tr("Recenter on the layer"),
                                     tr("Refresh layer"),
@@ -1202,16 +1233,10 @@ GEOR.managelayers = (function() {
                                     updateTextRT,
                                     tr("About this layer")
                                 ];
-                                // get checked real time value
-                                for (let i in arr) {
-                                    var item = arr[i];
-                                    if (item && item.text.indexOf(updateTextRT)>-1) {
-                                    	rtMenuIndex = i;
-                                        var checkStatus = item.checked ? true : false;
-                                        rtActivate = checkStatus;
-                                        break;
-                                    }                                    
-                                }
+                                // get checked real time value                               
+                                rtActivate = getStatusRT(updateTextRT, arr, isRT);
+                                
+                                
                                 // show or hide items
                                 for (let i in arr) {
                                     var item = arr[i];
