@@ -30,6 +30,15 @@ GEOR.layerfinder = (function() {
     /*
      * Private
      */
+	
+    var observable = new Ext.util.Observable();
+    observable.addEvents(
+        /**
+         * Event: add 
+         * Fires when layer is added 
+         */    		
+        "layeradded"
+    );
 
     /**
      * Property: layerStore
@@ -480,12 +489,19 @@ GEOR.layerfinder = (function() {
         Ext.each(recordsToAdd, function(r) {
             layerStore.addSorted(r);
         });
+        
+        observable.fireEvent("layeradded");       
     };
 
     /*
      * Public
      */
     return {
+    	
+        /*
+         * Observable object
+         */
+        events: observable,
 
         /**
          * APIMethod: create
@@ -508,21 +524,7 @@ GEOR.layerfinder = (function() {
                 minWidth: 90,
                 iconCls: 'btn-add',
                 disabled: true,
-                handler: function() {
-                	// get count of layer before add layer
-                	if (GeoExt.MapPanel.guess().map){
-                		this.map = GeoExt.MapPanel.guess().map;             
-                    	var beforeAddLayer = this.map.layers.length;
-                	}                	
-                	                	
-                    addSelectedLayers();
-                    
-                    // if the user insert new layer, up display order of annotation layer
-                    if (beforeAddLayer){
-                    	if (beforeAddLayer !== this.map.layers.length && this.map.getLayersByName('__georchestra_annotations')[0]){
-                        	this.map.getLayersByName('__georchestra_annotations')[0].setZIndex(1000);
-                        }
-                    }                    
+                handler: function() {          
                     
                     switch (currentTab) {
                     case "cswbrowser":

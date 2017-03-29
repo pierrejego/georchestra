@@ -107,16 +107,6 @@ GEOR.wmcbrowser = (function() {
                 if (!status) {
                     onFailure("The provided file is not a valid OGC context");
                 }
-                // if annotation layer exist, up layer to front - zindex
-            	if(GeoExt.MapPanel.guess().map){
-                    var annotationMap = GeoExt.MapPanel.guess().map;
-            		var drawLayerExist =  annotationMap.getLayersByName('__georchestra_annotations') ? annotationMap.getLayersByName('__georchestra_annotations') : false;
-            		if(drawLayerExist && drawLayerExist.length > 0){                
-                		drawLayerExist[0].setZIndex(1000);
-                	}else{
-            			this.map.addLayer(layer);
-            		}
-            	}
             },
             failure: onFailure.createCallback("Could not find WMC file")
         });

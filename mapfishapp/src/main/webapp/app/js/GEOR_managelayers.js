@@ -82,7 +82,13 @@ GEOR.managelayers = (function() {
          * Event: beforecontextcleared
          * Fired before all layers are removed from map
          */
-        "beforecontextcleared"
+        "beforecontextcleared",
+        /**
+         * Event: layerremoved
+         * Fired after layer is removed
+         */
+        "layerremoved"
+        
     );
 
     /**
@@ -172,21 +178,12 @@ GEOR.managelayers = (function() {
                     width: 360,
                     yesCallback: function() {
                         layer.map.removeLayer(layer);
-                        console.log('remove');
                     },
                     scope: this
                 });
             } else {
-                layer.map.removeLayer(layer);
-                
-                // Fix : Set again annotation layer zIndex to up this layer
-                if (GeoExt.MapPanel.guess().map){
-                	this.map = GeoExt.MapPanel.guess().map;
-                	var drawLayerExist =  this.map.getLayersByName('__georchestra_annotations') ? this.map.getLayersByName('__georchestra_annotations').length : false;
-                	if(drawLayerExist && drawLayerExist.length < 1){
-                		layer.setZIndex(1000);
-                	}
-                }
+                layer.map.removeLayer(layer);    
+                observable.fireEvent("layerremoved");
             }
             break;
         }
