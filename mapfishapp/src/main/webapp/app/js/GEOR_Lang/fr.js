@@ -248,6 +248,9 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "No geometry column.": "Colonne géométrique non détectée.",
     "Geometry column type (TYPE) is unsupported.": "Le type de la colonne géométrique (${TYPE}) n'est pas supporté.",
     "Switching to attributes-only edition.": "Seuls les attributs des objets existants seront éditables.",
+    "Real time" : "Temps réel",
+    "sec" : "sec",
+    "min" : "min",
     /* GEOR_map.js strings */
     "Location map": "Carte de situation",
     "Warning after loading layer":

@@ -1366,8 +1366,18 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 	color:#000;
 }
 .geor-tree-node a.x-tree-node-anchor span {
-	font-weight: normal !important;
+	font-weight: normal;
+	color: #333;
 }
+.x-tree-node-anchor .ab span {
+	font-weight: normal !important;
+	color: red;
+}
+.geor-tree-node a.x-tree-node-anchor .oh span {
+	font-weight: normal !important;
+	color: red;
+}
+
 .x-tree-node a span, .x-dd-drag-ghost a span{
 	color:#000;
 }
@@ -2230,3 +2240,5 @@ body .fieldXY{
 	width:120px;
 	height:20px !important;	
 }
+
+
