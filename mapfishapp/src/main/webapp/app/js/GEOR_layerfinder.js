@@ -524,8 +524,10 @@ GEOR.layerfinder = (function() {
                 minWidth: 90,
                 iconCls: 'btn-add',
                 disabled: true,
-                handler: function() {          
-                    
+                handler: function() {  
+                	
+                	addSelectedLayers();
+                	
                     switch (currentTab) {
                     case "cswbrowser":
                         GEOR.cswbrowser.clearSelection();
