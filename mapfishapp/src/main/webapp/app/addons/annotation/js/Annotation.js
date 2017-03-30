@@ -728,12 +728,24 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
      */
     onFeatureAdded: function(event) {
     	if(GeoExt.MapPanel.guess().map){
-    		var drawLayerExist =  this.map.getLayersByName('__georchestra_annotations') ? this.map.getLayersByName('__georchestra_annotations').length : false;
-    		if(drawLayerExist && drawLayerExist.length < 1){
-        		layer.setZIndex(1000);
-        	}else{
-    			this.map.addLayer(layer);
-    		}
+            if(GeoExt.MapPanel.guess().map.getLayersByName("__georchestra_annotations")){
+                /*var zIndex = [];
+                var mapLayers = GeoExt.MapPanel.guess().map.layers;
+                
+                mapLayers.forEach(function(layer){
+                    zIndex.push(layer.getZIndex());
+                })
+                
+                zIndex.sort();
+                
+                var highValue = zIndex[zIndex.length-1];*/
+       
+//                GeoExt.MapPanel.guess().map.getLayersByName("__georchestra_annotations")[0].setZIndex(highValue+1);
+                GeoExt.MapPanel.guess().map.getLayersByName("__georchestra_annotations")[0].setZIndex(1000);
+			
+	    	}else{
+				this.map.addLayer(layer);
+			}
     	}
         var feature, drawControl;
 

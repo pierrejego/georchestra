@@ -369,6 +369,7 @@ GEOR.FeaturePanel = Ext.extend(Ext.form.FormPanel, {
             text: OpenLayers.i18n('annotation.close'),
             handler: function() {
                 this.ownerCt.close();
+                layer.setZIndex(1000);
             },
             scope: this
         }];
