@@ -11,24 +11,6 @@ GEOR.Addons.Annotation = Ext.extend(GEOR.Addons.Base, {
      * record - {Ext.data.record} a record with the addon parameters
      */
     init: function(record) {
-
-    	function upLayer (){
-            if(GeoExt.MapPanel.guess().map.getLayersByName("__georchestra_annotations")){
-                GeoExt.MapPanel.guess().map.getLayersByName("__georchestra_annotations")[0].setZIndex(1000);
-			}
-    	}
-        GEOR.wmc.events.on("aftercontextrestore", function(){
-        	upLayer();
-        });            	
-    	
-        GEOR.layerfinder.events.on("layeradded", function(){
-        	upLayer();
-        });
-        
-        GEOR.managelayers.events.on("layerremoved", function(){
-        	upLayer();
-        });
-        
         var annotation = new GEOR.Annotation({
             map: this.map,
             popupOptions: {unpinnable: false, draggable: true}

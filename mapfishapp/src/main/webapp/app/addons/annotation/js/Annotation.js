@@ -26,8 +26,6 @@ Ext.namespace("GEOR");
  *      Create a FeatureEditing main controler.
  */
 GEOR.Annotation = Ext.extend(Ext.util.Observable, {
-	
-	
 
     /** api: property[map]
      *  ``OpenLayers.Map``  A configured map object.
@@ -206,6 +204,8 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         
         layer = new OpenLayers.Layer.Vector("__georchestra_annotations", layerOptions);
         this.layer = layer;
+        
+		// manage layer if wmc is load or layer is remove       
         layer.events.register("removed",this,function(){
         	if(Ext.getCmp("annotation_mainWindow")){
         		if (this.map && this.map.getLayersByName('__georchestra_annotations') < 1){
@@ -215,11 +215,35 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         });
         this.map.addLayer(layer); 
         
-        // find zIndex modification in : 
-        // 		GEOR_layerfinder.js file with on button handler
-        // 		in this file in onFeatureAdded method
-        //		in GEOR_layerfinder.js on "delete" layer case
         
+        function upLayer (layer){
+            if(layer){
+            	var l = GeoExt.MapPanel.guess().map.layers;
+            	l.forEach(function(el){
+            		// transform string layer z index to integer
+            		var index = parseInt(el.getZIndex());
+        			// up layer only if other layer is front of annotation
+            		if(index > parseInt(layer.getZIndex()) ){
+            			layer.setZIndex(index + 1);
+            		} 
+            	});
+			}
+    	}
+        
+        // up annotation layer to front if contexte is restore
+        GEOR.wmc.events.on("aftercontextrestore", function(){
+        	upLayer(layer);
+        });            	
+    	
+        // up annotation layer to front layer is added
+        GEOR.layerfinder.events.on("layeradded", function(){
+        	upLayer(layer);
+        });
+        
+        // up annotation layer to front layer is removed
+        GEOR.managelayers.events.on("layerremoved", function(){
+        	upLayer(layer);
+        });                
 
         layer.events.on({
             "beforefeatureselected": this.onBeforeFeatureSelect,
@@ -240,7 +264,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         this.initDeleteAllAction();
         //this.actions.push('-');
         this.initExportAsKmlAction();
-
 
         GEOR.Annotation.superclass.constructor.apply(this, arguments);
     },
@@ -487,7 +510,6 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         };
 
         var action = new Ext.Action(actionOptions);
-
 
         this.actions.push(action);
     },
