@@ -215,7 +215,7 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
         });
         this.map.addLayer(layer); 
         
-        
+        // function to manage annotation layer z index
         function upLayer (layer){
             if(layer){
             	var l = GeoExt.MapPanel.guess().map.layers;
