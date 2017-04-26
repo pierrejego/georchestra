@@ -891,7 +891,7 @@ GEOR.managelayers = (function() {
         };
 
         // Edit style if layer is import from shapefile or wms
-        if (GEOR.styler && (hasEquivalentWFS || (isVector && layer.params.SHPGEOM))) {        	
+        if (GEOR.styler && (hasEquivalentWFS || (isVector && layer.params && layer.params.SHPGEOM))) {        	
             insertSep();
             menuItems.push({
                 iconCls: 'geor-btn-style',
