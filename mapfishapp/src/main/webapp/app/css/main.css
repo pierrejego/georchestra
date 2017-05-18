@@ -510,3 +510,7 @@ div.olMapViewport {
 	background-color: #fff;
 }
 
+/* advanced print action */
+.mf-printAdvanced-action {    
+    background-image:url(../img/mapfish/print-blue-builder.png) !important;
+}

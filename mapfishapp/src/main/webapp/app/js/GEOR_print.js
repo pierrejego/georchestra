@@ -663,10 +663,24 @@ GEOR.print = (function() {
         getAction: function() {
             if (action === null) {
                 action = new Ext.Action({
+                	xtype:"splitbutton",
                     iconCls: 'mf-print-action',
                     text: '',
                     tooltip: OpenLayers.i18n("Print current map"),
-                    handler: showWindow
+                    menu: new Ext.menu.Menu({
+                    	items:[{
+                    		text: "Impression",
+                    		tooltip: OpenLayers.i18n("Print current map"),
+                    		iconCls: 'mf-print-action',
+                    		handler: showWindow,
+                		},{
+                			text: "Mise en page",
+                			iconCls: "mf-printAdvanced-action",
+                			tooltip: "Mettre en page les élements de la carte",
+                			handler: function(){
+                				window.open("https://sig-wrs.asogfi.fr/export/print.html");
+            				}
+                		}]
                 });
             }
             return action;
