@@ -472,7 +472,7 @@ GEOR.managelayers = (function() {
                     checked = false;
                     if (style.current) {
                         checked = true;
-                    }else if(!style.href && !style.current && style.name === defaultStyleName){
+                    }else if(!style.href && !style.current && style.name === defaultStyleName && !layer.params.SLD){
                     		checked = true;
                     		  observable.fireEvent("selectstyle", layerRecord, style.name);
                    	}
