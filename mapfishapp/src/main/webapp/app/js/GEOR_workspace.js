@@ -168,6 +168,128 @@ GEOR.workspace = (function() {
             scope: this
         });
     };
+    
+    /**
+     * Open DDMAP Catalogue
+     */
+    var openDDmapCatalogue = function() {
+    	// Spinner to wait response
+    	GEOR.waiter.show();
+    	
+    	// get information
+    	var store = new Ext.data.JsonStore({
+    		url: GEOR.custom.URL_MAPTOOLS+'/info',
+     	    fields: ['id', 'title']
+    	 });
+    	 store.load();
+ 
+    	 // create windows
+    	 createDDMAPCatalogue(store);
+    	 
+    };
+    
+    /**
+     * 
+     */
+    var createDDMAPCatalogue = function(store) {
+     	
+    	var ddmapSelected = null;
+
+    	var tpl = new Ext.XTemplate(
+    			 '<div class="thumb-wrap" id="nouveau">',
+    			 '<div class="thumb" style="background-image: url('+GEOR.config.PATHNAME+'/app/img/famfamfam/add.png); background-repeat: no-repeat; background-position: center center;">',
+    			 	'<a href="'+GEOR.custom.URL_DDMAP+'" target="_blank"><img /></a></div>',
+    			 	'<span>Nouveau</span>',
+    			 '</div>',
+    			 '<tpl for=".">',
+    		        '<div class="thumb-wrap" id="{id}" >',
+    		        '<div class="thumb">',
+    			    '<a href="'+GEOR.custom.URL_DDMAP+'?data='+GEOR.custom.URL_MAPTOOLS+'/data?id={id}" target="_blank">',
+    			    	'<img src="'+GEOR.custom.URL_MAPTOOLS+'/thumb?id={id}" title="{title}" /></a></div>',
+    				    '<span>{title}</span></div>',
+    		      '</tpl>',
+    		      '<div class="x-clear"></div>', 
+    			);
+
+    	var ddmapWin = new Ext.Window({
+            title: tr("Catalogue d'analyse de données"),
+            constrainHeader: true,
+            layout: 'fit',
+            id:"ddmap-catalogue-windows",
+            width: 400,
+            height: 300,
+            minwidth: 285,
+            closeAction: 'close',
+            modal: false,
+            autoScroll: true, 
+            buttonAlign: 'left',
+            fbar: [{
+            	text: tr("Delete"),
+                handler: function() {
+                	// verify if at least one link is selected
+                	if(ddmapSelected == null){
+                		 Ext.Msg.alert("Notification","Vous devez sélectionner au moins un élément");
+                	}
+                	else{
+                		// Verfiy element is not the New One
+                		
+	                	// Ask for validation before deleting
+	                	Ext.MessageBox.alert("Suppression", "Etes vous sur de vous supprimer ?", function()
+	                			{                      	
+			                	// Delete using service
+			                    console.log("delete");
+	                			}
+	                	);
+	 
+                	}
+                }
+            },'->', {
+                text: tr("Close"),
+                handler: function() {
+                	ddmapWin.close();
+                }
+            }, {
+                text: tr("Load"),
+                disabled: true,
+                itemId: 'load',
+                minWidth: 90,
+                iconCls: 'geor-load-map',
+                handler: function() {
+                	// verify if at least one link is selected
+                	
+                	// for each selection open link in a blank windows
+                	console.log("close");
+                	},
+                listeners: {
+                    "enable": function(btn) {
+                        btn.focus();
+                    }
+                }
+            }],
+            items: new Ext.DataView({
+    		            store: store,
+    		            tpl: tpl,
+    		            autoHeight:true,
+    		            multiSelect: true,
+    		            overClass:'x-view-over',
+    		            itemSelector:'div.thumb-wrap',
+    		            cls: 'context-selector',
+    		            emptyText: 'No data to display', 		            
+    		            listeners: {
+    		            	selectionchange: {
+    		            		fn: function(dv,nodes){
+    		            			var l = nodes.length;
+    		            			var s = l != 1 ? 's' : '';
+    		            			ddmapWin.setTitle(tr("Catalogue d'analyse de données : ") + '('+l+' élément'+s+' selectionné'+s+')');
+    		            			ddmapSelected = nodes;
+    		            		}
+    		            	}
+    		            }
+    		        })
+    		    });
+    		        		   
+    		ddmapWin.show();
+    };
 
     /**
      * Method: cancelBtnHandler
@@ -424,7 +546,11 @@ GEOR.workspace = (function() {
                         text: tr("Load a map context"),
                         iconCls: "geor-load-map",
                         handler: GEOR.wmcbrowser.show
-                    }, '-', {
+                    }, '-',{
+                        text: tr("Integrate data"),
+                        iconCls: "geor-ddmap",
+                        handler: openDDmapCatalogue
+                    }, {
                         text: tr("Get a permalink"),
                         iconCls: "geor-permalink",
                         handler: permalink
