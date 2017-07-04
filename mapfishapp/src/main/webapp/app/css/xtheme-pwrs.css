@@ -775,6 +775,11 @@ input.x-tree-node-cb {
 #tbar .mf-print-action {
 	background-image: url("../img/mapfish/printer-white.png") !important;
 }
+
+#tbar .mf-print-advanced {
+	background-image: url("../img/mapfish/builder_16px.png") !important;
+}
+
 #tbar .x-btn-text-icon .x-btn-icon-small-left .x-btn-text {
 	padding-right: 6px;
 }
@@ -2241,4 +2246,129 @@ body .fieldXY{
 	height:20px !important;	
 }
 
+
+/* style for styler dataView*/
+/* Set style for cart */
+
+#print_dataView .x-panel-body{
+	background: white;
+	font: 11px Arial, Helvetica, sans-serif;
+}
+
+#print_dataView .thumb-wrap{
+	float: left;
+	margin: 4px;
+	margin-right: 0;
+	padding: 5px;
+}
+#print_dataView .thumb-wrap span{
+	display: block;
+	overflow: hidden;
+	text-align: center;
+}
+
+#print_dataView .x-view-over{
+    border:1px solid #ebebeb;
+    background: #efefef url(../img/row-over.gif) repeat-x left top;
+	padding: 4px;
+}
+
+#print_dataView .x-view-selected{
+	background: #eff5fb url(../img/selected.gif) no-repeat right bottom;
+	border:1px solid #99bbe8;
+	padding: 4px;
+}
+
+#print_dataView .loading-indicator {
+	font-size:11px;
+	background-image:url('../img/loading.gif');
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left:20px;
+	margin:10px;
+}
+
+
+#print_dataView .thumbStyle{
+	background: transparent;
+	padding: 3px;
+}
+
+#print_dataView .x-view-selected .thumbStyle, #styler_dataView .x-view-selected .thumbMax, #styler_dataView .x-view-selected .thumbMidlMin, #styler_dataView .x-view-selected .thumbMidlMax{
+	background:transparent;
+}
+
+#print_dataView .thumbStyle img {
+	height: 30px;
+	width: 30px;
+}
+
+#printLogoWindow .x-window-mc{
+	border-bottom : 1px solid #99bbe8 ;
+}
+
+#treePrint {
+	border-right : 3px solid #4d4d4d;	
+}
+
+#treePrint .x-tree-node{
+	padding-right: 20px;
+}
+
+.album-node .x-tree-node-icon, .album-btn{
+    /*background: url(../img/tree.png) 0 -16px;*/
+    background: url(../img/tree.png) 1px -37px;
+    background-repeat: no-repeat;
+    
+}
+
+.album-node-open .x-tree-node-icon, .album-btn{
+    background: url(../img/tree.png) -5px -141px;
+    background-repeat: no-repeat;
+}
+
+#treePrint .x-tree-node .x-tree-selected{
+	background-color: rgba(221,221,221,0);    
+}
+
+#treePrint .x-tree-node .x-tree-node-over{
+	background-color: rgba(221,221,221, 0);
+    width:145%;
+    opacity:0.8;
+}
+
+#inputImg {
+    border-width: 0px;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.print-load-button .x-btn-mr, .print-load-button .x-btn-ml, .print-load-button .x-btn-tr, .print-load-button .x-btn-tl, .print-load-button .x-btn-bc, .print-load-button .x-btn-tc,.print-load-button .x-btn-bl,.print-load-button .x-btn-br{
+	border:none;
+}
+
+.print-load-button .x-btn-ml{
+    display: none;
+}
+
+.print-load-button{
+    margin-left: -1.5px;
+}
+
+.printLogoStyle{
+    background-image: url(../img/famfamfam/add.png);
+}
+
+.print-load-button .x-btn-text{
+    color: black;
+}
+
+.print-load-button:hover, .print-load-button:hover .x-btn-text{
+    background-color: rgba(0,0,0,0);
+    color: #007EC3;
+}
+
+.printLogoStyle:hover{
+    opacity: 0.5;
+}
 

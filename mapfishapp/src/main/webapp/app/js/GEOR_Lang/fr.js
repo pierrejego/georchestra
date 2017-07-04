@@ -329,6 +329,9 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "Print": "Imprimer",
     "Printing...": "Impression en cours...",
     "Print current map": "Imprimer la carte courante",
+    "Advanced" : "Avancée",
+    "Advanced layout" : "Impression avancée",
+    "Landscape" : "Paysage",
     /* GEOR_Querier.js strings */
     "Fields of filters with a red mark are mandatory": "Vous devez remplir " +
         "les champs des filtres marqués en rouge.",

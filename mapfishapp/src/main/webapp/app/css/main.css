@@ -280,6 +280,10 @@ div.olMapViewport {
     background-image:url(../img/mapfish/printer.png) !important;
 }
 
+.mf-print-advanced {
+    background-image:url(../img/mapfish/build_16px.png) !important;
+}
+
 .zoomin {
     background-image:url(../img/mapfish/icon_zoomin.png) !important;
     height:20px !important;
@@ -510,7 +514,3 @@ div.olMapViewport {
 	background-color: #fff;
 }
 
-/* advanced print action */
-.mf-printAdvanced-action {    
-    background-image:url(../img/mapfish/print-blue-builder.png) !important;
-}
