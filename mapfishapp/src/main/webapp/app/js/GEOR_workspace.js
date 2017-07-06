@@ -26,25 +26,23 @@ Ext.namespace("GEOR");
 
 GEOR.workspace = (function() {
     /*
-     * Private
-     */
+	 * Private
+	 */
 
     /**
-     * Property: map
-     * {OpenLayers.Map} The map object
-     */
+	 * Property: map {OpenLayers.Map} The map object
+	 */
     var map = null;
 
     /**
-     * Property: tr
-     * {Function} an alias to OpenLayers.i18n
-     */
+	 * Property: tr {Function} an alias to OpenLayers.i18n
+	 */
     var tr = null;
 
     /**
-     * Method: saveMDBtnHandler
-     * Handler for the button triggering the WMC save to catalog
-     */
+	 * Method: saveMDBtnHandler Handler for the button triggering the WMC save
+	 * to catalog
+	 */
     var saveMDBtnHandler = function() {
         var formPanel = this.findParentByType('form'), 
             form = formPanel.getForm();
@@ -106,9 +104,9 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: saveBtnHandler
-     * Handler for the button triggering the WMC save dialog
-     */
+	 * Method: saveBtnHandler Handler for the button triggering the WMC save
+	 * dialog
+	 */
     var saveBtnHandler = function() {
         var formPanel = this.findParentByType('form'), 
             form = formPanel.getForm();
@@ -129,9 +127,9 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: permalink
-     * Handler to display a permalink based on on-the-fly WMC generation
-     */
+	 * Method: permalink Handler to display a permalink based on on-the-fly WMC
+	 * generation
+	 */
     var permalink = function() {
         GEOR.waiter.show();
         OpenLayers.Request.POST({
@@ -143,7 +141,7 @@ GEOR.workspace = (function() {
                 var o = Ext.decode(response.responseText),
                     params = OpenLayers.Util.getParameters(),
                     id =  /^.+(\w{32}).wmc$/.exec(o.filepath)[1];
-                // we have to unset these params since they have precedence 
+                // we have to unset these params since they have precedence
                 // over the WMC:
                 Ext.each(["bbox", "wmc", "lon", "lat", "radius"], function(item) {
                     delete params[item];
@@ -170,8 +168,8 @@ GEOR.workspace = (function() {
     };
     
     /**
-     * Open DDMAP Catalogue
-     */
+	 * Open DDMAP Catalogue
+	 */
     var openDDmapCatalogue = function() {
     	// Spinner to wait response
     	GEOR.waiter.show();
@@ -179,36 +177,54 @@ GEOR.workspace = (function() {
     	// get information
     	var store = new Ext.data.JsonStore({
     		url: GEOR.custom.URL_MAPTOOLS+'/info',
-     	    fields: ['id', 'title']
-    	 });
-    	 store.load();
+     	    fields: ['id', 'title'],
+     	    listeners : {
+     	    	load : function() {
+     	    		var rec = new store.recordType({id:'nouveau', title:'Nouveau'});
+     	    		rec.commit();
+     	    		this.add(rec); 
+     	    	}
+     	    },
+    	});
+    	
+    	store.load();
  
-    	 // create windows
-    	 createDDMAPCatalogue(store);
-    	 
+    	// create windows
+    	createDDMAPCatalogue(store);	 
     };
     
     /**
-     * 
-     */
+	 * 
+	 */
     var createDDMAPCatalogue = function(store) {
      	
     	var ddmapSelected = null;
 
     	var tpl = new Ext.XTemplate(
-    			 '<div class="thumb-wrap" id="nouveau">',
-    			 '<div class="thumb" style="background-image: url('+GEOR.config.PATHNAME+'/app/img/famfamfam/add.png); background-repeat: no-repeat; background-position: center center;">',
-    			 	'<a href="'+GEOR.custom.URL_DDMAP+'" target="_blank"><img /></a></div>',
-    			 	'<span>Nouveau</span>',
-    			 '</div>',
     			 '<tpl for=".">',
     		        '<div class="thumb-wrap" id="{id}" >',
-    		        '<div class="thumb">',
-    			    '<a href="'+GEOR.custom.URL_DDMAP+'?data='+GEOR.custom.URL_MAPTOOLS+'/data?id={id}" target="_blank">',
-    			    	'<img src="'+GEOR.custom.URL_MAPTOOLS+'/thumb?id={id}" title="{title}" /></a></div>',
-    				    '<span>{title}</span></div>',
+    		        	'<tpl if="this.isNew(id)">',
+    		        		'<div class="thumb" style="background-image: url('+GEOR.config.PATHNAME+'/app/img/famfamfam/add.png); background-repeat: no-repeat; background-position: center center;" >',
+    		        			'<img />',
+    		        	'</tpl>',
+    		        	'<tpl if="this.isNew(id) == false">',
+    		        		'<div class="thumb">',
+    		        			'<img src="'+GEOR.custom.URL_MAPTOOLS+'/thumb?id={id}" title="{title}" />',
+    		        	'</tpl>',
+    		        	'</div>',
+    		        	'<span>{title}</span>',
+    		        '</div>',
     		      '</tpl>',
     		      '<div class="x-clear"></div>', 
+    		      {
+    				 // XTemplate configuration:
+    		        compiled: true,
+    		        disableFormats: true,
+    		        // member functions:
+    		        isNew: function(id){
+    		            return id == 'nouveau';
+    		        }
+    		      }
     			);
 
     	var ddmapWin = new Ext.Window({
@@ -236,8 +252,21 @@ GEOR.workspace = (function() {
 	                	// Ask for validation before deleting
 	                	Ext.MessageBox.alert("Suppression", "Etes vous sur de vous supprimer ?", function()
 	                			{                      	
-			                	// Delete using service
-			                    console.log("delete");
+		                		// for each selection open link in a blank windows
+		                    	var URL = GEOR.custom.URL_DDMAP;
+		                    	for (var i = 0, len = ddmapSelected.length; i < len; i++) {
+		                    		if(ddmapSelected[i].id != "nouveau"){
+		                    			
+		                    			Ext.Ajax.request({
+		                                    method: "GET",
+		                                    url: GEOR.custom.URL_MAPTOOLS+'/erase?id='+ddmapSelected[i].id,
+		                                    success: console.log("deleted"),
+		                                    failure: console.log("failed to delete")
+		                                });
+			                    			
+		                    		}
+		                    	}
+		                    	store.load();
 	                			}
 	                	);
 	 
@@ -250,20 +279,21 @@ GEOR.workspace = (function() {
                 }
             }, {
                 text: tr("Load"),
-                disabled: true,
                 itemId: 'load',
                 minWidth: 90,
                 iconCls: 'geor-load-map',
                 handler: function() {
                 	// verify if at least one link is selected
-                	
+                	if(ddmapSelected == null){
+                		Ext.Msg.alert("Notification","Vous devez sélectionner au moins un élément");
+                	}
                 	// for each selection open link in a blank windows
-                	console.log("close");
-                	},
-                listeners: {
-                    "enable": function(btn) {
-                        btn.focus();
-                    }
+                	var URL = GEOR.custom.URL_DDMAP;
+                	for (var i = 0, len = ddmapSelected.length; i < len; i++) {
+                		if(ddmapSelected[i].id != "nouveau"){
+                			window.open(URL + '?data="'+GEOR.custom.URL_MAPTOOLS+'/data?id='+ddmapSelected[i].id+'"');
+                		}
+                	}
                 }
             }],
             items: new Ext.DataView({
@@ -273,8 +303,7 @@ GEOR.workspace = (function() {
     		            multiSelect: true,
     		            overClass:'x-view-over',
     		            itemSelector:'div.thumb-wrap',
-    		            cls: 'context-selector',
-    		            emptyText: 'No data to display', 		            
+    		            cls: 'context-selector',	
     		            listeners: {
     		            	selectionchange: {
     		            		fn: function(dv,nodes){
@@ -282,6 +311,15 @@ GEOR.workspace = (function() {
     		            			var s = l != 1 ? 's' : '';
     		            			ddmapWin.setTitle(tr("Catalogue d'analyse de données : ") + '('+l+' élément'+s+' selectionné'+s+')');
     		            			ddmapSelected = nodes;
+    		            		}
+    		            	},
+    		            	dblclick: {
+    		            		fn: function(dv, index, node, e){
+    		            			var URL = GEOR.custom.URL_DDMAP;
+    		            			if(node.id != "nouveau"){
+    		            				URL = URL + '?data="'+GEOR.custom.URL_MAPTOOLS+'/data?id='+node.id+'"';
+    		            			}
+    		            			window.open(URL);
     		            		}
     		            	}
     		            }
@@ -292,17 +330,15 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: cancelBtnHandler
-     * Handler for the cancel button
-     */
+	 * Method: cancelBtnHandler Handler for the cancel button
+	 */
     var cancelBtnHandler = function() {
         this.findParentByType('form').ownerCt.close();
     };
 
     /**
-     * Method: saveWMC
-     * Triggers the save dialog.
-     */
+	 * Method: saveWMC Triggers the save dialog.
+	 */
     var saveWMC = function() {
         var btns = [{
             text: tr("Cancel"),
@@ -337,7 +373,8 @@ GEOR.workspace = (function() {
                         Ext.each(records, function(r) {
                             menu.addItem({
                                 text: tr("in group") + " <b>" + r.get("name") + "</b>",
-                                group_id: r.id, // a convenient way to pass the group_id arg ...
+                                group_id: r.id, // a convenient way to pass the
+												// group_id arg ...
                                 handler: saveMDBtnHandler
                             });
                         });
@@ -352,7 +389,7 @@ GEOR.workspace = (function() {
                 minWidth: 100,
                 iconCls: 'geor-btn-download',
                 itemId: 'save-md',
-                //menuAlign: "tr-br",
+                // menuAlign: "tr-br",
                 menu: menu
             });
         }
@@ -426,9 +463,8 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: editOSM
-     * Creates handlers for OSM edition
-     */
+	 * Method: editOSM Creates handlers for OSM edition
+	 */
     var editOSM = function(options) {
         var round = GEOR.util.round;
         return function() {
@@ -448,10 +484,9 @@ GEOR.workspace = (function() {
             } else if (options.protocol === 'llz') {
                 var c = bounds.getCenterLonLat();
                 /*
-                Zoom level determined based on the idea that, for OSM:
-                    maxResolution: 156543 -> zoom level 0
-                    numZoomLevels: 19
-                */
+				 * Zoom level determined based on the idea that, for OSM:
+				 * maxResolution: 156543 -> zoom level 0 numZoomLevels: 19
+				 */
                 var zoom = Math.round((Math.log(156543) - Math.log(map.getResolution()))/Math.log(2));
                 url = options.base + OpenLayers.Util.getParameterString({
                     lon: round(c.lon, 5),
@@ -464,9 +499,8 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: shareLink
-     * Creates handlers for map link sharing
-     */
+	 * Method: shareLink Creates handlers for map link sharing
+	 */
     var shareLink = function(options) {
         return function() {
             GEOR.waiter.show();
@@ -491,9 +525,8 @@ GEOR.workspace = (function() {
     };
 
     /**
-     * Method: getShareMenu
-     * Creates the sub menu for map sharing
-     */
+	 * Method: getShareMenu Creates the sub menu for map sharing
+	 */
     var getShareMenu = function() {
         var menu = [], cfg;
         Ext.each(GEOR.config.SEND_MAP_TO, function(item) {
@@ -515,20 +548,18 @@ GEOR.workspace = (function() {
     };
 
     /*
-     * Public
-     */
+	 * Public
+	 */
     return {
 
         /**
-         * APIMethod: create
-         * Returns the workspace menu config.
-         *
-         * Parameters:
-         * m {OpenLayers.Map}
-         *
-         * Returns:
-         * {Object} The toolbar config item corresponding to the "workspace" menu.
-         */
+		 * APIMethod: create Returns the workspace menu config.
+		 * 
+		 * Parameters: m {OpenLayers.Map}
+		 * 
+		 * Returns: {Object} The toolbar config item corresponding to the
+		 * "workspace" menu.
+		 */
         create: function(m) {
             map = m;
             tr = OpenLayers.i18n;
@@ -536,8 +567,10 @@ GEOR.workspace = (function() {
                 text: tr("Workspace"),
                 menu: new Ext.menu.Menu({
                     defaultAlign: "tr-br",
-                    // does not work as expected, at least with FF3 ... (ExtJS bug ?)
-                    // top right corner of menu should be aligned with bottom right corner of its parent
+                    // does not work as expected, at least with FF3 ... (ExtJS
+					// bug ?)
+                    // top right corner of menu should be aligned with bottom
+					// right corner of its parent
                     items: [{
                         text: tr("Save the map context"),
                         iconCls: "geor-save-map",
