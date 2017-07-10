@@ -174,13 +174,14 @@ GEOR.workspace = (function() {
     	// Spinner to wait response
     	GEOR.waiter.show();
     	
-    	// get information
+    	// Create JSonStore from info service of maptools
     	var store = new Ext.data.JsonStore({
     		url: GEOR.custom.URL_MAPTOOLS+'/info',
      	    fields: ['id', 'title'],
      	    listeners : {
+     	    	// Add one new element to open a empty ddmap
      	    	load : function() {
-     	    		var rec = new store.recordType({id:'nouveau', title:'Nouveau'});
+     	    		var rec = new store.recordType({id:'defaut', title:'Nouveau'});
      	    		rec.commit();
      	    		this.add(rec); 
      	    	}
@@ -189,15 +190,16 @@ GEOR.workspace = (function() {
     	
     	store.load();
  
-    	// create windows
+    	// create windows with this store
     	createDDMAPCatalogue(store);	 
     };
     
     /**
-	 * 
+	 *  Create DDMap catalogue windows
 	 */
     var createDDMAPCatalogue = function(store) {
      	
+    	// used to store selected items
     	var ddmapSelected = null;
 
     	var tpl = new Ext.XTemplate(
@@ -220,9 +222,9 @@ GEOR.workspace = (function() {
     				 // XTemplate configuration:
     		        compiled: true,
     		        disableFormats: true,
-    		        // member functions:
+    		        // Verify if the element is the default one:
     		        isNew: function(id){
-    		            return id == 'nouveau';
+    		            return id == 'defaut';
     		        }
     		      }
     			);
@@ -246,30 +248,28 @@ GEOR.workspace = (function() {
                 	if(ddmapSelected == null){
                 		 Ext.Msg.alert("Notification","Vous devez sélectionner au moins un élément");
                 	}
-                	else{
-                		// Verfiy element is not the New One
-                		
+                	else{              		
 	                	// Ask for validation before deleting
-	                	Ext.MessageBox.alert("Suppression", "Etes vous sur de vous supprimer ?", function()
-	                			{                      	
-		                		// for each selection open link in a blank windows
-		                    	var URL = GEOR.custom.URL_DDMAP;
-		                    	for (var i = 0, len = ddmapSelected.length; i < len; i++) {
-		                    		if(ddmapSelected[i].id != "nouveau"){
-		                    			
-		                    			Ext.Ajax.request({
-		                                    method: "GET",
-		                                    url: GEOR.custom.URL_MAPTOOLS+'/erase?id='+ddmapSelected[i].id,
-		                                    success: console.log("deleted"),
-		                                    failure: console.log("failed to delete")
-		                                });
-			                    			
-		                    		}
-		                    	}
-		                    	store.load();
-	                			}
-	                	);
-	 
+	                	Ext.MessageBox.alert("Suppression", "Etes vous sur de vous supprimer ?", function(){                      	
+	                		
+	                		var idArray=[];
+	                		// for each selection open link in a blank windows
+			                for (var i = 0, len = ddmapSelected.length; i < len; i++) {
+			                    		
+			                	// verify its not the defaut one
+			                	if(ddmapSelected[i].id != "defaut"){
+			                		idArray.push(ddmapSelected[i].id);
+			                	}
+			                }
+			                				                
+			                Ext.Ajax.request({
+			                	method: "GET",
+			                	url: GEOR.custom.URL_MAPTOOLS+'/erase',
+			                	params: { id : idArray},
+			                	success: function(response) { store.load()},
+			                	failure: console.log("failed to delete")
+			                });  			
+	                	});
                 	}
                 }
             },'->', {
@@ -288,10 +288,11 @@ GEOR.workspace = (function() {
                 		Ext.Msg.alert("Notification","Vous devez sélectionner au moins un élément");
                 	}
                 	// for each selection open link in a blank windows
-                	var URL = GEOR.custom.URL_DDMAP;
                 	for (var i = 0, len = ddmapSelected.length; i < len; i++) {
-                		if(ddmapSelected[i].id != "nouveau"){
-                			window.open(URL + '?data="'+GEOR.custom.URL_MAPTOOLS+'/data?id='+ddmapSelected[i].id+'"');
+                		if(ddmapSelected[i].id != "defaut"){
+                			window.open(GEOR.custom.URL_DDMAP + '?data="'+GEOR.custom.URL_MAPTOOLS+'/data?id='+ddmapSelected[i].id+'"');
+                		}else{
+                			window.open(GEOR.custom.URL_DDMAP);
                 		}
                 	}
                 }
@@ -316,7 +317,7 @@ GEOR.workspace = (function() {
     		            	dblclick: {
     		            		fn: function(dv, index, node, e){
     		            			var URL = GEOR.custom.URL_DDMAP;
-    		            			if(node.id != "nouveau"){
+    		            			if(node.id != "defaut"){
     		            				URL = URL + '?data="'+GEOR.custom.URL_MAPTOOLS+'/data?id='+node.id+'"';
     		            			}
     		            			window.open(URL);
@@ -579,10 +580,12 @@ GEOR.workspace = (function() {
                         text: tr("Load a map context"),
                         iconCls: "geor-load-map",
                         handler: GEOR.wmcbrowser.show
-                    }, '-',{
+                    }, '-',{ 
+                    	id: 'ddmapCatalogueMenuItem',
                         text: tr("Integrate data"),
                         iconCls: "geor-ddmap",
-                        handler: openDDmapCatalogue
+                        handler: openDDmapCatalogue,
+                        hidden: GEOR.config.ROLES.indexOf("ROLE_SV_USER") < 0
                     }, {
                         text: tr("Get a permalink"),
                         iconCls: "geor-permalink",
@@ -593,7 +596,7 @@ GEOR.workspace = (function() {
                         plugins: [{
                             ptype: 'menuqtips'
                         }],
-                        menu: getShareMenu()
+                        menu: getShareMenu(), 
                     }]
                 })
             };
