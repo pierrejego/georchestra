@@ -249,7 +249,7 @@ GEOR.workspace = (function() {
                         Ext.Msg.alert("Notification", "Vous devez sélectionner au moins un élément");
                     } else {
                         // Ask for validation before deleting
-                        Ext.MessageBox.alert("Suppression", "Etes vous sur de vous supprimer ?", function() {
+                        Ext.MessageBox.alert("Suppression", "Valider la suppression ?", function() {
 
                             var idArray = [];
                             // for each selection open link in a blank windows
@@ -260,18 +260,20 @@ GEOR.workspace = (function() {
                                     idArray.push(ddmapSelected[i].id);
                                 }
                             }
-
-                            Ext.Ajax.request({
-                                method: "GET",
-                                url: GEOR.custom.URL_MAPTOOLS + '/erase',
-                                params: {
-                                    id: idArray
-                                },
-                                success: function(response) {
-                                    store.load()
-                                },
-                                failure: console.log("failed to delete")
-                            });
+                            
+                            if(idArray.length > 0){
+	                            Ext.Ajax.request({
+	                                method: "GET",
+	                                url: GEOR.custom.URL_MAPTOOLS + '/erase',
+	                                params: {
+	                                    id: idArray
+	                                },
+	                                success: function(response) {
+	                                    store.load()
+	                                },
+	                                failure: console.log("failed to delete")
+	                            });
+                            }
                         });
                     }
                 }
@@ -293,7 +295,7 @@ GEOR.workspace = (function() {
                     // for each selection open link in a blank windows
                     for (var i = 0, len = ddmapSelected.length; i < len; i++) {
                         if (ddmapSelected[i].id != "defaut") {
-                            window.open(GEOR.custom.URL_DDMAP + '?data=' + GEOR.custom.URL_MAPTOOLS + '/data?id=' + ddmapSelected[i].id);
+                            window.open(GEOR.custom.URL_DDMAP + '?data=' + GEOR.custom.URL_MAPTOOLS + '/data/' + ddmapSelected[i].id);
                         } else {
                             window.open(GEOR.custom.URL_DDMAP);
                         }
@@ -321,7 +323,7 @@ GEOR.workspace = (function() {
                         fn: function(dv, index, node, e) {
                             var URL = GEOR.custom.URL_DDMAP;
                             if (node.id != "defaut") {
-                                URL = URL + '?data=' + GEOR.custom.URL_MAPTOOLS + '/data?id=' + node.id;
+                                URL = URL + '?data=' + GEOR.custom.URL_MAPTOOLS + '/data/' + node.id;
                             }
                             window.open(URL);
                         }
