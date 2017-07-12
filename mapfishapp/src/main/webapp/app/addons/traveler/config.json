@@ -2,11 +2,11 @@
         "id": "traveler_0",
         "name": "Traveler",
         "enabled": true,
-        "preloaded":true,
+        "preloaded":false,
         "title": {
             "en": "Road measuring",
             "es": "Camino de medición",
-            "fr": "Mesures routières"
+            "fr": "Déplacement"
         },
         "description": {
             "en": "Travel Tools",

@@ -164,6 +164,9 @@ div.olMapViewport {
 .geor-load-tools {
     background-image: url(../img/fugue/wrench--plus.png) !important;
 }
+.geor-ddmap {
+    background-image: url(./theme-pwrs/styler/img/import.png) !important;
+}
 .geor-permalink {
     background-image: url(../img/famfamfam/link.png) !important;
 }

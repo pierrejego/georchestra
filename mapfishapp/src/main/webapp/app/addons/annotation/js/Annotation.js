@@ -231,19 +231,23 @@ GEOR.Annotation = Ext.extend(Ext.util.Observable, {
     	}
         
         // up annotation layer to front if contexte is restore
-        GEOR.wmc.events.on("aftercontextrestore", function(){
-        	upLayer(layer);
-        });            	
-    	
+        if(GEOR.wmc){
+        	GEOR.wmc.events.on("aftercontextrestore", function(){
+            	upLayer(layer);
+            }); 
+        }                   	    	
         // up annotation layer to front layer is added
-        GEOR.layerfinder.events.on("layeradded", function(){
-        	upLayer(layer);
-        });
-        
+        if(GEOR.layerfinder){
+        	GEOR.layerfinder.events.on("layeradded", function(){
+	        	upLayer(layer);
+	        });
+        }
         // up annotation layer to front layer is removed
-        GEOR.managelayers.events.on("layerremoved", function(){
-        	upLayer(layer);
-        });                
+        if(GEOR.managelayers){
+        	GEOR.managelayers.events.on("layerremoved", function(){
+            	upLayer(layer);
+            }); 
+        }                     
 
         layer.events.on({
             "beforefeatureselected": this.onBeforeFeatureSelect,
