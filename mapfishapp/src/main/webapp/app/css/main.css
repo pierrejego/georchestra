@@ -164,6 +164,9 @@ div.olMapViewport {
 .geor-load-tools {
     background-image: url(../img/fugue/wrench--plus.png) !important;
 }
+.geor-ddmap {
+    background-image: url(./theme-pwrs/styler/img/import.png) !important;
+}
 .geor-permalink {
     background-image: url(../img/famfamfam/link.png) !important;
 }
@@ -278,6 +281,10 @@ div.olMapViewport {
 /* mapfish css imported */
 .mf-print-action {
     background-image:url(../img/mapfish/printer.png) !important;
+}
+
+.mf-print-advanced {
+    background-image:url(../img/mapfish/build_16px.png) !important;
 }
 
 .zoomin {

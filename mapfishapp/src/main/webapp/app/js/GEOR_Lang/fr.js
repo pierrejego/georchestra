@@ -329,6 +329,9 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "Print": "Imprimer",
     "Printing...": "Impression en cours...",
     "Print current map": "Imprimer la carte courante",
+    "Advanced" : "Avancée",
+    "Advanced layout" : "Impression avancée",
+    "Landscape" : "Paysage",
     /* GEOR_Querier.js strings */
     "Fields of filters with a red mark are mandatory": "Vous devez remplir " +
         "les champs des filtres marqués en rouge.",
@@ -508,8 +511,11 @@ OpenLayers.Lang.fr = OpenLayers.Util.extend(OpenLayers.Lang.fr, {
     "Edit activated": "Edition activée", 
     "Hover the feature you wish to edit, or choose \"new feature\" in the edit menu": "Survolez les objets de la couche que vous souhaitez modifier, ou choisissez \"nouvel objet\" dans le menu d'édition de la couche",
     /* GeoExt.data.CSW.js */
-    "no abstract": "pas de résumé"
+    "no abstract": "pas de résumé",
+    "Integrate data": "Analyse de données",
+    "Delete": "Supprimer"
     // no trailing comma
+    	
 });
 
 GeoExt.Lang.add("fr", {
