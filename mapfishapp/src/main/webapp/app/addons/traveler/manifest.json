@@ -37,7 +37,8 @@
         "ISOCHRONES_COLOR" : ["rgba(23,178,23,0.6)","rgba(255,231,0,0.5)","rgba(255,0,0,0.5)"],
         "ISOCHRONE_STROKE" : ["rgba(255,255,255,0.5)"],
         "LIMIT_GEOM" : 10,
-        "ISO_LAYER_NAME": "Isochrones"         
+        "ISO_LAYER_NAME": "Isochrones"  ,
+        "IS_PRINTABLE": true       
     },
     "i18n": {
         "en": {},        
@@ -101,7 +102,17 @@
   	        "Traveler.route.tunnels.tooltip" : "Eviter les tunnels",
   	        "Traveler.route.options.title": "Options",
   	        "Traveler.route.result.distance":"Distance ",
-  	        "Traveler.route.result.time" : "Temps "  	               	
+  	        "Traveler.route.result.time" : "Temps " ,
+  	        "null" : "Prendre tout droit",
+  	        "L" : "Tourner à gauche",
+  	        "FR" : "Tourner légèrement à droite",
+  	        "R" : "Tourner à droite",
+  	        "FL" : "Tourner légèrement à gauche",
+  	        "F" : "Prendre tout droit",
+  	        "BL" : "Tourner très à gauche",
+  	        "BR" : "Tourner très à droite",
+  	        "Traveler.route.result.pdf.title" :  "Calcul d'itinéraire",
+  	        "Traveler.route.result.pdf.filename" :  "Santegraphie-Itinéraire"   	               	
         } 
     }
 }

@@ -642,8 +642,8 @@ GEOR.Addons.Traveler.route.getRoad = function(addon, modeButton) {
                             })
                         })
                         if (steps.length > 0) {
-                            if (Ext.getCmp("route_btnNav")) {
-                                //Ext.getCmp("route_btnNav").show(); // uncomment to display print button
+                            if (Ext.getCmp("route_btnNav") && addon.options.IS_PRINTABLE) {
+                                Ext.getCmp("route_btnNav").show();
                             }
                         }
                     }
@@ -846,9 +846,63 @@ GEOR.Addons.Traveler.route.routeWindow = function(addon) {
             tooltip: tr("Traveler.route.print.tooltip"),
             handler: function() {
                 if (GEOR.Addons.Traveler.route.navInfos) {
-                    // call pdf -> see getDocument method in photos obliques
+                    var arrayLength = GEOR.Addons.Traveler.route.navInfos.length;
+                    var feuilleDeRoute = "";
+
+                    for (var i = 0; i < arrayLength; i++) {
+                        feuilleDeRoute = feuilleDeRoute + i + ". " + tr(GEOR.Addons.Traveler.route.navInfos[i].navInstruction) + " " + GEOR.Addons.Traveler.route.navInfos[i].name + "\n";
+                        //Do something
+                    }
+
+                    var printPage;
+                    var layerStore = GeoExt.MapPanel.guess().layers;
+
+                    var defaultCustomParams = {
+                        mapTitle: tr("Traveler.route.result.pdf.title"),
+                        mapComments: feuilleDeRoute,
+                        copyright: "",
+                        scaleLbl: "",
+                        dateLbl: "",
+                        showOverview: false,
+                        showNorth: true,
+                        showScalebar: false,
+                        showDate: false,
+                        showLegend: false,
+                        projection: "",
+                    };
+                    
+                    var serviceUrl =  GEOR.config.PATHNAME + '/pdf';
+                    // The printProvider that connects us to the print service
+                    var printProvider = new GeoExt.data.PrintProvider({
+                        url: serviceUrl,
+                        autoLoad: true,
+                        outputFormatsEnabled: true,
+                        baseParams: {
+                            url: serviceUrl
+                        },
+                        listeners: {
+                            "loadcapabilities": function(provider, caps) {
+                                // create printPage
+                                printPage = new GeoExt.data.PrintPage({
+                                    printProvider: printProvider,
+                                    customParams: defaultCustomParams
+                                });
+                                var r = printProvider.layouts.find("name", "A4 itineraire");
+                                if (r >= 0) {
+                                    printProvider.setLayout(printProvider.layouts.getAt(r));
+                                }
+
+                                printPage.fit(GeoExt.MapPanel.guess(), true);
+                                printProvider.print(layerStore.map, printPage, {});
+                            },
+                            "beforeprint": function(provider, map, pages, o) {
+                                // set a custom PDF file name:
+                                provider.customParams.outputFilename = tr("Traveler.route.result.pdf.filename");
+                            },
+                        }
+                    });
                 }
-            }
+            },
         }],
         listeners: {
             "show": function(win) {
