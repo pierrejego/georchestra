@@ -1116,8 +1116,10 @@ GEOR.print = (function() {
                                                 var winHeight = screenHeight * 0.70;
                                                 var winWidth = winHeight * 0.7;
                                                 var size = "height=" + winHeight + "; width=" + winWidth + ";";
-                                                // open print document in new window
-                                                window.open("https://sig-wrs.asogfi.fr/export/" + fileName, "", size); // TODO URL dans le GEOR.custom
+                                                // open print document in new window                                                                                                // open print document in new window
+                                                if(GEOR.custom.URL_PRINT_DOC){
+                                                    window.open(GEOR.custom.URL_PRINT_DOC + fileName,"", size);
+                                                }
 
                                             }
                                         }],
