@@ -446,12 +446,19 @@ GEOR.managelayers = (function() {
             isWMS = type === "WMS",
             isWMTS = type === "WMTS",
             stylesMenuItems = [],
+            styleChecked,
             onStyleItemCheck;
         
         if (isWMS) {
             onStyleItemCheck = function(item, checked) {
                 if (checked === true) {
                     observable.fireEvent("selectstyle", this, item.value);
+                    styles.forEach(function(el){
+                        el.current = false;
+                       if(el.name === item.value){
+                           el.current = true;
+                       } 
+                    });                    
                 }
             };
                         
@@ -466,15 +473,17 @@ GEOR.managelayers = (function() {
                     );
                 });
                 var checked, style, text, cfg;
+                // parse layer styles to check current style in list
                 for (var i=0, len=styles.length; i<len; i++) {
                     style = styles[i];
-
                     checked = false;
-                    if (style.current) {
+                    if (style.current) { // check element in list if current style
+                    	styleChecked = style;
                         checked = true;
-                    }else if(!style.href && !style.current && style.name === defaultStyleName && !layer.params.SLD){
-                    		checked = true;
-                    		  observable.fireEvent("selectstyle", layerRecord, style.name);
+                    // special condition for vector layer to check default style if any style
+                    }else if(!style.href && !style.current && style.name === defaultStyleName && !layer.params.SLD && !styleChecked.current){
+                    	checked = true;
+                    	observable.fireEvent("selectstyle", layerRecord, style.name);
                    	}
                     text = (style.title || style.name) + // title is a human readable string
 	                            (style.name === defaultStyleName ? " - <b>"+tr("default style")+"</b>" : "");
