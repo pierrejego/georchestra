@@ -481,7 +481,7 @@ GEOR.managelayers = (function() {
                     	styleChecked = style;
                         checked = true;
                     // special condition for vector layer to check default style if any style
-                    }else if(!style.href && !style.current && style.name === defaultStyleName && !layer.params.SLD && !styleChecked.current){
+                    }else if(!style.href && !style.current && style.name === defaultStyleName && !layer.params.SLD && !styleChecked){
                     	checked = true;
                     	observable.fireEvent("selectstyle", layerRecord, style.name);
                    	}
