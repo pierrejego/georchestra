@@ -39,7 +39,7 @@
         "LIMIT_GEOM" : 10,
         "ISO_LAYER_NAME": "Isochrones"  ,
         "IS_PRINTABLE": true,
-        "BAN_PRIORITY": true,       
+        "BAN_PRIORITY": true       
     },
     "i18n": {
         "en": {},        

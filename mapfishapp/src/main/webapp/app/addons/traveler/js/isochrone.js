@@ -314,7 +314,7 @@ GEOR.Addons.Traveler.isochrone.ban = function(addon) {
     var startPoints =  addon.isoStart ? addon.isoStart : false;
     var banStore = new Ext.data.JsonStore({ // create store that call service
         proxy: new Ext.data.HttpProxy({
-            url: addon.options.banPriority, // URL
+            url: addon.options.BAN_URL, // URL
             method: "GET",
             autoLoad: true
         }),
@@ -353,8 +353,8 @@ GEOR.Addons.Traveler.isochrone.ban = function(addon) {
                     var y = map.getCenter().lat;
                     var geom = new OpenLayers.Geometry.Point(x, y).transform(map.getProjection(), to);
                     if (geom.x && geom.y) {
-                        store.baseParams.lon = geom.x;
-                        store.baseParams.lat = geom.y;
+                    	banStore.baseParams.lon = geom.x;
+                    	banStore.baseParams.lat = geom.y;
                     }
                 }            	
                 banStore.baseParams.q = banStore.baseParams["query"];

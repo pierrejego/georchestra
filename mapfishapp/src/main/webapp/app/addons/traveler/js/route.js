@@ -338,8 +338,8 @@ GEOR.Addons.Traveler.route.addStep = function(addon, isStart, delBtn, idFset) {
                     var y = map.getCenter().lat;
                     var geom = new OpenLayers.Geometry.Point(x, y).transform(map.getProjection(), to);
                     if (geom.x && geom.y) {
-                        store.baseParams.lon = geom.x;
-                        store.baseParams.lat = geom.y;
+                    	banStore.baseParams.lon = geom.x;
+                    	banStore.baseParams.lat = geom.y;
                     }
                 }            	
                 banStore.baseParams.q = banStore.baseParams["query"];
