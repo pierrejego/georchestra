@@ -47,6 +47,7 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
                 },
                 "show": function() {
                     this.map.addLayer(this.layer);
+                    window.alignTo(GeoExt.MapPanel.guess().map.div,"tl",[0,5],false);
                 },
                 scope: this
             }
