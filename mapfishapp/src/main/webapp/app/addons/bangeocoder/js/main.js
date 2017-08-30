@@ -81,10 +81,12 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
      * Create combo use to search free text input by user and display proposition (autocompletion)
      */
     _createCbSearch: function() {
-    	
-    	// get options from config.json file
-    	var banGeocoderOptions = this.options;
-    	
+
+        // get options from config.json file
+        var banGeocoderOptions = this.options;
+        var map = GeoExt.MapPanel.guess().map;
+        var to = new OpenLayers.Projection("EPSG:4326")
+
         // create store to pass free text and get result from service (URL)
     	var store = new Ext.data.JsonStore({
             proxy: new Ext.data.HttpProxy({
@@ -117,10 +119,20 @@ GEOR.Addons.BANGeocoder = Ext.extend(GEOR.Addons.Base, {
                     }                                              
                    ],
             totalProperty: 'limit',
-            listeners : {
-                "beforeload": function (q){
-                    store.baseParams.q = store.baseParams["query"];  
-                    store.baseParams.limit = banGeocoderOptions.limitResponse;   // number of result is default set to 5, change it in config.json file, more informations in README
+            listeners: {
+                "beforeload": function(q) {
+                    //get lat long from map center
+                    if ( /*banGeocoderOptions.useMapCenter &&*/ map) { // control if option is activate in GEOR.custom.useMapCenter
+                        var x = map.getCenter().lon;
+                        var y = map.getCenter().lat;
+                        var geom = new OpenLayers.Geometry.Point(x, y).transform(map.getProjection(), to);
+                        if (geom.x && geom.y) {
+                            store.baseParams.lon = geom.x;
+                            store.baseParams.lat = geom.y;
+                        }
+                    }
+                    store.baseParams.q = store.baseParams["query"];
+                    store.baseParams.limit = banGeocoderOptions.limitResponse; // number of result is default set to 5, change it in config.json file, more informations in README
                     delete store.baseParams["query"];
                 }
             }
