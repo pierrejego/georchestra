@@ -38,7 +38,8 @@
         "ISOCHRONE_STROKE" : ["rgba(255,255,255,0.5)"],
         "LIMIT_GEOM" : 10,
         "ISO_LAYER_NAME": "Isochrones"  ,
-        "IS_PRINTABLE": true       
+        "IS_PRINTABLE": true,
+        "BAN_PRIORITY": true,       
     },
     "i18n": {
         "en": {},        
