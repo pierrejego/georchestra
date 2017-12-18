@@ -58,12 +58,14 @@ public class GroupProtected {
 	 */
 	public boolean isProtected(final String uid) {
 
-		if (this.listOfprotectedGroups.isEmpty())
-			GroupProtected.LOG.warn("There isn't any protected groups configured");
-
+		if (this.listOfprotectedGroups.isEmpty()){
+			LOG.warn("There isn't any protected groups configured");
+		}
+		
 		for (String reg : listOfprotectedGroups) {
-			if (Pattern.matches(reg, uid))
+			if (Pattern.matches(reg, uid)){
 				return true;
+				}
 		}
 
 		return false;
