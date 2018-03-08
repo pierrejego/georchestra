@@ -63,7 +63,6 @@ public class AccountFromTokenFormBean extends AccountFormBean{
 				+ ", email=" + email
 				+ ", phone=" + phone + ", description=" + description + ", password="
 				+ password + ", confirmPassword=" + confirmPassword
-				+ ", recaptcha_challenge_field=" + recaptcha_challenge_field
 				+ ", recaptcha_response_field=" + recaptcha_response_field
 				+ "]";
 	}
