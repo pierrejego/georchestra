@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -425,7 +427,7 @@ public class DocController {
             // send back the file content
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType(docService.getMIMEType()); // MIME type of the file
-            response.setCharacterEncoding("utf-8");
+            response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
             response.setHeader("Content-Disposition", "attachment; filename=\"" + docService.getName() + "\"");
             response.setHeader("Cache-Control", "public, max-age=31536000"); // 1 year
             // see http://stackoverflow.com/questions/3339859/what-is-the-risk-of-having-http-header-cache-control-public
@@ -433,6 +435,10 @@ public class DocController {
             // Documents like CSV may contain sensitive information => private
             // but we want it to be be fast => cached by proxies => public
             PrintWriter out = response.getWriter();
+            if(docService.getMIMEType().contains("csv")){
+            	// this is used to add UTF8 with BOM information in order to open excel directy
+                out.write('\ufeff');
+            }
             out.println(docService.getContent());
         }
         catch (DocServiceException docExc) {
