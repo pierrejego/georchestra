@@ -27,12 +27,23 @@
         <c:if test="${not empty pgtIou}">
         		<cas:proxyGrantingTicket>${pgtIou}</cas:proxyGrantingTicket>
         </c:if>
-        <c:if test="${fn:length(assertion.chainedAuthentications) > 1}">
+     <%--   <c:if test="${fn:length(assertion.chainedAuthentications) > 1}">
 		  <cas:proxies>
             <c:forEach var="proxy" items="${assertion.chainedAuthentications}" varStatus="loopStatus" begin="0" end="${fn:length(assertion.chainedAuthentications)-2}" step="1">
 			     <cas:proxy>${fn:escapeXml(proxy.principal.id)}</cas:proxy>
             </c:forEach>
 		  </cas:proxies>
-        </c:if>
+        </c:if> --%>
+	<c:if test="${fn:length(assertion.chainedAuthentications) > 0}"> 
+       <cas:attributes> 
+       <c:forEach var="auth" items="${assertion.chainedAuthentications}"> 
+               <c:forEach var="attr" items="${auth.principal.attributes}">
+                       <c:forEach var="v" items="${attr.value}">
+                               <cas:${fn:escapeXml(attr.key)}>${fn:escapeXml(v)}</cas:${fn:escapeXml(attr.key)}>
+                       </c:forEach>
+               </c:forEach> 
+       </c:forEach> 
+       </cas:attributes> 
+</c:if>
 	</cas:authenticationSuccess>
 </cas:serviceResponse>
